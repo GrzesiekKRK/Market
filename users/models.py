@@ -6,13 +6,11 @@ class CustomUser(AbstractUser):
     ADMIN = 1
     VENDOR = 2
     USER = 3
-    GUEST = 4
 
     ROLE_CHOICES = (
                     (ADMIN, 'Admin'),
                     (VENDOR, 'Vendor'),
                     (USER, 'User'),
-                    (GUEST, 'Guest')
                     )
 
     email = models.EmailField(max_length=50, verbose_name='Email')
@@ -21,11 +19,11 @@ class CustomUser(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     secondary_email = models.EmailField(max_length=50, verbose_name='Secondary Email')
     address = models.CharField(max_length=100, null=True, verbose_name='Address')
-    status = models.BooleanField()
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, null=True)
-    reviews = models.DecimalField(default=5.0)
+    reviews = models.DecimalField(decimal_places=2, max_digits=6, default=5.0)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"User {self.first_name} {self.last_name}"
+
 
 

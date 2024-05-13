@@ -8,7 +8,7 @@ class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    address = models.CharField(max_length=100, default='', blank=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
     date = models.DateTimeField(default=datetime.today)
     status = models.BooleanField(default=False)
 
