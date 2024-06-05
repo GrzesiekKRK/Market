@@ -1,0 +1,68 @@
+ [
+        {
+            "model": "users.CustomUser",
+            "pk": 4,
+            "fields": {
+                "username": "John",
+                "first_name": "John",
+                "last_name": "Elder",
+                "email": "jhon@wp.pl",
+                "pesel": "12345678910",
+                "bank_account": "1234756890123456789123450",
+                "secondary_email": "elder@wp.pl",
+                "address": "Russia",
+                "created_at": "2024-05-13",
+                "role": 2
+            }
+        },
+        {
+            "model": "users.CustomUser",
+            "pk": 2,
+            "fields": {
+                "username": "Mark",
+                "first_name": "Mark",
+                "last_name": "Twain",
+                "email": "mark@wp.pl",
+                "pesel": "12345678920",
+                "bank_account": "1234756890123456589123450",
+                "secondary_email": "twain@wp.pl",
+                "address": "England",
+                "created_at": "2024-05-13",
+                "role": 3
+            }
+        },
+        {
+            "model": "users.CustomUser",
+            "pk": 3,
+            "fields": {
+                "username": "Greg",
+                "first_name": "Gregory",
+                "last_name": "Zab",
+                "email": "gregory@wp.pl",
+                "pesel": "12345678019",
+                "password": "admin",
+                "bank_account": "1555756890123456789123450",
+                "secondary_email": "zab@wp.pl",
+                "address": "Poland",
+                "created_at": "2024-05-13",
+                "role": 1
+            }
+        },
+     {
+            "model": "users.CustomUser",
+            "pk": 5,
+            "fields": {
+                "username": "Tom",
+                "first_name": "Tom",
+                "last_name": "Foster",
+                "email": "foster@wp.pl",
+                "pesel": "12325678019",
+                "bank_account": "1235756890123456789123450",
+                "secondary_email": "tom@wp.pl",
+                "address": "Poland",
+                "created_at": "2024-05-13",
+                "role": 3
+            }
+        }
+    ]
+

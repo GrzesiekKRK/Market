@@ -11,7 +11,8 @@ class Cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, override_quantity=False):
+    def add(self, product, quantity=1, override_quantity=False) -> None:
+        """Change number of  products in cart"""
         product_id = str(product.id)
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0,
@@ -23,14 +24,15 @@ class Cart:
         self.session.save()
 
     def remove(self, product):
+        """Remove single product from cart """
         product_id = str(product.id)
         if product_id in self.cart:
             del self.cart[product_id]
         self.session.save()
 
     def __iter__(self):
+        """Get the product objects and add them to the cart """
         product_ids = self.cart.keys()
-        # get the product objects and add them to the cart
         products = Product.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
         for product in products:
@@ -54,3 +56,4 @@ class Cart:
         for key in list(self.cart.keys()):  # Use list() to create a copy of keys
             del self.cart[key]
         self.session.save()
+

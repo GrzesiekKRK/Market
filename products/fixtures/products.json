@@ -1,0 +1,157 @@
+ [
+        {
+            "model": "products.Product",
+            "pk": 1,
+            "fields": {
+                "name": "Ork",
+                "price": 119.99,
+                "category": 6,
+                "description": "Greenskin",
+                "image": "uploads/product/ork.jpg"
+            }
+        },
+        {
+            "model": "products.Product",
+            "pk": 2,
+            "fields": {
+                "name": "Man at Arms",
+                "price": 119.99,
+                "category": 6,
+                "description": "Bretonia",
+                "image": "uploads/product/men.jpg"
+            }
+        },
+     {
+         "model": "products.Product",
+         "pk": 3,
+         "fields": {
+             "name": "Travel Electronics Organizer Waterproof Double Layer Cable Storage Bag",
+             "price": 52.00,
+             "category": 5,
+             "description": "Bag white noting inside",
+             "image": "uploads/product/bag.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 4,
+         "fields": {
+             "name": "Travel Electronics Organizer Waterproof Double Layer White Cable Storage Bag",
+             "price": 55.00,
+             "category": 5,
+             "description": "Bag white noting inside",
+             "image": "uploads/product/bag2.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 5,
+         "fields": {
+             "name": "Travel Electronics Organizer Waterproof Double Layer Pink Cable Storage Bag",
+             "price": 60.00,
+             "category": 5,
+             "description": "Bag white noting inside",
+             "image": "uploads/product/bag3.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 6,
+         "fields": {
+             "name": "Lenovo Legion 2024",
+             "price": 1155.00,
+             "category": 3,
+             "description": "Best Gaming Laptope for 2024 ",
+             "image": "uploads/product/legion.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 7,
+         "fields": {
+             "name": "Asus Quad",
+             "price": 1145.00,
+             "category": 3,
+             "description": "Great Laptope for working outside ",
+             "image": "uploads/product/asus.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 8,
+         "fields": {
+             "name": "Chair",
+             "price": 155.00,
+             "category": 4,
+             "description": "Wooden chair ",
+             "image": "uploads/product/chair.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 9,
+         "fields": {
+             "name": "Table",
+             "price": 155.00,
+             "category": 4,
+             "description": "Wooden tabel 120x120 ",
+             "image": "uploads/product/tabel.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 10,
+         "fields": {
+             "name": "Pirrelii",
+             "price": 155.00,
+             "category": 1,
+             "description": "All Year Tires",
+             "image": "uploads/product/pirreli.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 11,
+         "fields": {
+             "name": "Goodyear",
+             "price": 400.00,
+             "category": 1,
+             "description": "Slick Tires",
+             "image": "uploads/product/goodyear.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 12,
+         "fields": {
+             "name": "Polish Book",
+             "price": 23.30,
+             "category": 2,
+             "description": "Get your polish skills to next level",
+             "image": "uploads/product/book.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 13,
+         "fields": {
+             "name": "What Book",
+             "price": 33.30,
+             "category": 2,
+             "description": "Get your what skills to next level",
+             "image": "uploads/product/what.jpg"
+         }
+     },
+     {
+         "model": "products.Product",
+         "pk": 14,
+         "fields": {
+             "name": "Writing Worksheets",
+             "price": 3.30,
+             "category": 2,
+             "description": "Get your polish skills to next level with writing",
+             "image": "uploads/product/write.jpg"
+         }
+     }
+ ]
+
