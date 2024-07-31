@@ -32,7 +32,9 @@
         <link href="{% static 'css/style.css' %}" rel="stylesheet">
     </head>
 <!-- Messeges -->
-
+        {% if messages_number %}
+            {{messages_number}}
+        {% endif %}
         <!-- Messeges End -->
     {% block content %}
 

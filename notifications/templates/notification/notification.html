@@ -18,8 +18,9 @@
                             <div class="p-4 border border-secondary border-rounded">
                                 <h4>{{ message.title }}</h4>
                                 <p>{{ message.body }}</p>
+                                <p>Read: {{ message.is_read }}</p>
                             </div>
-                             <a href="{%  url 'market-notification-detail'  message.id  %}"><i class="fas fa-apple-alt me-2"></i>{{ message.id }}</a>
+                             <a href="{%  url 'market-notification-detail'  message.id  %}"><i class="fas fa-envelope me-2 text-secondary"></i>Detail</a>
                         </div>
                     </div>
                 </div>

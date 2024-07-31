@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DeleteView
 
 from .models import Notification
-from products.models import Product
 from products.models import ProductImage
 
 from icecream import ic
@@ -32,4 +31,19 @@ class NotificationDetailView(LoginRequiredMixin, TemplateView):
         context['notification'] = notification
         context['product'] = product
         context['miniature'] = miniature
+        read = notification.is_read
+        if not read:
+            read = NotificationDetailView.read(notification)
         return context
+
+    @staticmethod
+    def read(notification):
+        notification.is_read = True
+        notification.save()
+        return notification
+
+
+class NotificationDeleteView(DeleteView):
+    model = Notification
+    template_name = 'notification/notification-delete.html'
+    success_url = '/'
