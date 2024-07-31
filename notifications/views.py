@@ -18,3 +18,13 @@ class NotificationListView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class NotificationDetailView(LoginRequiredMixin, TemplateView):
+    model = Notification
+    template_name = 'notification/notification-detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        notification = Notification.objects.get(id=context['pk'])
+        context['notification'] = notification
+
+        return context

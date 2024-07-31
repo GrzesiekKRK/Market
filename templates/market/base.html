@@ -32,14 +32,7 @@
         <link href="{% static 'css/style.css' %}" rel="stylesheet">
     </head>
 <!-- Messeges -->
-        {% if notification %}
-            {% for message in notification %}
 
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
         <!-- Messeges End -->
     {% block content %}
 
