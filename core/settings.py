@@ -35,7 +35,8 @@ INSTALLED_EXTENSIONS = [
     'orders',
     'products',
     'users',
-    'wishlists']
+    'wishlists',
+    ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
 
@@ -63,6 +64,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.roles',
+                'cart.context_processors.items_number',
+                'notifications.context_processors.messages_number',
             ],
         },
     },
@@ -120,8 +124,13 @@ STATIC_URL = 'static/'
 
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, 'static')
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
 
 
 MEDIA_URL = 'media/'
@@ -133,3 +142,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 CART_SESSION_ID = 'cart'
+
+
+LOGIN_REDIRECT_URL = '/login'

@@ -1,6 +1,7 @@
 {% extends 'market/base.html' %}
 {% block content %}
     <body>
+    {% csrf_token %}
         <!-- Single Page Header start -->
         <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Cart</h1>
@@ -29,58 +30,87 @@
                             <tr>
                                 <th scope="row">
                                     <div class="d-flex align-items-center">
-                                        <img src="../../static/img/vegetable-item-5.jpg"  class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                                        <img src="{{ item.product.image.url }}"  class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                                     </div>
                                 </th>
                                 <td>
                                     <p class="mb-0 mt-4">{{ item.product}}</p>
                                 </td>
                                 <td>
-                                    <p class="mb-0 mt-4">{{ item.price }} $</p>
+                                    {% if item.is_sale %}
+                                        <p class="text-dark fs-5 fw-bold mb-0">{{ item.sale_price }} $</p>
+                                    {% else %}
+                                        <p class="text-dark fs-5 fw-bold mb-0">{{ item.price }} $</p>
+                                    {% endif %}
                                 </td>
                                 <td>
 
                                     <!-- One more or less button -->
-                                    <div class="input-group quantity mt-4" style="width: 100px;">
+                                    <div>
+                                    <form action="{% url 'decrease-numbers-of-item-in-cart' item.product.id  %}" method="post">
+                                        {% csrf_token %}
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
+                                            <button type="submit" class="btn btn-sm btn-minus rounded-circle bg-light border"  >
                                             <i class="fa fa-minus"></i>
                                             </button>
-                                        </div>
+                                            </div>
+                                        </form>
                                         <input type="text" class="form-control form-control-sm text-center border-0" value="{{ item.quantity }}">
+
+                                     <form action="{% url 'increase-numbers-of-item-in-cart' item.product.id %}" method="post">
+                                         {% csrf_token %}
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                            <button type="submit" class="btn btn-sm btn-plus rounded-circle bg-light border">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                             <!-- One more and less button End-->
-
                                         </div>
-                                    </div>
+                                 </form>
+                                        </div>
+
                                 </td>
                                 <td>
                                     <p class="mb-0 mt-4">{{ item.total_price }} $</p>
                                 </td>
                                 <td>
                                     <!-- Remove Item button -->
-                                    <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                        <i class="fa fa-times text-danger"></i>
-                                    </button>
+                                    {% if item%}
+                                        <form method="post" action="{% url 'remove-product-from-cart' item.product.id %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn-danger border border-secondary rounded-pill px-3 text-primary">
+                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Remove
+                                                        </button>
+                                        </form>
+                                    {% endif %}
                                     <!-- Remove Item Button End -->
                                 </td>
                             </tr>
 
                         {% endfor %}
-                        <!-- Items in Cart End -->
+
 
                         </tbody>
                     </table>
                 </div>
+            <!-- Items in Cart End -->
+
             <!-- Coupon -->
                 <div class="mt-5">
+                    <form method="post" action="{% url 'remove-all-products-from-cart'  %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger border border-secondary rounded-pill px-3 text-primary">
+                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Clear Cart
+                        </button>
+                    </form>
+                </div>
+            <!-- Coupon End -->
+
+            <!-- Clear Cart -->
+            <div class="mt-5">
                     <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
                     <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
                 </div>
-            <!-- Coupon End -->
+            <!-- Clear Cart End -->
 
             <!-- Cart Total Price -->
 
@@ -92,7 +122,9 @@
                             <div class="p-4">
                                 <h1 class="display-6 mb-4">Cart <span class="fw-normal"></span></h1>
                             <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                                <h5 class="mb-0 ps-4 me-4">Total</h5>
+                                <h5 class="mb-0 ps-4 me-4">Number of Items</h5>
+                                <p class="mb-0 pe-4">{{ items_in_cart }}</p>
+                                <h5 class="mb-0 ps-4 me-4">Total Price</h5>
                                 <p class="mb-0 pe-4">${{ total_price }}</p>
                                  <!-- Total Price End -->
                             </div>

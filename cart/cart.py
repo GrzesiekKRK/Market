@@ -1,6 +1,7 @@
 from django.conf import settings
 from decimal import Decimal
 from products.models import Product
+from icecream import ic
 
 
 class Cart:
@@ -26,6 +27,7 @@ class Cart:
     def remove(self, product):
         """Remove single product from cart """
         product_id = str(product.id)
+
         if product_id in self.cart:
             del self.cart[product_id]
         self.session.save()

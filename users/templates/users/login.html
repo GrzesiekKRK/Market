@@ -7,10 +7,10 @@
             <h1 class="text-center text-white display-6">Login</h1>
         </div>
         <!-- Single Page Header End -->
-    <div class="content-section">
-    <form method="POST">
+    <div  class="content-section">
+    <form method="POST" >
         {% csrf_token %}
-        <fieldset class="form-group">
+        <fieldset class="form-group text-center">
             {{ form.as_p }}
 
         </fieldset>
@@ -20,7 +20,7 @@
     </form>
         <div class="border-top pt-3">
         <small class="text-muted">
-            Have an account? <a class="nl-2" href="#">Sign in</a>
+            Creat account? <a class="nl-2" href="{% url 'user-register' %}">Sign in</a>
         </small>
         </div>
     </div>

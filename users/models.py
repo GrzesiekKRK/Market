@@ -1,16 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from . import consts as users_role
 
 
 class CustomUser(AbstractUser):
-    ADMIN = 1
-    VENDOR = 2
-    USER = 3
-
     ROLE_CHOICES = (
-                    (ADMIN, 'Admin'),
-                    (VENDOR, 'Vendor'),
-                    (USER, 'User'),
+                    (users_role.CUSTOMER_USER_ROLE_MODERATOR, 'Moderator'),
+                    (users_role.CUSTOMER_USER_ROLE_VENDOR, 'Vendor'),
+                    (users_role.CUSTOMER_USER_ROLE, 'User'),
                     )
 
     email = models.EmailField(max_length=50, verbose_name='Email')
@@ -23,7 +20,7 @@ class CustomUser(AbstractUser):
     reviews = models.DecimalField(decimal_places=2, max_digits=6, default=5.0)
 
     def __str__(self) -> str:
-        return f"User {self.first_name} {self.last_name}"
+        return f" {self.first_name} {self.last_name}"
 
 
 

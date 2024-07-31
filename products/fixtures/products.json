@@ -3,7 +3,7 @@
             "model": "products.Product",
             "pk": 1,
             "fields": {
-                "name": "Ork",
+                "name": "Beans",
                 "price": 119.99,
                 "category": 6,
                 "description": "Greenskin",

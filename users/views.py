@@ -1,25 +1,19 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login
-from .forms import RegisterUserForm, LoginForm
+from django.views.generic import CreateView, UpdateView
+from django.views.generic.edit import DeleteView
 from django.contrib import messages
+from .forms import RegisterUserForm, LoginForm, UpdateUserForm
+from .models import CustomUser
 
 
-def register(request):# TODO Class Based View.
-    if request.method == "POST":
-        form = RegisterUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f"Account's been created for {username}.")
-            return redirect('market-home')
-    else:
-        form = RegisterUserForm()
+class UserLoginView(LoginView):
+    template_name = 'users/login.html'
+    redirect_authenticated_user = True
 
-    return render(request, 'users/register.html', {'form': form})
-
-
-def user_login(request):
-    if request.method == "POST":
+    def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -27,8 +21,54 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                return redirect('market-home')
-    else:
-        form = LoginForm()
-    return render(request, 'users/login.html', {'form': form})
+                return redirect('market-products')
+        return render(request, 'users/login.html', {'form': form})
 
+    def get_success_url(self):
+        user = CustomUser.objects.get(id=self.request.user.id)
+        return render(self.request, 'users/update.html', {'user': user})
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid username or password')
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class UserSignUpView(CreateView):
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('user-login')
+    form_class = RegisterUserForm
+    success_message = "Your profile was created successfully"
+
+
+class UserUpdateView(UpdateView):
+    template_name = 'users/update.html'
+    form_class = UpdateUserForm
+
+    def get_object(self):
+        user = CustomUser.objects.get(id=self.request.user.id)
+        return user
+
+    def get_success_url(self):
+        user = CustomUser.objects.get(id=self.request.user.id)
+        return render(self.request, 'users/update.html', {'user': user})
+
+    def post(self, request):
+        if request.method == "POST":
+            form = UpdateUserForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your profile is updated successfully')
+                return redirect('user-profile')
+        else:
+            form = form = UpdateUserForm()
+        return render(request, 'users/update.html', {'form': form})
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid change')
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class UserDeleteView(DeleteView):
+    model = CustomUser
+    template_name = 'users/delete.html'
+    success_url = '/'
