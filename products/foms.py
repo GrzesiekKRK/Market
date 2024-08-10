@@ -10,13 +10,13 @@ class AddProductForm(forms.ModelForm):
     miniature_description = forms.CharField(max_length=100)
     description = forms.CharField(max_length=400)
     quantity = forms.DecimalField()
-    condition = forms.ChoiceField(choices=Product.CONDITION_CHOICES)
+    units_of_measurement = forms.ChoiceField(choices=Product.UNITS_CHOICES)
     is_sale = forms.BooleanField(initial=False, required=False)
     sale_price = forms.DecimalField(initial=0.0)
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'price', 'miniature_description', 'description',  'quantity', 'condition', 'is_sale', 'sale_price']
+        fields = ['name', 'category', 'price', 'miniature_description', 'description',  'quantity', 'units_of_measurement', 'is_sale', 'sale_price']
 
 
 class ImageForm(forms.ModelForm):

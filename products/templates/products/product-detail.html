@@ -25,8 +25,10 @@
                         {% endfor %}
                     </div>
                     <div class="fruite-img">
-                        {% for image in images %}
+                        {% for image in product.image.all %}
+                            {% if not image.miniature %}
                             <img src="{{ image.image.url }}" class="img-fluid w-100 rounded-top border border-secondary" alt="Image of {{ product.name }}">
+                            {% endif %}
                         {% endfor %}
                     </div>
                 <div>

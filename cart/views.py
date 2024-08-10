@@ -8,10 +8,11 @@ from icecream import ic
 def cart(request):
     cart = Cart(request)
     
-    items = cart
+    products = cart
     total_price = cart.get_sub_total_price()
     items_in_cart = cart.__len__()
-    return render(request, 'cart/cart.html', {'items': items, 'total_price': total_price, 'items_in_cart': items_in_cart})
+
+    return render(request, 'cart/cart.html', {'products': products, 'total_price': total_price, 'items_in_cart': items_in_cart})
 
 
 def add_product_to_cart_view(request, pk):
