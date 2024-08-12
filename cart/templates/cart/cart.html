@@ -78,7 +78,7 @@
                                 </td>
                                 <td>
                                     <!-- Remove Item button -->
-                                    {% if item%}
+                                    {% if product%}
                                         <form method="post" action="{% url 'remove-product-from-cart' product.product.id %}">
                                                         {% csrf_token %}
                                                         <button type="submit" class="btn-danger border border-secondary rounded-pill px-3 text-primary">

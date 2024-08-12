@@ -17,7 +17,10 @@ class Cart:
         product_id = str(product.id)
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0,
-                                     'price': str(product.price)}
+                                     'price': str(product.price),
+                                     'is_sale': int(product.is_sale),
+                                     'sale_price': str(product.sale_price),
+                                     }
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
@@ -41,6 +44,8 @@ class Cart:
             cart[str(product.id)]['product'] = product
         for item in cart.values():
             item['price'] = Decimal(item['price'])
+            item['is_sale'] = item['is_sale']
+            item['sale_price'] = Decimal(item['sale_price'])
             item['total_price'] = Decimal(item['price']) * item['quantity']
             yield item
 
@@ -48,7 +53,7 @@ class Cart:
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_sub_total_price(self):
-        return sum(Decimal(item['price']) * item['quantity'] for item
+        return sum(Decimal(item['sale_price']) * item['quantity'] if item['is_sale'] else Decimal(item['price']) * item['quantity'] for item
                    in self.cart.values())
 
     def clear(self):
