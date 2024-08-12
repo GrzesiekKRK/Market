@@ -74,7 +74,11 @@
 
                                 </td>
                                 <td>
-                                    <p class="mb-0 mt-4">{{ product.total_price }} $</p>
+                                    {% if product.is_sale %}
+                                            <p class="mb-0 mt-4">{{ product.sale_total_price }} $</p>
+                                        {% else %}
+                                            <p class="mb-0 mt-4">{{ product.total_price }} $</p>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <!-- Remove Item button -->
