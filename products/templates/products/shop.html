@@ -146,9 +146,9 @@
                                                 <div class="d-flex justify-content-between flex-lg-wrap">
                                                     {% if product.is_sale %}
                                                         <strike>${{ product.price }}</strike>
-                                                        <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $ for {{ product.units_of_measurement}}</p>
+                                                        <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
                                                         {% else %}
-                                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $ for {{ product.units_of_measurement}}</p>
+                                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
                                                     {% endif %}
                                                     <form action="{% url 'product-add-to-cart' product.id %}" method="post">
                                                         {% csrf_token %}
