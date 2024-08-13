@@ -49,7 +49,7 @@
                                 </td>
                                 <td>
 
-                                    <!-- One more or less button -->
+                                    <!-- One less or more button -->
                                     <div>
                                     <form action="{% url 'decrease-numbers-of-item-in-cart' product.product.id  %}" method="post">
                                         {% csrf_token %}
@@ -67,7 +67,7 @@
                                             <button type="submit" class="btn btn-sm btn-plus rounded-circle bg-light border">
                                                 <i class="fa fa-plus"></i>
                                             </button>
-                                            <!-- One more and less button End-->
+                                            <!-- One less and more button End-->
                                         </div>
                                  </form>
                                         </div>
@@ -76,7 +76,7 @@
                                 <td>
                                     {% if product.is_sale %}
                                             <p class="mb-0 mt-4">{{ product.sale_total_price }} $</p>
-                                        {% else %}
+                                    {% else %}
                                             <p class="mb-0 mt-4">{{ product.total_price }} $</p>
                                     {% endif %}
                                 </td>

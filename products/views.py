@@ -17,7 +17,7 @@ class BaseView(LoginRequiredMixin, TemplateView):
     template_name = 'market/index.html'
 
 
-class ShopView(LoginRequiredMixin, TemplateView):
+class ProductListView(LoginRequiredMixin, TemplateView):
     template_name = 'products/shop.html'
 
     def dispatch(self, *args, **kwargs):
