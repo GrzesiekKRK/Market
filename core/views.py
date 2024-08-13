@@ -10,8 +10,8 @@ class ConcatView(TemplateView):
     template_name = "market/contact.html"
 
 
-def checkout(request):
-    return render(request, "market/checkout.html")
+class CheckoutView(TemplateView):
+    template_name = "market/checkout.html"
 
 
 def testimonial(request):
