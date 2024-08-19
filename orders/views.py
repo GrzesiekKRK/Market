@@ -35,7 +35,8 @@ class CreateOrderView(LoginRequiredMixin):
         order_before_payment.save()
         for product in products:
             item = Product.objects.get(id=product['product'].id)
-            order_product = ProductOrder(product=item, order=order_before_payment, product_quantity=item.quantity, product_price=item.price)
+            ic(item)
+            order_product = ProductOrder(product=item, order=order_before_payment, product_quantity=product['product'].quantity, product_price=product['product'].price)
             order_product.save()
 
         context['customer'] = order_before_payment.customer

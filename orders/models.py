@@ -13,18 +13,12 @@ class Order(models.Model):
     status = models.BooleanField(default=False)
     total_price = models.DecimalField(decimal_places=2, max_digits=6,)
 
-    def __str__(self):
-        return self.product
-
-    def sell(self):
-        order_quantity = self.order_quantity
-
 
 class ProductOrder(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products')
-    product_quantity = models.IntegerField()
-    product_price = models.DecimalField(decimal_places=2, max_digits=6,)
+    quantity = models.IntegerField()
+    price = models.DecimalField(decimal_places=2, max_digits=6,)
 
     def total_price(self):
-        return self.product_quantity * self.product_price
+        return self.quantity * self.price
