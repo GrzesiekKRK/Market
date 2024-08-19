@@ -1,116 +1,94 @@
 {% extends 'market/base.html' %}
 {% block content %}
-    {% if request.user.is_authenticated%}
-                        <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <h3> <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a></h3>
-                        <form action="{% url 'user-logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button style="height:25px;width:70px" type="submit" >Log out</button>
-                        </form>
-                        </div>
-                                            <!-- User End -->
+    {% if request.user.is_authenticated %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <h3>
+                <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
+            </h3>
+            <form action="{% url 'user-logout' %}" method="POST">
+                {% csrf_token %}
+                <button style="height:25px;width:70px" type="submit">Log out</button>
+            </form>
+        </div>
+        <!-- User End -->
+        <!-- If not sign up or login-->
+    {% else %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
+            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- If not sign up or login End -->
+<body>
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Order {{ order_number }}</h1>
+    </div>
+    <!-- Single Page Header End -->
 
-                                            <!-- If not sign up or login-->
-                    {% else %}
-                    <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
-                        <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-                                    <!-- If not sign up or login End -->
-    <body>
-                                    <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Order</h1>
-        </div>
-                                    <!-- Single Page Header End -->
+    <!-- First Name and Last Name on the Label -->
+    <h3 align="center">Data on the label</h3>
+    <p align="center">First name: {{ customer.first_name }}</p>
+    <p align="center">Last name: {{ customer.last_name }}</p>
+    <!-- First Name and Last Name on the Label End -->
 
-                                            <!-- Filters  -->
-        <div class="col-lg-12">
-            <div class="mb-3">
-                <h4>Filters</h4>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                    <label for="Categories-1"> New </label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                    <label for="Categories-2"> Used </label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                    <label for="Categories-3"> Sales</label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-4" name="Categories-1" value="Beverages">
-                    <label for="Categories-4"> Out of order</label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-5" name="Categories-1" value="Beverages">
-                    <label for="Categories-5"> Don't ask</label>
-                </div>
-            </div>
-        </div>
-                                        <!-- Filters End -->
+    <!-- Address -->
+    <p align="center">Address: {{ address }}</p>
+    <p align="center">Postal Code: {{ postal_code }}</p>
+    <!-- Address End-->
 
-                                        <!-- Products -->
-        {% for each in order %}
-            <div class="col-lg-12">
-                <h3 class="text-secondary fw-bold"> <br> <br> {{ each.id }}</h3>
-            </div>
-            </div>
-            </div>
-            </div>
-            </div>
-            <div class="col-lg-9">
-            <div class="row g-4 justify-content-center">
-            <div class="col-md-6 col-lg-6 col-xl-4">
-                <div class="rounded position-relative fruite-item">
-                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                        {% for product in each %}
-                        <h4>{{ product.name }}</h4>
-                        <p>{{ product.description }}</p>
-                            <p>{{ product.price }}</p>
-
-                            {%  endfor %}
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-                                    <!-- Products End -->
-
-                                    <!-- Page Buttons -->
-        <div class="col-12">
-            <div class="pagination d-flex justify-content-center mt-5">
-                <a href="#" class="rounded">&laquo;</a>
-                <a href="#" class="active rounded">1</a>
-                <a href="#" class="rounded">2</a>
-                <a href="#" class="rounded">3</a>
-                <a href="#" class="rounded">4</a>
-                <a href="#" class="rounded">5</a>
-                <a href="#" class="rounded">6</a>
-                <a href="#" class="rounded">&raquo;</a>
+    <!-- Products -->
+    </div>
+</div>
+</div>
+</div>
+<div class="col-lg-9">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                    </tr>
+                </thead>
+                <!-- Items in cart -->
+                <h3 align="center">Products</h3>
+                <tbody>
+                {% for product in products %}
+                        <tr>
+                            <td>
+                                <p class="mb-0 mt-4">{{ product.product }}</p>
+                            </td>
+                            <td>
+                                <p class="text-dark fs-5 fw-bold mb-0">{{product.product_price}} $</p>
+                            </td>
+                            <td>{{ product.product_quantity }}</td>
+                        <td>{{ product.product.total_price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                    <!-- Products End -->
+                    <!-- Page Buttons -->
             </div>
         </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        <!-- Page Buttons End -->
-    </body>
-
+    </div>
+</div>
+</div>
+</div>
+<!-- Page Buttons End -->
+</body>
 {% endblock content %}

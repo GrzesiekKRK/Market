@@ -35,7 +35,7 @@ class CreateOrderView(LoginRequiredMixin):
         order_before_payment.save()
         for product in products:
             item = Product.objects.get(id=product['product'].id)
-            order_product = ProductOrder(product=item, order=order_before_payment, quantity=item.quantity, price=item.price)
+            order_product = ProductOrder(product=item, order=order_before_payment, product_quantity=item.quantity, product_price=item.price)
             order_product.save()
 
         context['customer'] = order_before_payment.customer
@@ -52,16 +52,26 @@ class CreateOrderView(LoginRequiredMixin):
 class YourOrderListView(LoginRequiredMixin, TemplateView):
     template_name = 'orders/order.html'
     login_required = True
+    model = Order
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         orders = Order.objects.filter(customer=self.request.user)
-        context['order'] = orders
+        context['orders'] = orders
         return context
 
 
 class OrderDetailView(LoginRequiredMixin, TemplateView):
     model = Order
-    template_name = 'order/order-detail.html'
+    template_name = 'orders/order-detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order = Order.objects.get(id=context['pk'])
+        products = ProductOrder.objects.filter(order=order)
+
+
+        context['orders'] = order
+        context['products'] = products
+        return context
 
