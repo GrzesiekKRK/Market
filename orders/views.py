@@ -18,7 +18,7 @@ class CreateOrderView(LoginRequiredMixin):
         customer = CustomUser.objects.get(id=user.id)
 
         address = customer.address
-
+        postal_code = customer.postal_code
         cart = Cart(request)
         products = cart
         order_quantity = cart.__len__()
@@ -28,6 +28,7 @@ class CreateOrderView(LoginRequiredMixin):
                                 customer=customer,
                                 order_quantity=order_quantity,
                                 address=address,
+                                postal_code=postal_code,
                                 date=date,
                                 total_price=total_price
                                 )
@@ -41,11 +42,9 @@ class CreateOrderView(LoginRequiredMixin):
         context['order_number'] = order_before_payment.id
         context['order_quantity'] = order_before_payment.order_quantity
         context['address'] = order_before_payment.address
+        context['postal_code'] = order_before_payment.postal_code
         context['total_price'] = order_before_payment.total_price
-        
-        context['products'] = ProductOrder.objects.filter(order=order_before_payment)
-        for item in order_before_payment.product.all():
-            ic(item.quantity)
+        context['products'] = products
 
         return render(request, 'orders/create_order.html', context)
 

@@ -82,6 +82,11 @@
         </div>
     </div>
     <!-- Filters End -->
+
+    <!-- Address -->
+    <p>{{ address }}</p>
+    <!-- Address End-->
+
     <!-- Products -->
     </div>
 </div>
@@ -93,12 +98,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Products</th>
                         <th scope="col">Name</th>
                         <th scope="col">Price</th>
                         <th scope="col">Quantity</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">Total Price</th>
                     </tr>
                 </thead>
                 <!-- Items in cart -->
@@ -107,8 +110,6 @@
                         <tr>
                             <td>
                                 <p class="mb-0 mt-4">{{ product.product }}</p>
-                                <p>{{ product.name }}</p>
-                                <p>{{ product.order_quantity }}</p>
                             </td>
                             <td>
                                 {% if product.is_sale %}
@@ -117,9 +118,12 @@
                                     <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
                                 {% endif %}
                             </td>
-                            <td></td>
+                            <td>{{ product.quantity }}</td>
+                        <td>{{ product.total_price }}</td>
                         </tr>
                     {% endfor %}
+                </tbody>
+            </table>
                     <!-- Products End -->
                     <!-- Page Buttons -->
                     <div class="col-12">
@@ -134,11 +138,6 @@
                             <a href="#" class="rounded">&raquo;</a>
                         </div>
                     </div>
-
-
-                </tbody>
-            </table>
-
             </div>
         </div>
     </div>
