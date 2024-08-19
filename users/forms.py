@@ -11,7 +11,7 @@ class RegisterUserForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'first_name', 'last_name', 'email', 'pesel', 'bank_account', 'secondary_email', 'address', 'role')
+        fields = ('username', 'first_name', 'last_name', 'email', 'pesel', 'bank_account', 'secondary_email', 'address', 'role', 'postal_code')
 
 
 class LoginForm(forms.Form):
@@ -46,7 +46,7 @@ class UpdateUserForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'first_name', 'last_name', 'bank_account', 'secondary_email', 'address')
+        fields = ('username', 'first_name', 'last_name', 'bank_account', 'secondary_email', 'address', 'postal_code')
 
 
 

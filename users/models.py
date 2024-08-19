@@ -16,6 +16,7 @@ class CustomUser(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     secondary_email = models.EmailField(max_length=50, verbose_name='Secondary Email')
     address = models.CharField(max_length=100, null=True, verbose_name='Address')
+    postal_code = models.CharField(max_length=6, verbose_name="Postal Code", default="32-856")
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, null=True)
     reviews = models.DecimalField(decimal_places=2, max_digits=6, default=5.0)
 
