@@ -1,10 +1,8 @@
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+
 from .models import Inventory
 from users.permissions import account_role_required
-
 
 from products.models import ProductImage
 

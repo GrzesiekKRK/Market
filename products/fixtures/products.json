@@ -3,155 +3,105 @@
             "model": "products.Product",
             "pk": 1,
             "fields": {
-                "name": "Beans",
+                "name": "Muszyna",
                 "price": 119.99,
-                "category": 6,
-                "description": "Greenskin",
-                "image": "uploads/product/ork.jpg"
+                "category": 1,
+                "description": "Mineralwater Muszyna 1.5L",
+                "miniature_description": "Mineralwater Muszyna filled from source in Poland",
+                "quantity": 1500,
+                "units_of_measurement": 1
             }
         },
         {
             "model": "products.Product",
             "pk": 2,
             "fields": {
-                "name": "Man at Arms",
+                "name": "Ice Tea",
                 "price": 119.99,
-                "category": 6,
-                "description": "Bretonia",
-                "image": "uploads/product/men.jpg"
+                "category": 1,
+                "description": "Ice Tea 1.5L Peach",
+                "miniature_description": "Ice Tea made with tea extract and powder",
+                "quantity": 900.00,
+                "units_of_measurement": 1
             }
         },
      {
-         "model": "products.Product",
-         "pk": 3,
-         "fields": {
-             "name": "Travel Electronics Organizer Waterproof Double Layer Cable Storage Bag",
-             "price": 52.00,
-             "category": 5,
-             "description": "Bag white noting inside",
-             "image": "uploads/product/bag.jpg"
-         }
-     },
+            "model": "products.Product",
+            "pk": 3,
+            "fields": {
+                "name": "Orange",
+                "price": 119.99,
+                "category": 2,
+                "description": "from Peru",
+                "miniature_description": "Size 2",
+                "quantity": 99.5,
+                "units_of_measurement": 3
+            }
+        },
      {
-         "model": "products.Product",
-         "pk": 4,
-         "fields": {
-             "name": "Travel Electronics Organizer Waterproof Double Layer White Cable Storage Bag",
-             "price": 55.00,
-             "category": 5,
-             "description": "Bag white noting inside",
-             "image": "uploads/product/bag2.jpg"
-         }
-     },
+            "model": "products.Product",
+            "pk": 4,
+            "fields": {
+                "name": "Strawberry",
+                "price": 119.99,
+                "category": 2,
+                "description": "from Poland",
+                "miniature_description": "Size 1",
+                "quantity": 900.00,
+                "units_of_measurement": 2
+            }
+        },
      {
-         "model": "products.Product",
-         "pk": 5,
-         "fields": {
-             "name": "Travel Electronics Organizer Waterproof Double Layer Pink Cable Storage Bag",
-             "price": 60.00,
-             "category": 5,
-             "description": "Bag white noting inside",
-             "image": "uploads/product/bag3.jpg"
-         }
-     },
+            "model": "products.Product",
+            "pk": 5,
+            "fields": {
+                "name": "Raspberry",
+                "price": 119.99,
+                "category": 2,
+                "description": "from Poland",
+                "miniature_description": "Size 1",
+                "quantity": 900.00,
+                "units_of_measurement": 2
+            }
+        },
      {
-         "model": "products.Product",
-         "pk": 6,
-         "fields": {
-             "name": "Lenovo Legion 2024",
-             "price": 1155.00,
-             "category": 3,
-             "description": "Best Gaming Laptope for 2024 ",
-             "image": "uploads/product/legion.jpg"
-         }
-     },
+            "model": "products.Product",
+            "pk": 6,
+            "fields": {
+                "name": "Tomato Green",
+                "price": 119.99,
+                "category": 3,
+                "description": "from Poland",
+                "miniature_description": "Size 1",
+                "quantity": 100.50,
+                "units_of_measurement": 3
+            }
+        },
      {
-         "model": "products.Product",
-         "pk": 7,
-         "fields": {
-             "name": "Asus Quad",
-             "price": 1145.00,
-             "category": 3,
-             "description": "Great Laptope for working outside ",
-             "image": "uploads/product/asus.jpg"
-         }
-     },
+            "model": "products.Product",
+            "pk": 7,
+            "fields": {
+                "name": "Tomato Red",
+                "price": 119.99,
+                "category": 3,
+                "description": "from Poland",
+                "miniature_description": "Size 2",
+                "quantity": 180.90,
+                "units_of_measurement": 3
+            }
+        },
      {
-         "model": "products.Product",
-         "pk": 8,
-         "fields": {
-             "name": "Chair",
-             "price": 155.00,
-             "category": 4,
-             "description": "Wooden chair ",
-             "image": "uploads/product/chair.jpg"
-         }
-     },
-     {
-         "model": "products.Product",
-         "pk": 9,
-         "fields": {
-             "name": "Table",
-             "price": 155.00,
-             "category": 4,
-             "description": "Wooden tabel 120x120 ",
-             "image": "uploads/product/tabel.jpg"
-         }
-     },
-     {
-         "model": "products.Product",
-         "pk": 10,
-         "fields": {
-             "name": "Pirrelii",
-             "price": 155.00,
-             "category": 1,
-             "description": "All Year Tires",
-             "image": "uploads/product/pirreli.jpg"
-         }
-     },
-     {
-         "model": "products.Product",
-         "pk": 11,
-         "fields": {
-             "name": "Goodyear",
-             "price": 400.00,
-             "category": 1,
-             "description": "Slick Tires",
-             "image": "uploads/product/goodyear.jpg"
-         }
-     },
-     {
-         "model": "products.Product",
-         "pk": 12,
-         "fields": {
-             "name": "Polish Book",
-             "price": 23.30,
-             "category": 2,
-             "description": "Get your polish skills to next level",
-             "image": "uploads/product/book.jpg"
-         }
-     },
-     {
-         "model": "products.Product",
-         "pk": 13,
-         "fields": {
-             "name": "What Book",
-             "price": 33.30,
-             "category": 2,
-             "description": "Get your what skills to next level",
-             "image": "uploads/product/what.jpg"
-         }
-     },
-     {
-         "model": "products.Product",
-         "pk": 14,
-         "fields": {
-             "name": "Writing Worksheets",
-             "price": 3.30,
-             "category": 2,
-             "description": "Get your polish skills to next level with writing",
-             "image": "uploads/product/write.jpg"
-         }
-     }
+            "model": "products.Product",
+            "pk": 8,
+            "fields": {
+                "name": "Orange Juice",
+                "price": 119.99,
+                "category": 3,
+                "description": "Take bottel and fill it",
+                "miniature_description": "Orange from Peru",
+                "quantity": 100.50,
+                "units_of_measurement": 4
+            }
+        }
  ]
 

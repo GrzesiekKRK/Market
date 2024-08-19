@@ -137,7 +137,7 @@
                             </div>
                                 <!-- Proceed checkout -->
                                 {% if total_price > 0%}
-                                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button"><a href="{%  url 'market-checkout'  %}" methods="get"><i class="fas fa-apple-alt me-2"></i>Proceed Checkout</a></button>
+                                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button"><a href="{%  url 'customer-create-order'  %}" methods="get"><i class="fas fa-apple-alt me-2"></i>Proceed Checkout</a></button>
                                 {% else %}
                                     <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
                                 {% endif %}
