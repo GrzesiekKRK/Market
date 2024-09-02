@@ -7,6 +7,7 @@ from .models import Order, ProductOrder
 from products.models import Product
 from users.models import CustomUser
 from cart.cart import Cart
+from payments.services import stripe_checkout_session
 from icecream import ic
 
 
@@ -26,7 +27,7 @@ class CreateOrderView(LoginRequiredMixin):
         total_price = cart.get_sub_total_price()
         date = datetime.today()
 
-        order_before_payment = CreateOrderView.check_order(request, customer, products, total_price)
+        order_before_payment = Order.objects.get(customer=customer,  total_price=total_price)
 
         if not order_before_payment:
             order_before_payment = Order(
@@ -39,8 +40,10 @@ class CreateOrderView(LoginRequiredMixin):
                                     )
             order_before_payment.save()
             for product in products:
+                ic(product)
                 item = Product.objects.get(id=product['product'].id)
-                order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['product'].quantity, price=product['product'].price)
+                ic(product['product'].quantity)
+                order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['quantity'], price=product['price'])
                 order_product.save()
 
         context['customer'] = customer
@@ -53,18 +56,9 @@ class CreateOrderView(LoginRequiredMixin):
 
         return render(request, 'orders/create_order.html', context)
 
-    @staticmethod
-    def check_order(request, customer, products, total_price):
-        order = Order.objects.get(customer=customer,  total_price=total_price)
-
-        if not order:
-            return False
-        return order
-
 
 class YourOrderListView(LoginRequiredMixin, TemplateView):
     template_name = 'orders/order.html'
-    login_required = True
     model = Order
 
     def get_context_data(self, **kwargs):
@@ -82,8 +76,14 @@ class OrderDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         order = Order.objects.get(id=context['pk'])
         products = ProductOrder.objects.filter(order=order)
+        customer = CustomUser.objects.get(id=order.customer.id)
 
+        context['customer'] = customer
         context['orders'] = order
-        context['products'] = products
+        context['products_order'] = products
+        context['stripe_session_url'] = stripe_checkout_session(order)
+        ic(context)
         return context
+
+
 

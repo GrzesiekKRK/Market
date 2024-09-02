@@ -33,6 +33,7 @@ INSTALLED_EXTENSIONS = [
     'inventories',
     'notifications',
     'orders',
+    'payments',
     'products',
     'users',
     'wishlists',
@@ -145,3 +146,7 @@ CART_SESSION_ID = 'cart'
 
 
 LOGIN_REDIRECT_URL = '/login'
+
+# Stripe
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51PETcT05Gsg5Ch9YFmXTCMQ38hITal9A2aSlxIQOB72STArVKxFBveoviEA7WRsK8oGiTZP1yjkWVwA4TgCrR2yp009bQ4AyAh'
+STRIPE_SECRET_KEY = 'sk_test_51PETcT05Gsg5Ch9YJnBzDiiLCFDyRjEmxaEVmthJLpnMh0bghv81TUvIkYDmE1EGHWKMxJ84CVRHSG8O6YoQPoxO00yZ0qxWog'

@@ -8,3 +8,7 @@
 Tworzenie hasła dla usera
 from django.contrib.auth.hashers import make_password
 make_password("haslo")
+
+
+formatowanie html
+djlint .\order-detail.html --reformat

@@ -17,7 +17,7 @@
         <!-- User End -->
         <!-- If not sign up or login-->
     {% else %}
-        <div class="top-info ps-2">
+        <div class="top-info ps-2">products_order
             <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
             <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
@@ -32,23 +32,20 @@
 <body>
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6">Order {{ order_number }}</h1>
+        <h1 class="text-center text-white display-6">Order {{ orders.id }}</h1>
     </div>
     <!-- Single Page Header End -->
-
     <!-- First Name and Last Name on the Label -->
     <h3 align="center">Data on the label</h3>
     <p align="center">First name: {{ customer.first_name }}</p>
     <p align="center">Last name: {{ customer.last_name }}</p>
     <!-- First Name and Last Name on the Label End -->
-
     <!-- Address -->
-    <p align="center">Address: {{ address }}</p>
-    <p align="center">Postal Code: {{ postal_code }}</p>
+    <p align="center">Address: {{ customer.address }}</p>
+    <p align="center">Postal Code: {{ customer.postal_code }}</p>
     <!-- Address End-->
-
     <!-- Products -->
-    </div>
+</div>
 </div>
 </div>
 </div>
@@ -67,28 +64,33 @@
                 <!-- Items in cart -->
                 <h3 align="center">Products</h3>
                 <tbody>
-                {% for product in products %}
+                    {% for item in products_order %}
                         <tr>
                             <td>
-                                <p class="mb-0 mt-4">{{ product.product }}</p>
+                                <p class="mb-0 mt-4">{{ item.product }}</p>
                             </td>
                             <td>
-                                <p class="text-dark fs-5 fw-bold mb-0">{{product.product_price}} $</p>
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ item.price }} $</p>
                             </td>
-                            <td>{{ product.product_quantity }}</td>
-                        <td>{{ product.product.total_price }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.total_price }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-                    <!-- Products End -->
-                    <!-- Page Buttons -->
-            </div>
+            <!-- Products End -->
+            <!-- Page Buttons -->
         </div>
     </div>
 </div>
 </div>
 </div>
+</div>
+     <a href="{{ stripe_session_url.url }}">
+                     <button class="button is-primary" id="submitBtn">Purchase!</button>
+                </a>
+    </div>
+
 <!-- Page Buttons End -->
 </body>
 {% endblock content %}
