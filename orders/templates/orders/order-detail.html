@@ -17,7 +17,8 @@
         <!-- User End -->
         <!-- If not sign up or login-->
     {% else %}
-        <div class="top-info ps-2">products_order
+        <div class="top-info ps-2">
+            products_order
             <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
             <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
@@ -86,11 +87,10 @@
 </div>
 </div>
 </div>
-     <a href="{{ stripe_session_url.url }}">
-                     <button class="button is-primary" id="submitBtn">Purchase!</button>
-                </a>
-    </div>
-
+<a href="{{ stripe_session_url.url }}">
+    <button class="button is-primary" id="submitBtn">Purchase!</button>
+</a>
+</div>
 <!-- Page Buttons End -->
 </body>
 {% endblock content %}

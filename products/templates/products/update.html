@@ -1,36 +1,30 @@
 {% extends 'market/base.html' %}
-
 {% block content %}
     <body>
-    <!-- Single Page Header start -->
+        <!-- Single Page Header start -->
         <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Product {{product.name  }}</h1>
+            <h1 class="text-center text-white display-6">Product {{ product.name }}</h1>
         </div>
         <!-- Single Page Header End -->
-    <div class="content-section" align="center">
-
-    <div class="container center" align="center">
-        <form method="POST" enctype="multipart/form-data" >
-            {% csrf_token %}
-            <div class="mb-3" align="let">
-              <label  for="formFile" class="form-label" >Change product data </label>
-                {{ product_form }}
-                {% if image_form.image %}
-                    {% for image in image_form.image %}
-                        <h1>{{ image.url }}</h1>
-                    {% endfor %}
-                {% endif %}
+        <div class="content-section" align="center">
+            <div class="container center" align="center">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3" align="let">
+                        <label for="formFile" class="form-label">Change product data</label>
+                        {{ product_form }}
+                        {% if image_form.image %}
+                            {% for image in image_form.image %}<h1>{{ image.url }}</h1>{% endfor %}
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary ">Submit</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-outline-primary ">Submit</button>
-        </form>
-    </div>
-    <form method="post">
-        <small class="text-muted" >
-            Delete product <a class="nl-2" href="{% url 'product-delete' product.id %}">{{ product.name }}</a>
-
-        </small>
-        </form>
-
-    </div>
+            <form method="post">
+                <small class="text-muted">
+                    Delete product <a class="nl-2" href="{% url 'product-delete' product.id %}">{{ product.name }}</a>
+                </small>
+            </form>
+        </div>
     </body>
 {% endblock content %}

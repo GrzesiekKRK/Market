@@ -1,111 +1,129 @@
 {% extends 'market/base.html' %}
 {% block content %}
-    {% if request.user.is_authenticated%}
-                        <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <h3> <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a></h3>
-                        <form action="{% url 'user-logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button style="height:25px;width:70px" type="submit" >Log out</button>
-                        </form>
-                        </div>
-                                            <!-- User End -->
-
-                                            <!-- If not sign up or login-->
-                    {% else %}
-                    <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
-                        <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-                                    <!-- If not sign up or login End -->
-    <body>
-                                    <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Order History</h1>
+    {% if request.user.is_authenticated %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
-                                    <!-- Single Page Header End -->
-
-                                            <!-- Filters  -->
+        <div class="top-link pe-2">
+            <h3>
+                <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
+            </h3>
+            <form action="{% url 'user-logout' %}" method="POST">
+                {% csrf_token %}
+                <button style="height:25px;width:70px" type="submit">Log out</button>
+            </form>
+        </div>
+        <!-- User End -->
+        <!-- If not sign up or login-->
+    {% else %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
+            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- If not sign up or login End -->
+<body>
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Order History</h1>
+    </div>
+    <!-- Single Page Header End -->
+    <!-- Filters  -->
+    <div class="col-lg-12">
+        <div class="mb-3">
+            <h4>Filters</h4>
+            <div class="mb-2">
+                <input type="radio"
+                       class="me-2"
+                       id="Categories-1"
+                       name="Categories-1"
+                       value="Beverages">
+                <label for="Categories-1">New</label>
+            </div>
+            <div class="mb-2">
+                <input type="radio"
+                       class="me-2"
+                       id="Categories-2"
+                       name="Categories-1"
+                       value="Beverages">
+                <label for="Categories-2">Used</label>
+            </div>
+            <div class="mb-2">
+                <input type="radio"
+                       class="me-2"
+                       id="Categories-3"
+                       name="Categories-1"
+                       value="Beverages">
+                <label for="Categories-3">Sales</label>
+            </div>
+            <div class="mb-2">
+                <input type="radio"
+                       class="me-2"
+                       id="Categories-4"
+                       name="Categories-1"
+                       value="Beverages">
+                <label for="Categories-4">Out of order</label>
+            </div>
+            <div class="mb-2">
+                <input type="radio"
+                       class="me-2"
+                       id="Categories-5"
+                       name="Categories-1"
+                       value="Beverages">
+                <label for="Categories-5">Don't ask</label>
+            </div>
+        </div>
+    </div>
+    <!-- Filters End -->
+    <!-- Products -->
+    {% for order in orders %}
         <div class="col-lg-12">
-            <div class="mb-3">
-                <h4>Filters</h4>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                    <label for="Categories-1"> New </label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                    <label for="Categories-2"> Used </label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                    <label for="Categories-3"> Sales</label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-4" name="Categories-1" value="Beverages">
-                    <label for="Categories-4"> Out of order</label>
-                </div>
-                <div class="mb-2">
-                    <input type="radio" class="me-2" id="Categories-5" name="Categories-1" value="Beverages">
-                    <label for="Categories-5"> Don't ask</label>
-                </div>
-            </div>
-        </div>
-                                        <!-- Filters End -->
-
-                                        <!-- Products -->
-        {% for order in orders %}
-            <div class="col-lg-12">
-                <h3 align="center" class="text-secondary fw-bold">Order {{ order.id }}</h3>
-                <p align="center">Made at: {{ order.date }}</p>
-                {% if order.status %}
-            <p align="center">Status: Paid</p>
+            <h3 align="center" class="text-secondary fw-bold">Order {{ order.id }}</h3>
+            <p align="center">Made at: {{ order.date }}</p>
+            {% if order.status %}
+                <p align="center">Status: Paid</p>
             {% else %}
-                    <p align="center">Status: Awaiting payment</p>
+                <p align="center">Status: Awaiting payment</p>
             {% endif %}
             <p align="center">
-            <button  type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
-                <a href="{%  url 'market-customer-order-detail' order.id %}" methods="get">Detail</a>
-            </button>
-                </p>
-             <br>
-            </div>
-
-        {% endfor %}
+                <button type="submit"
+                        class="btn border border-secondary rounded-pill px-3 text-primary">
+                    <a href="{% url 'market-customer-order-detail' order.id %}"
+                       methods="get">Detail</a>
+                </button>
+            </p>
+            <br>
         </div>
-                                    <!-- Products End -->
-
-                                    <!-- Page Buttons -->
-        <div class="col-12">
-            <div class="pagination d-flex justify-content-center mt-5">
-                <a href="#" class="rounded">&laquo;</a>
-                <a href="#" class="active rounded">1</a>
-                <a href="#" class="rounded">2</a>
-                <a href="#" class="rounded">3</a>
-                <a href="#" class="rounded">4</a>
-                <a href="#" class="rounded">5</a>
-                <a href="#" class="rounded">6</a>
-                <a href="#" class="rounded">&raquo;</a>
-            </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        <!-- Page Buttons End -->
-    </body>
-
+    {% endfor %}
+</div>
+<!-- Products End -->
+<!-- Page Buttons -->
+<div class="col-12">
+    <div class="pagination d-flex justify-content-center mt-5">
+        <a href="#" class="rounded">&laquo;</a>
+        <a href="#" class="active rounded">1</a>
+        <a href="#" class="rounded">2</a>
+        <a href="#" class="rounded">3</a>
+        <a href="#" class="rounded">4</a>
+        <a href="#" class="rounded">5</a>
+        <a href="#" class="rounded">6</a>
+        <a href="#" class="rounded">&raquo;</a>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Page Buttons End -->
+</body>
 {% endblock content %}

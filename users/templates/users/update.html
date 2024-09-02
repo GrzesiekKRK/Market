@@ -1,30 +1,29 @@
 {% extends 'market/base.html' %}
-
 {% block content %}
     <body>
-    <!-- Single Page Header start -->
+        <!-- Single Page Header start -->
         <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Profile</h1>
         </div>
         <!-- Single Page Header End -->
-    <div class="content-section" align="center">
-    <form method="POST">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            {{ form.as_p }}
-        </fieldset>
-        <div class="form-group" align="center">
-            <button class="btn btn-outline-info" type="submit" >Update</button>
+        <div class="content-section" align="center">
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form.as_p }}
+                </fieldset>
+                <div class="form-group" align="center">
+                    <button class="btn btn-outline-info" type="submit">Update</button>
+                </div>
+            </form>
         </div>
-    </form>
-        </div>
-    <div class="border-top pt-3">
-        <form method="post">
-        <small class="text-muted">
-            Delete account <a class="nl-2" href="{% url 'user-delete' request.user.id %}">{{ request.user }}</a>
-        </small>
-        </form>
+        <div class="border-top pt-3">
+            <form method="post">
+                <small class="text-muted">
+                    Delete account <a class="nl-2" href="{% url 'user-delete' request.user.id %}">{{ request.user }}</a>
+                </small>
+            </form>
         </div>
     </div>
-    </body>
+</body>
 {% endblock content %}

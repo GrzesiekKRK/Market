@@ -35,20 +35,17 @@
         <h1 class="text-center text-white display-6">Order {{ order_number }}</h1>
     </div>
     <!-- Single Page Header End -->
-
     <!-- First Name and Last Name on the Label -->
     <h3 align="center">Data on the label</h3>
     <p align="center">First name: {{ customer.first_name }}</p>
     <p align="center">Last name: {{ customer.last_name }}</p>
     <!-- First Name and Last Name on the Label End -->
-
     <!-- Address -->
     <p align="center">Address: {{ address }}</p>
     <p align="center">Postal Code: {{ postal_code }}</p>
     <!-- Address End-->
-
     <!-- Products -->
-    </div>
+</div>
 </div>
 </div>
 </div>
@@ -67,7 +64,7 @@
                 <!-- Items in cart -->
                 <h3 align="center">Products</h3>
                 <tbody>
-                {% for product in products %}
+                    {% for product in products %}
                         <tr>
                             <td>
                                 <p class="mb-0 mt-4">{{ product.product }}</p>
@@ -80,16 +77,19 @@
                                 {% endif %}
                             </td>
                             <td>{{ product.quantity }}</td>
-                        <td>{{ product.total_price }}</td>
+                            <td>{{ product.total_price }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-                    <!-- Products End -->
-                    <!-- Stripe -->
-                    <div class="col-12">
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button"><a href="{%  url 'stripe'  %}" methods="get"><i class="fas fa-apple-alt me-2"></i>Payment</a></button>
-</div>
-<!-- Stripe End -->
-</body>
-{% endblock content %}
+            <!-- Products End -->
+            <!-- Stripe -->
+            <div class="col-12">
+                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
+                        type="button">
+                    <a href="{% url 'stripe' %}" methods="get"><i class="fas fa-apple-alt me-2"></i>Payment</a>
+                </button>
+            </div>
+            <!-- Stripe End -->
+        </body>
+    {% endblock content %}

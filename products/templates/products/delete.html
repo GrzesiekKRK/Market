@@ -1,23 +1,20 @@
 {% extends 'market/base.html' %}
 {% block content %}
     <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Delete Account</h1>
-        </div>
-        <!-- Single Page Header End -->
-
-<form method="post">
-    {% csrf_token %}
-<p>Are you sure you want to delete "{{ object }}" account?</p>
-    <input type="submit" value="Confirm" >
-</form>
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Delete Account</h1>
+    </div>
+    <!-- Single Page Header End -->
+    <form method="post">
+        {% csrf_token %}
+        <p>Are you sure you want to delete "{{ object }}" account?</p>
+        <input type="submit" value="Confirm">
+    </form>
     <h3 class="border-top pt-3">
         <form method="post">
-        <small class="text-muted">
-            Are you? Or go to ... <a class="nl-2" href="{% url 'market-products' %}">Market</a>
-        </small>
+            <small class="text-muted">
+                Are you? Or go to ... <a class="nl-2" href="{% url 'market-products' %}">Market</a>
+            </small>
         </form>
-        </h3>
+    </h3>
 {% endblock content %}
-
-
