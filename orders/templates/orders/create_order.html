@@ -55,10 +55,11 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th scope="col">Image</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Price</th>
+                        <th scope="col">Unit Price</th>
                         <th scope="col">Quantity</th>
-                        <th scope="col">Total Price</th>
+                        <th scope="col"> Price</th>
                     </tr>
                 </thead>
                 <!-- Items in cart -->
@@ -66,6 +67,15 @@
                 <tbody>
                     {% for product in products %}
                         <tr>
+                            <td>
+                                {% for image in product.product.image.all %}
+                                {% if image.miniature %}
+                                    <img src="{{ image.image.url }}"
+                                         class="img-fluid w-100 rounded-top border border-secondary"
+                                         alt="Image of {{ product.name }}">
+                                {% endif %}
+                            {% endfor %}
+                            </td>
                             <td>
                                 <p class="mb-0 mt-4">{{ product.product }}</p>
                             </td>
@@ -85,11 +95,13 @@
             <!-- Products End -->
             <!-- Stripe -->
             <div class="col-12">
-                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                        type="button">
-                    <a href="{% url 'stripe' %}" methods="get"><i class="fas fa-apple-alt me-2"></i>Payment</a>
-                </button>
+                <a href="{{ stripe_session_url.url }}">
+                    <button class="button is-primary" id="submitBtn">Total Price {{ total_price }}</button>
+                </a>
             </div>
             <!-- Stripe End -->
+        </div>
+    </div>
+</div>
         </body>
     {% endblock content %}

@@ -76,9 +76,11 @@ class CreateProduct(LoginRequiredMixin):
                 inventory = Inventory.objects.get_or_create(vendor=user)
                 inventory[0].save()
                 inventory[0].product.add(product)
+
                 for image in images:
                     image_ins = ProductImage(image=image, product=product)
                     image_ins.save()
+
                 miniature = miniature[0]
                 image_ins = ProductImage(image=miniature, product=product, miniature=True)
                 image_ins.save()

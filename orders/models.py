@@ -13,6 +13,9 @@ class Order(models.Model):
     status = models.BooleanField(default=False)
     total_price = models.DecimalField(decimal_places=2, max_digits=6,)
 
+    def __str__(self):
+        return f"order {self.id} "
+
 
 class ProductOrder(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)

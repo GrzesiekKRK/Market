@@ -100,6 +100,15 @@
                 </button>
             </p>
             <br>
+        <p>
+            {% if not order.status %}
+            <button type="submit"
+                        class="btn border border-secondary rounded-pill px-3 text-primary">
+                    <a href="{% url 'customer-delete-unpaid-order' order.id %}"
+                       methods="get">Delete unpaid </a>
+                </button>
+            {% endif %}
+        </p>
         </div>
     {% endfor %}
 </div>

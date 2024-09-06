@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from datetime import datetime
@@ -25,35 +25,31 @@ class CreateOrderView(LoginRequiredMixin):
         products = cart
         order_quantity = cart.__len__()
         total_price = cart.get_sub_total_price()
-        date = datetime.today()
+        # date = datetime.today()
 
-        order_before_payment = Order.objects.get(customer=customer,  total_price=total_price)
+        order_before_payment = Order.objects.get_or_create(
+                                                            customer=customer,
+                                                            order_quantity=order_quantity,
+                                                            address=address,
+                                                            postal_code=postal_code,
+                                                            # date=date,
+                                                            total_price=total_price,
+                                                            )
 
-        if not order_before_payment:
-            order_before_payment = Order(
-                                    customer=customer,
-                                    order_quantity=order_quantity,
-                                    address=address,
-                                    postal_code=postal_code,
-                                    date=date,
-                                    total_price=total_price
-                                    )
-            order_before_payment.save()
-            for product in products:
-                ic(product)
-                item = Product.objects.get(id=product['product'].id)
-                ic(product['product'].quantity)
-                order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['quantity'], price=product['price'])
-                order_product.save()
+        order_before_payment[0].save()
+        for product in products:
+            item = Product.objects.get(id=product['product'].id)
+            order_product = ProductOrder(product=item, order=order_before_payment[0], quantity=product['quantity'], price=product['price'])
+            order_product.save()
 
         context['customer'] = customer
         context['address'] = address
         context['postal_code'] = postal_code
-        context['order_number'] = order_before_payment.id
+        context['order_number'] = order_before_payment[0].id
         context['order_quantity'] = order_quantity
         context['total_price'] = total_price
         context['products'] = products
-
+        context['stripe_session_url'] = stripe_checkout_session(order_before_payment[0])
         return render(request, 'orders/create_order.html', context)
 
 
@@ -82,8 +78,9 @@ class OrderDetailView(LoginRequiredMixin, TemplateView):
         context['orders'] = order
         context['products_order'] = products
         context['stripe_session_url'] = stripe_checkout_session(order)
-        ic(context)
         return context
 
 
-
+class OrderDeleteView(LoginRequiredMixin, DeleteView):
+    model = Order
+    success_url = '/order'

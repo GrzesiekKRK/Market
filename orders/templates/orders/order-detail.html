@@ -57,6 +57,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
+                        <th scope="col">Image</th>
                         <th scope="col">Price</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Total Price</th>
@@ -69,6 +70,15 @@
                         <tr>
                             <td>
                                 <p class="mb-0 mt-4">{{ item.product }}</p>
+                            </td>
+                            <td>
+                                {% for image in item.product.image.all %}
+                                {% if image.miniature %}
+                                    <img src="{{ image.image.url }}"
+                                         class="img-fluid w-100 rounded-top border border-secondary"
+                                         alt="Image of {{ product.name }}">
+                                {% endif %}
+                            {% endfor %}
                             </td>
                             <td>
                                 <p class="text-dark fs-5 fw-bold mb-0">{{ item.price }} $</p>
