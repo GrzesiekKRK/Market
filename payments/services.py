@@ -49,7 +49,6 @@ DOMAIN = 'http://127.0.0.1:8000/'
 
 
 def stripe_checkout_session(order):
-    order = Order.objects.get(id=order.id)
     user = CustomUser.objects.get(id=order.customer.id)
     line_items_list = []
     products = ProductOrder.objects.filter(order=order)
@@ -84,7 +83,7 @@ def stripe_checkout_session(order):
                         {
                             "key": "postal_code", "label": {"custom": 'Postal Code', 'type': 'custom'}, "type": "text",
                             "text": {"default_value": order.postal_code}
-                        }
+                        },
                         ],
         mode='payment',
         success_url=DOMAIN + 'payments/success/' + f'{order.id}',
@@ -92,6 +91,15 @@ def stripe_checkout_session(order):
         automatic_tax={
                         'enabled': True,
                         },
+        metadata={
+                    'order_id': str(order.id)
+                    },
+        payment_intent_data={
+                                "metadata": {
+                                                'order_id': order.id,
+                                                'klucz': 'wartość'
+                                            }
+        }
         )
 
     return session

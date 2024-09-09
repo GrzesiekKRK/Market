@@ -3,7 +3,7 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
-
+import json
 import stripe
 
 from orders.models import Order
@@ -85,7 +85,7 @@ class SuccessView(TemplateView):
 
 
 class CancelledView(TemplateView):
-    template_name = 'payments/cancelled.html'
+    template_name = 'payments/cancel.html'
 
 
 @csrf_exempt
@@ -93,6 +93,9 @@ def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
     payload = request.body
+    order = json.loads(payload.decode())
+    order_id = order['data']['object']['metadata']
+
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
 
@@ -107,11 +110,12 @@ def stripe_webhook(request):
         # Invalid signature
         return HttpResponse(status=400)
 
-    # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
+    if event['type'] == 'charge.succeeded':
         print("Payment was successful.")
-        # TODO: run some custom code here
-
+        qu = Order.objects.get(id=int(order_id['order_id']))
+        qu.status = True
+        qu.save()
+    ic(order_id)
     return HttpResponse(status=200)
 
 
