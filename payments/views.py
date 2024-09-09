@@ -61,24 +61,6 @@ def prepare_stripe_subscription_checkout_session(cost: int, interval: int, order
     params['stripe_session_url'] = get_valid_stripe_session_url(stripe_session)
 """
 
-# class StripePaymentService:
-#     ...
-
-# class CreateCheckoutSessionView(View):
-#     def post(self, request, *args, **kwargs):
-#         checkout_session = stripe.checkout.Session.create(
-#             line_items=[
-#                 {
-#                         # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-#                         'price': '{{PRICE_ID}}',
-#                         'quantity': 1,
-#                 },
-#                 ],
-#                 mode='payment',
-#                 success_url=YOUR_DOMAIN + '/success.html',
-#                 cancel_qurl=YOUR_DOMAIN + '/cancel.html',
-#             )
-
 
 class SuccessView(TemplateView):
     template_name = 'payments/success.html'
@@ -115,32 +97,8 @@ def stripe_webhook(request):
         qu = Order.objects.get(id=int(order_id['order_id']))
         qu.status = True
         qu.save()
+
     ic(order_id)
     return HttpResponse(status=200)
 
 
-@csrf_exempt
-def create_checkout_session(request):
-    if request.method == 'GET':
-        domain_url = 'http://localhost:8000/'
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                # new
-                client_reference_id=request.user.id if request.user.is_authenticated else None,
-                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + 'cancelled/',
-                payment_method_types=['card'],
-                mode='payment',
-                line_items=[
-                    {
-                        'name': 'T-shirt',
-                        'quantity': 1,
-                        'currency': 'usd',
-                        'amount': '2000',
-                    }
-                ]
-            )
-            return JsonResponse({'sessionId': checkout_session['id']})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})

@@ -18,7 +18,7 @@ class BaseView(LoginRequiredMixin, TemplateView):
 
 
 class ProductListView(LoginRequiredMixin, TemplateView):
-    template_name = 'products/shop.html'
+    template_name = 'products/products.html'
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
@@ -134,3 +134,5 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'products/delete.html'
     success_url = '/'
+
+

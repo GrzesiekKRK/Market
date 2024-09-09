@@ -3,6 +3,7 @@ from django.contrib import messages
 from .cart import Cart
 
 from products.models import Product
+from orders.models import ProductOrder
 from icecream import ic
 
 
@@ -16,12 +17,12 @@ def cart(request):
     return render(request, 'cart/cart.html', {'products': products, 'total_price': total_price, 'items_in_cart': items_in_cart})
 
 
-def add_product_to_cart_view(request, pk):
+def add_product_to_cart_view(request, pk, quantity=1):
     cart = Cart(request)
 
     if request.method == 'POST':
         product = get_object_or_404(Product, id=pk)
-        cart.add(product=product)
+        cart.add(product=product, quantity=quantity)
 
     messages.success(request, f'Product {product.name} added.')
     return redirect('market-products')
@@ -67,3 +68,12 @@ def clear_cart(request):
     messages.success(request, f'Cart clear.')
     return redirect('market-cart')
 
+
+def renew_order(request, pk):
+    if request.method == 'POST':
+        items = ProductOrder.objects.filter(order=pk)
+
+        for item in items:
+            product = Product.objects.get(id=item.product.id)
+            add_product_to_cart_view(request, pk=product.id, quantity=int(item.quantity))
+        return redirect('market-cart')

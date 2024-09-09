@@ -102,9 +102,15 @@
             <button class="button is-primary" id="submitBtn">Purchase!</button>
         </a>
     {% else %}
-        <a href="{{ stripe_session_url.url }}">
-            <button class="button is-primary" id="submitBtn">Purchase once more!</button>
-        </a>
+         <form action="{% url 'renew-order' orders.id  %}" method="post">
+             {% csrf_token %}
+             <div class="input-group-btn">
+                 <button type="submit"
+                         class="btn btn-sm btn-minus rounded-circle bg-light border">
+                     Renew
+                 </button>
+             </div>
+         </form>
     {% endif %}
 </div>
 <!-- Page Buttons End -->
