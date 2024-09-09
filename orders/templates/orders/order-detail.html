@@ -97,9 +97,15 @@
 </div>
 </div>
 </div>
-<a href="{{ stripe_session_url.url }}">
-    <button class="button is-primary" id="submitBtn">Purchase!</button>
-</a>
+    {% if not orders.status %}
+        <a href="{{ stripe_session_url.url }}">
+            <button class="button is-primary" id="submitBtn">Purchase!</button>
+        </a>
+    {% else %}
+        <a href="{{ stripe_session_url.url }}">
+            <button class="button is-primary" id="submitBtn">Purchase once more!</button>
+        </a>
+    {% endif %}
 </div>
 <!-- Page Buttons End -->
 </body>

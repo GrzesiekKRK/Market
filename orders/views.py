@@ -42,13 +42,17 @@ class CreateOrderView(LoginRequiredMixin):
             order_product = ProductOrder(product=item, order=order_before_payment[0], quantity=product['quantity'], price=product['price'])
             order_product.save()
 
+        order_products = ProductOrder.objects.filter(order=order_before_payment[0])
+        if len(products) == len(order_products):
+            cart.clear()
+
         context['customer'] = customer
         context['address'] = address
         context['postal_code'] = postal_code
         context['order_number'] = order_before_payment[0].id
         context['order_quantity'] = order_quantity
         context['total_price'] = total_price
-        context['products'] = products
+        context['products'] = order_products
         context['stripe_session_url'] = stripe_checkout_session(order_before_payment[0])
         return render(request, 'orders/create_order.html', context)
 
