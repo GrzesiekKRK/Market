@@ -7,6 +7,8 @@ import json
 import stripe
 
 from orders.models import Order
+from users.models import CustomUser
+from notifications.models import Notification
 
 from icecream import ic
 
@@ -94,11 +96,12 @@ def stripe_webhook(request):
 
     if event['type'] == 'charge.succeeded':
         print("Payment was successful.")
-        qu = Order.objects.get(id=int(order_id['order_id']))
-        qu.status = True
-        qu.save()
-
-    ic(order_id)
+        order_status = Order.objects.get(id=int(order_id['order_id']))
+        order_status.status = True
+        order_status.save()
+        buyer = CustomUser.objects.get(id=order_status.customer.id)
+        buyer_notification = Notification.create_notification(user=buyer, order=order_status, product='', wishlist='')
+        buyer_notification.save()
     return HttpResponse(status=200)
 
 

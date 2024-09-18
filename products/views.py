@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 
 from products.models import Category, Product
 from .models import ProductImage
@@ -10,6 +10,7 @@ from .foms import AddProductForm, ImageForm
 from inventories.models import Inventory
 from wishlists.models import Wishlist
 from notifications.models import Notification
+from users.models import CustomUser
 from icecream import ic
 
 
@@ -107,22 +108,22 @@ class ProductUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         product = self.get_object()
+        product_form = AddProductForm(request.POST, instance=product)
 
-        if request.method == "POST":
-            product_form = AddProductForm(request.POST, instance=product)
+        if product_form.is_valid():
+            product_form.save()
 
-            if product_form.is_valid():
-                product_form.save()
-                # image_form.save()
-                if product.is_sale:
-                    wishlists = Wishlist.objects.filter(product=product)
-                    for wish in wishlists:
-                        notification = Notification.create_notification(user=request.user, wishlist=wish, product=product)
-                        notification.save()
+            if product.is_sale:
+                wishlists_with_product_on_sale = Wishlist.objects.filter(product=product)
+                for wishlist_owner in wishlists_with_product_on_sale:
+                    title = f"Special Offer: {product.name}"
+                    body = product.id
+                    user = CustomUser.objects.get(id=wishlist_owner.id)
+                    notification = Notification(user=user, title=title, body=body)
+                    notification.save()
 
-                return render(request, 'products/product-detail.html', {'product': product})
-        else:
-            product_form = AddProductForm(instance=product)
+            return render(request, 'products/product-detail.html', {'product': product})
+
         return render(request, 'products/update.html', {'product_form': product_form, 'product': product})
 
     def form_invalid(self, form):

@@ -25,7 +25,6 @@ class CreateOrderView(LoginRequiredMixin):
         products = cart
         order_quantity = cart.__len__()
         total_price = cart.get_sub_total_price()
-        # date = datetime.today()
 
         order_before_payment = Order.objects.get_or_create(
                                                             customer=customer,

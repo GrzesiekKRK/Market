@@ -14,21 +14,10 @@
                 <div class="col-md-6 col-lg-6 col-xl-4">
                     <div class="rounded position-relative fruite-item">
                         <div class="p-4 border border-secondary border-rounded">
-                            <h4>{{ notification.title }}</h4>
-                            <p>{{ notification.body }}</p>
-                            <a>{{ product.name }}</a>
+                            <h4>{{ title }}</h4>
                             <br>
-                            <img src="{{ miniature.image.url }}"
-                                 class="img-fluid rounded"
-                                 alt="Image of {{ product.name }}">
+                            <h4><a href="{% url 'market-product-detail'  body %}" methods="get">See details</a></h4>
                             <br>
-                            <form action="{% url 'product-add-to-cart' product.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary">
-                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                </button>
-                            </form>
                             <form action="{% url 'market-notification-delete' notification.id %}"
                                   method="post">
                                 {% csrf_token %}

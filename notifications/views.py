@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, DeleteView
 
@@ -26,14 +25,14 @@ class NotificationDetailView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         notification = Notification.objects.get(id=context['pk'])
-        product = notification.product
-        miniature = ProductImage.objects.get(product=product.id, miniature=True)
-        context['notification'] = notification
-        context['product'] = product
-        context['miniature'] = miniature
+
         read = notification.is_read
         if not read:
             read = NotificationDetailView.read(notification)
+        context['notification'] = notification
+        context['title'] = notification.title
+        context['body'] = notification.body
+        ic(context)
         return context
 
     @staticmethod

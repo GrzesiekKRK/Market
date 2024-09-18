@@ -16,8 +16,11 @@
                         <div class="rounded position-relative fruite-item">
                             <div class="p-4 border border-secondary border-rounded">
                                 <h4>{{ message.title }}</h4>
-                                <p>{{ message.body }}</p>
-                                <p>Read: {{ message.is_read }}</p>
+                                {% if message.is_read %}
+                                <p>Read</p>
+                                {% else %}
+                                <p>Unread</p>
+                                {% endif %}
                             </div>
                             <a href="{% url 'market-notification-detail'  message.id %}"><i class="fas fa-envelope me-2 text-secondary"></i>Detail</a>
                         </div>
