@@ -72,7 +72,7 @@ def clear_cart(request):
 def renew_order(request, pk):
     if request.method == 'POST':
         items = ProductOrder.objects.filter(order=pk)
-
+        ic(items)
         for item in items:
             product = Product.objects.get(id=item.product.id)
             add_product_to_cart_view(request, pk=product.id, quantity=int(item.quantity))

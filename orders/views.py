@@ -26,33 +26,32 @@ class CreateOrderView(LoginRequiredMixin):
         order_quantity = cart.__len__()
         total_price = cart.get_sub_total_price()
 
-        order_before_payment = Order.objects.get_or_create(
-                                                            customer=customer,
-                                                            order_quantity=order_quantity,
-                                                            address=address,
-                                                            postal_code=postal_code,
-                                                            # date=date,
-                                                            total_price=total_price,
-                                                            )
+        order_before_payment = Order(
+                                        customer=customer,
+                                        order_quantity=order_quantity,
+                                        address=address,
+                                        postal_code=postal_code,
+                                        total_price=total_price,
+                                    )
 
-        order_before_payment[0].save()
+        order_before_payment.save()
         for product in products:
             item = Product.objects.get(id=product['product'].id)
-            order_product = ProductOrder(product=item, order=order_before_payment[0], quantity=product['quantity'], price=product['price'])
+            order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['quantity'], price=product['price'])
             order_product.save()
 
-        order_products = ProductOrder.objects.filter(order=order_before_payment[0])
-        if len(products) == len(order_products):
+        order_products = ProductOrder.objects.filter(order=order_before_payment)
+        if len(products) == order_quantity:
             cart.clear()
 
         context['customer'] = customer
         context['address'] = address
         context['postal_code'] = postal_code
-        context['order_number'] = order_before_payment[0].id
+        context['order_number'] = order_before_payment.id
         context['order_quantity'] = order_quantity
         context['total_price'] = total_price
         context['products'] = order_products
-        context['stripe_session_url'] = stripe_checkout_session(order_before_payment[0])
+        context['stripe_session_url'] = stripe_checkout_session(order_before_payment)
         return render(request, 'orders/create_order.html', context)
 
 

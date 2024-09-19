@@ -117,7 +117,7 @@ class ProductUpdateView(UpdateView):
                 wishlists_with_product_on_sale = Wishlist.objects.filter(product=product)
                 for wishlist_owner in wishlists_with_product_on_sale:
                     title = f"Special Offer: {product.name}"
-                    body = product.id
+                    body = f"http://127.0.0.1:8000/products/detail/{product.id}"
                     user = CustomUser.objects.get(id=wishlist_owner.id)
                     notification = Notification(user=user, title=title, body=body)
                     notification.save()

@@ -100,7 +100,9 @@ def stripe_webhook(request):
         order_status.status = True
         order_status.save()
         buyer = CustomUser.objects.get(id=order_status.customer.id)
-        buyer_notification = Notification.create_notification(user=buyer, order=order_status, product='', wishlist='')
+        buyer_title = f"Order {order_status.id} payment accepted"
+        buyer_body = f"http://127.0.0.1:8000/order/detail/{order_status.id}"
+        buyer_notification = Notification(user=buyer, title=buyer_title, body=buyer_body)
         buyer_notification.save()
     return HttpResponse(status=200)
 

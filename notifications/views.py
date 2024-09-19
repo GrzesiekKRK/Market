@@ -32,6 +32,7 @@ class NotificationDetailView(LoginRequiredMixin, TemplateView):
         context['notification'] = notification
         context['title'] = notification.title
         context['body'] = notification.body
+
         ic(context)
         return context
 
