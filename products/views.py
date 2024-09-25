@@ -24,7 +24,7 @@ class ProductListView(LoginRequiredMixin, TemplateView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         deals = Product.objects.filter(is_sale=True)
         products = Product.objects.all()
         categories = Category.objects.all()
@@ -39,7 +39,7 @@ class ProductDetailView(LoginRequiredMixin, TemplateView):
     model = Product
     template_name = 'products/product-detail.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         product = Product.objects.get(id=context['pk'])
         context['product'] = product
@@ -51,19 +51,18 @@ class ProductDetailView(LoginRequiredMixin, TemplateView):
 class CategoryView(LoginRequiredMixin, TemplateView):
     template_name = 'products/category.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         category = Category.objects.get(id=context['pk'])
         context['category'] = category
         context['categories'] = Category.objects.exclude(id=context['pk'])
         context['products'] = Product.objects.filter(category=category)
-
         return context
 
 
 class CreateProduct(LoginRequiredMixin):
     @staticmethod
-    def product_upload(request):
+    def product_upload(request) -> render:
         image_form = ImageForm()
         product_form = AddProductForm()
         if request.method == 'POST':
@@ -96,7 +95,7 @@ class ProductUpdateView(UpdateView):
     form_class = AddProductForm
     model = Product
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> render:
         product = self.get_object()
         # images = product.images.all()
         # product_images = [image.images for image in images if image.miniature is False]
@@ -106,7 +105,7 @@ class ProductUpdateView(UpdateView):
         # context = {'product_form': product_form, 'product': product, 'image_form': image_form}
         return render(request, 'products/update.html', {'product_form': product_form, 'product': product})
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> render:
         product = self.get_object()
         product_form = AddProductForm(request.POST, instance=product)
 

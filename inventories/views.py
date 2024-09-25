@@ -14,9 +14,10 @@ VENDOR = 2
 
 @method_decorator(account_role_required([VENDOR]), name='dispatch')
 class VendorInventoryListView(TemplateView):
+    """Display all existing products created by vendor"""
     template_name = 'inventories/inventory.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         inventory = Inventory.objects.get_or_create(vendor=self.request.user)
         context['inventory'] = inventory[0]

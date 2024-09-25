@@ -1,3 +1,5 @@
+
+
 from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
@@ -8,12 +10,12 @@ from products.models import Product
 from users.models import CustomUser
 from cart.cart import Cart
 from payments.services import stripe_checkout_session
-from icecream import ic
 
 
 class CreateOrderView(LoginRequiredMixin):
     @staticmethod
-    def create_order(request):
+    def create_order(request) -> render:
+
         context = {}
 
         user = request.user
@@ -59,7 +61,7 @@ class YourOrderListView(LoginRequiredMixin, TemplateView):
     template_name = 'orders/order.html'
     model = Order
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str: list[Order]]:
         context = super().get_context_data(**kwargs)
         orders = Order.objects.filter(customer=self.request.user)
         context['orders'] = orders
@@ -70,7 +72,7 @@ class OrderDetailView(LoginRequiredMixin, TemplateView):
     model = Order
     template_name = 'orders/order-detail.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         order = Order.objects.get(id=context['pk'])
         products = ProductOrder.objects.filter(order=order)

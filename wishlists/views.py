@@ -11,7 +11,7 @@ from icecream import ic
 class MyWishlistView(TemplateView):
     template_name = 'wishlist/wishlist.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         wishlist = Wishlist.objects.get_or_create(user=self.request.user)
 
@@ -21,7 +21,7 @@ class MyWishlistView(TemplateView):
         return context
 
     @staticmethod
-    def add_wish(request, pk):
+    def add_wish(request, pk: int) -> render:
         wishlist = Wishlist.objects.get_or_create(user=request.user)
         wishlist[0].save()
         product = Product.objects.get(id=pk)
@@ -36,7 +36,7 @@ class MyWishlistView(TemplateView):
         return render(request, 'wishlist/wishlist.html', {'products': products})
 
     @staticmethod
-    def remove_from_wishlist(request, pk):
+    def remove_from_wishlist(request, pk: int) -> render:
         wishlist = Wishlist.objects.get(user=request.user)
         wishlist.save()
         product = Product.objects.get(id=pk)

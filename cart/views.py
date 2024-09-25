@@ -7,7 +7,8 @@ from orders.models import ProductOrder
 from icecream import ic
 
 
-def cart(request):
+def cart(request) -> render:
+    """Renders Cart """
     cart = Cart(request)
     
     products = cart
@@ -17,7 +18,7 @@ def cart(request):
     return render(request, 'cart/cart.html', {'products': products, 'total_price': total_price, 'items_in_cart': items_in_cart})
 
 
-def add_product_to_cart_view(request, pk, quantity=1):
+def add_product_to_cart_view(request, pk: int, quantity=1) -> redirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -28,7 +29,7 @@ def add_product_to_cart_view(request, pk, quantity=1):
     return redirect('market-products')
 
 
-def increase_quantity_of_product(request, pk):
+def increase_quantity_of_product(request, pk: int) -> redirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -39,7 +40,7 @@ def increase_quantity_of_product(request, pk):
     return redirect('market-cart')
 
 
-def decrease_quantity_of_product(request, pk):
+def decrease_quantity_of_product(request, pk: int) -> redirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -50,7 +51,7 @@ def decrease_quantity_of_product(request, pk):
     return redirect('market-cart')
 
 
-def remove_item_from_cart(request, pk):
+def remove_item_from_cart(request, pk: int) -> redirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -61,7 +62,7 @@ def remove_item_from_cart(request, pk):
     return redirect('market-cart')
 
 
-def clear_cart(request):
+def clear_cart(request) -> redirect:
     cart = Cart(request)
 
     cart.clear()
@@ -69,10 +70,9 @@ def clear_cart(request):
     return redirect('market-cart')
 
 
-def renew_order(request, pk):
+def renew_order(request, pk: int) -> redirect:
     if request.method == 'POST':
         items = ProductOrder.objects.filter(order=pk)
-        ic(items)
         for item in items:
             product = Product.objects.get(id=item.product.id)
             add_product_to_cart_view(request, pk=product.id, quantity=int(item.quantity))

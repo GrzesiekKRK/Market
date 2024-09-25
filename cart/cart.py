@@ -5,15 +5,16 @@ from icecream import ic
 
 
 class Cart:
-    def __init__(self, request):
+    """Context processor Cart working on session"""
+    def __init__(self, request) -> None:
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, override_quantity=False) -> None:
-        """Change number of  products in cart"""
+    def add(self, product: Product, quantity=1, override_quantity=False) -> None:
+        """Increase or Decrease quantity of single product in cart by one"""
         product_id = str(product.id)
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0,
@@ -27,15 +28,15 @@ class Cart:
             self.cart[product_id]['quantity'] += quantity
         self.session.save()
 
-    def remove(self, product):
-        """Remove single product from cart """
+    def remove(self, product: Product) -> None:
+        """Remove single product from the cart """
         product_id = str(product.id)
 
         if product_id in self.cart:
             del self.cart[product_id]
         self.session.save()
 
-    def __iter__(self):
+    def __iter__(self) -> None:
         """Get the product objects and add them to the cart """
         product_ids = self.cart.keys()
         products = Product.objects.filter(id__in=product_ids)
@@ -50,17 +51,17 @@ class Cart:
             item['sale_total_price'] = Decimal(item['sale_price']) * item['quantity']
             yield item
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """Use to display number of products in the cart"""
         return sum(item['quantity'] for item in self.cart.values())
 
-    def get_sub_total_price(self):
+    def get_sub_total_price(self) -> int:
+        """Sum price of products in the cart"""
         return sum(Decimal(item['sale_price']) * item['quantity'] if item['is_sale'] else Decimal(item['price']) * item['quantity'] for item
                    in self.cart.values())
 
-    def clear(self):
-        """
-        Remove all items from the cart.
-        """
+    def clear(self) -> None:
+        """ Remove all items from the cart."""
         for key in list(self.cart.keys()):  # Use list() to create a copy of keys
             del self.cart[key]
         self.session.save()

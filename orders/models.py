@@ -1,3 +1,5 @@
+
+
 from django.db import models
 from datetime import datetime
 from products.models import Product
@@ -5,6 +7,7 @@ from users.models import CustomUser
 
 
 class Order(models.Model):
+    """Gather Product and CustomUser data"""
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     order_quantity = models.IntegerField(default=1)
     address = models.CharField(max_length=100, blank=True, null=True)

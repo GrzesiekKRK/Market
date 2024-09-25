@@ -10,22 +10,37 @@
         {% for message in messages %}
             <div class="col-lg-12"></div>
             <div class="col-lg-9">
+            <br>
                 <div class="row g-4 justify-content-center">
-                    <i class="fas fa-envelope me-2 text-secondary"></i>
+                    <br>
                     <div class="col-md-6 col-lg-6 col-xl-4">
                         <div class="rounded position-relative fruite-item">
                             <div class="p-4 border border-secondary border-rounded">
                                 <h4>{{ message.title }}</h4>
+                                <br>
+                                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
+                                            type="submit">
+                                         <p><a href="{% url 'market-notification-detail' message.id %}"><i class="fas fa-envelope me-2 text-secondary"></i>Open notification</a></p>
+                                        {% csrf_token %}
+                                    </button>
+
                                 {% if message.is_read %}
                                 <p>Read</p>
+                                    <form action="{% url 'market-notification-delete' message.id %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="btn border border-secondary rounded-pill px-3 text-primary">
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Delete message
+                                </button>
+                                </form>
                                 {% else %}
                                 <p>Unread</p>
                                 {% endif %}
                             </div>
-                            <a href="{% url 'market-notification-detail'  message.id %}"><i class="fas fa-envelope me-2 text-secondary"></i>Detail</a>
-                        </div>
                     </div>
                 </div>
+            </div>
             </div>
         {% endfor %}
     </body>

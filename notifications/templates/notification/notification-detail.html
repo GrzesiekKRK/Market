@@ -16,8 +16,7 @@
                         <div class="p-4 border border-secondary border-rounded">
                             <h4>{{ title }}</h4>
                             <br>
-                            <h4><a href={{ body }} methods="get">See details</a></h4>
-                            <br>
+                            <p>{{ body | safe }}</p>
                             <form action="{% url 'market-notification-delete' notification.id %}"
                                   method="post">
                                 {% csrf_token %}

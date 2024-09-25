@@ -1,7 +1,10 @@
+from typing import Any
+
 from .models import Notification
 
 
-def messages_number(request):
+def messages_number(request) -> dict[str: Any]:
+    """Display number of unread Notification"""
     user = request.user
 
     if user.is_authenticated:

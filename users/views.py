@@ -13,7 +13,7 @@ class UserLoginView(LoginView):
     template_name = 'users/login.html'
     redirect_authenticated_user = True
 
-    def post(self, request):
+    def post(self, request) -> render:
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -24,7 +24,7 @@ class UserLoginView(LoginView):
                 return redirect('market-products')
         return render(request, 'users/login.html', {'form': form})
 
-    def get_success_url(self):
+    def get_success_url(self) -> render:
         user = CustomUser.objects.get(id=self.request.user.id)
         return render(self.request, 'users/update.html', {'user': user})
 
@@ -44,15 +44,15 @@ class UserUpdateView(UpdateView):
     template_name = 'users/update.html'
     form_class = UpdateUserForm
 
-    def get_object(self):
+    def get_object(self) -> CustomUser:
         user = CustomUser.objects.get(id=self.request.user.id)
         return user
 
-    def get_success_url(self):
+    def get_success_url(self) -> render:
         user = CustomUser.objects.get(id=self.request.user.id)
         return render(self.request, 'users/update.html', {'user': user})
 
-    def post(self, request):
+    def post(self, request) -> render:
         if request.method == "POST":
             form = UpdateUserForm(request.POST, instance=request.user)
             if form.is_valid():

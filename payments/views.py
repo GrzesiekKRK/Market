@@ -6,8 +6,9 @@ from django.http import JsonResponse, HttpResponse
 import json
 import stripe
 
-from orders.models import Order
+from orders.models import Order, ProductOrder
 from users.models import CustomUser
+from inventories.models import Inventory
 from notifications.models import Notification
 
 from icecream import ic
@@ -19,49 +20,35 @@ class HomePageView(TemplateView):
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-"""
-    <a href="{{ stripe_session_url }}">
-                    <img src="{{ settings.HOST_CDN }}{% static 'img/stripe_button.png' %}" width="200" height="70"/>
-                </a>
-"""
-"""
-def prepare_stripe_subscription_checkout_session(cost: int, interval: int, order_number: str,
-                                                 stripe_customer: 'stripe.Customer') -> 'stripe.checkout.Session':
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=[{
-            'price_data': {
-                'currency': 'USD',
-                'product_data': {
-                    'name': f'Sphere-Engine Subscription',
-                    'description': f'Subscription for Sphere Engine services',
-                },
-                'unit_amount': cost * 100,  # cents
-                'recurring': {
-                    'interval': 'month',
-                    'interval_count': interval
-                },
-            },
-            'quantity': 1,
-        }],
-        mode='subscription',
-        success_url=reverse('se_billing_invoices') + f'?order={order_number}',
-        cancel_url=reverse('se_account_upgrade2'),
-        automatic_tax={
-            'enabled': True,
-        },
-        subscription_data={
-            'metadata': {
-                'order': str(order_number),
-            }
-        },
-    )
-    return session
-    """
 
-"""
-    params['stripe_session_url'] = get_valid_stripe_session_url(stripe_session)
-"""
+def buyer_notification(order: Order) -> Notification:
+    buyer = CustomUser.objects.get(id=order.customer.id)
+    title = f"Order {order.id} payment accepted"
+    body = f"'Hi your payment was accepted. To see your order click: <a href=\"http://127.0.0.1:8000/order/detail/{order.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>Open notification</a>'"
+    notification = Notification(user=buyer, title=title, body=body)
+    notification.save()
+    return notification
+
+
+def vendor_notification(order: Order) -> Notification:
+    buyer = CustomUser.objects.get(id=order.customer.id)# do adresu
+    label = {'Name': buyer.first_name + ' ' + buyer.last_name, 'address': buyer.address}
+    title = f"The purchase of your products has been paid for in orders {order.id}"
+    products_order = ProductOrder.objects.filter(order=order.id)
+    dict_prod = {}
+    for product_order in products_order:
+        inventory = Inventory.objects.get(product=product_order.product.id)
+        if inventory:
+            dict_prod['vendor'] = inventory.vendor.first_name + ' ' + inventory.vendor.last_name
+            dict_prod[f'{product_order.product.name}'] = product_order.quantity
+            dict_prod['address'] = label
+        else:
+            pass
+
+    body = f"Lista zakupionych productów {dict_prod}"
+    note = Notification(user=inventory.vendor, title=title, body=body)
+    note.save()
+    return note
 
 
 class SuccessView(TemplateView):
@@ -73,7 +60,7 @@ class CancelledView(TemplateView):
 
 
 @csrf_exempt
-def stripe_webhook(request):
+def stripe_webhook(request) -> HttpResponse:
     stripe.api_key = settings.STRIPE_SECRET_KEY
     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
     payload = request.body
@@ -99,11 +86,8 @@ def stripe_webhook(request):
         order_status = Order.objects.get(id=int(order_id['order_id']))
         order_status.status = True
         order_status.save()
-        buyer = CustomUser.objects.get(id=order_status.customer.id)
-        buyer_title = f"Order {order_status.id} payment accepted"
-        buyer_body = f"http://127.0.0.1:8000/order/detail/{order_status.id}"
-        buyer_notification = Notification(user=buyer, title=buyer_title, body=buyer_body)
-        buyer_notification.save()
+
+        buyer = buyer_notification(order_status)
+        vendor = vendor_notification(order_status)
+
     return HttpResponse(status=200)
-
-

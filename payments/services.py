@@ -9,46 +9,9 @@ import stripe
 from icecream import ic
 
 DOMAIN = 'http://127.0.0.1:8000/'
-"""
 
 
-    session = stripe.checkout.Session.create(
-            customer=stripe_customer.id,
-            line_items=[{
-                'price_data': {
-                    'currency': 'usd',
-                    'unit_amount': int(credit_cost * 100),  # cents
-                    'product_data': {
-                        'name': 'Credits',
-                        'description': 'Sphere-Engine credits',
-                    },
-                },
-                'quantity': int(credits_amount)
-            }],
-            automatic_tax={
-                'enabled': True,
-            },
-            mode='payment',
-            success_url=reverse('se_billing_invoices') + f'?order={order_number}',
-            cancel_url=reverse('se_account_upgrade2'),
-            payment_intent_data={
-                'metadata': {
-                    'order': str(order_number),
-                    'payment_type': 'one-time'
-                },
-            },
-            metadata={
-                'order': str(order_number),
-                'payment_type': 'one-time'
-            },
-            invoice_creation={
-                'enabled': True,
-            },
-        )
-"""
-
-
-def stripe_checkout_session(order):
+def stripe_checkout_session(order: Order) -> stripe.checkout:
     user = CustomUser.objects.get(id=order.customer.id)
     line_items_list = []
     products = ProductOrder.objects.filter(order=order)
@@ -97,7 +60,6 @@ def stripe_checkout_session(order):
         payment_intent_data={
                                 "metadata": {
                                                 'order_id': order.id,
-                                                'klucz': 'wartość'
                                             }
         }
         )
