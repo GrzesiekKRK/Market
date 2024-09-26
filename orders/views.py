@@ -63,7 +63,7 @@ class YourOrderListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs) -> dict[str: list[Order]]:
         context = super().get_context_data(**kwargs)
-        orders = Order.objects.filter(customer=self.request.user)
+        orders = Order.objects.filter(customer=self.request.user).order_by('-id')
         context['orders'] = orders
         return context
 

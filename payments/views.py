@@ -40,12 +40,13 @@ def vendor_notification(order: Order) -> Notification:
         inventory = Inventory.objects.get(product=product_order.product.id)
         if inventory:
             dict_prod['vendor'] = inventory.vendor.first_name + ' ' + inventory.vendor.last_name
-            dict_prod[f'{product_order.product.name}'] = product_order.quantity
-            dict_prod['address'] = label
+            dict_prod['products']= {[f'{product_order.product.name}']: product_order.quantity}
+
         else:
             pass
 
-    body = f"Lista zakupionych productów {dict_prod}"
+    body = (f"{dict_prod['vendor']}"
+            f"Lista zakupionych productów {dict_prod['products']}")
     note = Notification(user=inventory.vendor, title=title, body=body)
     note.save()
     return note
