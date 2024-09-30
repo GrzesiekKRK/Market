@@ -32,45 +32,40 @@
     <!-- Single Page Header End -->
 
     <!-- Orders -->
-    <div class="container">
-        {% for order in orders %}
-            <div class="order-card mb-4 p-4 border rounded">
-                <h3 class="text-secondary fw-bold text-center">Order {{ order.id }}</h3>
-                <p class="text-center">Made at: {{ order.date }}</p>
-                {% if order.status %}
-                    <p class="text-center">Status: Paid</p>
-                {% else %}
-                    <p class="text-center">Status: Awaiting payment</p>
-                {% endif %}
-                <div class="text-center">
-                    <a href="{% url 'market-customer-order-detail' order.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">Detail</a>
-                </div>
-                {% if not order.status %}
-                    <div class="text-center mt-2">
-                        <a href="{% url 'customer-delete-unpaid-order' order.id %}" class="btn border border-secondary rounded-pill px-3 text-danger">Delete Unpaid</a>
+<div class="container">
+        <div class="row g-4 justify-content-center">
+            {% for order in orders %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="rounded border border-secondary mb-4">
+                        <div class="p-4">
+                            <h4>Order {{ order.id }}</h4>
+                            <p class="text-center">Made at: {{ order.date }}</p>
+                            {% if order.status %}
+                                <p class="text-center">Status: Paid</p>
+                            {% else %}
+                                <p class="text-center">Status: Awaiting payment</p>
+                            {% endif %}
+                            <div class="text-center">
+                                <a href="{% url 'market-customer-order-detail' order.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">Detail</a>
+                            </div>
+                            {% if not order.status %}
+                                <p class="text-success">Status: Read</p>
+                                <form action="{% url 'customer-delete-unpaid-order' order.id  %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger rounded-pill px-3">
+                                        <i class="fa fa-trash me-2"></i> Delete Unpaid
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </div>
-                {% endif %}
-            </div>
-        {% empty %}
-            <div class="text-center">
-                <p>No orders found.</p>
-            </div>
-        {% endfor %}
-    </div>
-    <!-- Orders End -->
-
-    <!-- Page Buttons -->
-    <div class="col-12">
-        <div class="pagination d-flex justify-content-center mt-5">
-            <a href="#" class="rounded">&laquo;</a>
-            <a href="#" class="active rounded">1</a>
-            <a href="#" class="rounded">2</a>
-            <a href="#" class="rounded">3</a>
-            <a href="#" class="rounded">4</a>
-            <a href="#" class="rounded">5</a>
-            <a href="#" class="rounded">6</a>
-            <a href="#" class="rounded">&raquo;</a>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p>No messages available.</p>
+                </div>
+            {% endfor %}
         </div>
     </div>
-    <!-- Page Buttons End -->
+     <!-- Orders End -->
 {% endblock content %}
