@@ -80,11 +80,7 @@
                                 <p class="mb-0 mt-4">{{ product.product }}</p>
                             </td>
                             <td>
-                                {% if product.is_sale %}
-                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
-                                {% else %}
-                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
-                                {% endif %}
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
                             </td>
                             <td>{{ product.quantity }}</td>
                             <td>{{ product.total_price }}</td>

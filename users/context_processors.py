@@ -1,7 +1,10 @@
+from typing import Any
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+
 from . import consts as users_role
 
 
-def roles(request) -> dict:
+def roles(request) -> dict[str: int]:
     return {
         'CUSTOMER_USER_ROLE': users_role.CUSTOMER_USER_ROLE,
         'CUSTOMER_USER_ROLE_VENDOR': users_role.CUSTOMER_USER_ROLE_VENDOR,

@@ -2,163 +2,97 @@
 {% block content %}
     {% load roles %}
     {% has_one_of_roles CUSTOMER_USER_ROLE_VENDOR as has %}
-    {% if has %}
-        <div class="top-info ps-2">
-            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
-            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
-        </div>
-        <div class="top-link pe-2">
-            <h3>
-                <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">Vendor {{ request.user.username }}</a>
-            </h3>
-            <form action="{% url 'user-logout' %}" method="POST">
-                {% csrf_token %}
-                <button style="height:25px;width:70px" type="submit">Log out</button>
-            </form>
-        </div>
-        <!-- User End -->
-        <!-- Redirect -->
-    {% else %}
-        <div class="top-info ps-2">
-            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
-            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
-        </div>
-        <div class="top-link pe-2">
-            <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
-            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
-        </div>
+
+    <div class="top-info ps-2">
+        <small class="me-3">
+            <i class="fas fa-map-marker-alt me-2 text-secondary"></i>
+            <a href="#" class="text-white">Address</a>
+        </small>
+        <small class="me-3">
+            <i class="fas fa-envelope me-2 text-secondary"></i>
+            <a href="#" class="text-white">Messages</a>
+        </small>
     </div>
-</div>
-{% endif %}
-<body>
-    <!-- Single Page Header start -->
+
+    <div class="top-link pe-2">
+        {% if has %}
+            <h3>
+                <i class="fas fa-map-marker-alt me-2 text-secondary"></i>
+                <a class="text-white">Vendor {{ request.user.username }}</a>
+            </h3>
+            <form action="{% url 'user-logout' %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-white">Log out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'user-login' %}" class="text-white">
+                <small class="text-white mx-2">Login</small>/
+            </a>
+            <a href="{% url 'user-register' %}" class="text-white">
+                <small class="text-white mx-2">Sign Up</small>
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Single Page Header -->
     <div class="container-fluid page-header py-5">
         <h1 class="text-center text-white display-6">Inventory</h1>
     </div>
-    <!-- Single Page Header End -->
-    <!-- Filters  -->
-    <div class="col-lg-12">
-        <div class="mb-3">
-            <h4>Filters</h4>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-1"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-1">New</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-2"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-2">Used</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-3"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-3">Sales</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-4"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-4">Out of order</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-5"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-5">Don't ask</label>
-            </div>
-        </div>
-    </div>
-    <!-- Filters End -->
+
     <!-- Products -->
-    {% for product in products %}
-        <div class="col-lg-12">
-            <h3 class="text-secondary fw-bold">
-                <br>
-                <br>
-                {{ product.name }}
-            </h3>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-<div class="col-lg-9">
-    <div class="row g-4 justify-content-center">
-        <div class="col-md-6 col-lg-6 col-xl-4">
-            <div class="rounded position-relative fruite-item">
-                <div class="fruite-img">
-                    {% for image in product.image.all %}
-                        {% if image.miniature %}
-                            <img src="{{ image.image.url }}"
-                                 class="img-fluid w-100 rounded-top border border-secondary"
-                                 alt="Image of {{ product.name }}">
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                     style="top: 10px;
-                            left: 10px">{{ product.category }}</div>
-                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                    <h4>{{ product.name }}</h4>
-                    <p>{{ product.description }}</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0">{{ product.quantity }}</p>
-                        {% if product.is_sale %}
-                            <strike>${{ product.price }}</strike>
-                            <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
-                        {% else %}
-                            <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
-                        {% endif %}
+    <div class="col-lg-9">
+                    <div class="row g-4 justify-content-center">
+                        {% for product in products %}
+                            <div class="col-md-6 col-lg-6 col-xl-4">
+                                <div class="rounded position-relative fruite-item" style="height: 650px;"> <!-- Ustalona wysokość -->
+                                    <div class="fruite-img" style="height: 400px; overflow: hidden;"> <!-- Ustalona wysokość obrazka -->
+                                        {% for image in product.image.all %}
+                                            {% if image.miniature %}
+                                                <img src="{{ image.image.url }}"
+                                                     class="img-fluid w-100 rounded-top border border-secondary"
+                                                     alt="Image of {{ product.name }}" style="height: 150%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                             style="top: 10px; left: 10px">{{ product.category }}</div>
+                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                            <h4>{{ product.name }}</h4>
+                            <p>{{ product.description }}</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.quantity }}</p>
+                                {% if product.is_sale %}
+                                    <strike>${{ product.price }}</strike>
+                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
+                                {% else %}
+                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div align="center">
+                        <a href="{% url 'product-update' product.id %}" class="text-black-50">
+                            <small>Update {{ product.name }}</small>
+                        </a>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        <div align="center">
-            <form method="post">
-                <small class="text-black-50 border  ">
-                    <a class="nl-2"
-                       href="{% url 'product-update' product.id %}"
-                       methods="post">Update {{ product.name }}</a>
-                </small>
-            </form>
-        </div>
-    {% endfor %}
-</div>
-<!-- Products End -->
-<!-- Page Buttons -->
-<div class="col-12">
-    <div class="pagination d-flex justify-content-center mt-5">
-        <a href="#" class="rounded">&laquo;</a>
-        <a href="#" class="active rounded">1</a>
-        <a href="#" class="rounded">2</a>
-        <a href="#" class="rounded">3</a>
-        <a href="#" class="rounded">4</a>
-        <a href="#" class="rounded">5</a>
-        <a href="#" class="rounded">6</a>
-        <a href="#" class="rounded">&raquo;</a>
     </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Page Buttons End -->
-</body>
+    <!-- Products End -->
+
+    <!-- Page Buttons -->
+    <div class="col-12">
+        <div class="pagination d-flex justify-content-center mt-5">
+            <a href="#" class="rounded">&laquo;</a>
+            <a href="#" class="active rounded">1</a>
+            <a href="#" class="rounded">2</a>
+            <a href="#" class="rounded">3</a>
+            <a href="#" class="rounded">4</a>
+            <a href="#" class="rounded">5</a>
+            <a href="#" class="rounded">6</a>
+            <a href="#" class="rounded">&raquo;</a>
+        </div>
+    </div>
+    <!-- Page Buttons End -->
 {% endblock content %}

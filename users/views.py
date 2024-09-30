@@ -1,3 +1,6 @@
+from typing import Any
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
@@ -13,7 +16,7 @@ class UserLoginView(LoginView):
     template_name = 'users/login.html'
     redirect_authenticated_user = True
 
-    def post(self, request) -> render:
+    def post(self, request: HttpRequest) -> HttpResponse:
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -24,7 +27,7 @@ class UserLoginView(LoginView):
                 return redirect('market-products')
         return render(request, 'users/login.html', {'form': form})
 
-    def get_success_url(self) -> render:
+    def get_success_url(self) -> HttpResponse:
         user = CustomUser.objects.get(id=self.request.user.id)
         return render(self.request, 'users/update.html', {'user': user})
 
@@ -48,11 +51,11 @@ class UserUpdateView(UpdateView):
         user = CustomUser.objects.get(id=self.request.user.id)
         return user
 
-    def get_success_url(self) -> render:
+    def get_success_url(self) -> HttpResponse:
         user = CustomUser.objects.get(id=self.request.user.id)
         return render(self.request, 'users/update.html', {'user': user})
 
-    def post(self, request) -> render:
+    def post(self, request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
         if request.method == "POST":
             form = UpdateUserForm(request.POST, instance=request.user)
             if form.is_valid():

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpRequest, HttpResponseRedirect
 import json
 import stripe
 
@@ -30,23 +30,30 @@ def buyer_notification(order: Order) -> Notification:
     return notification
 
 
+def unpacking_products(products_dict: dict) -> str:
+    products = products_dict['products']
+    literal = ''
+    for product, quantity in products.items():
+        literal += ' ' + product + ' ' + quantity + '\r\n'
+
+    return literal
+
+
 def vendor_notification(order: Order) -> Notification:
-    buyer = CustomUser.objects.get(id=order.customer.id)# do adresu
-    label = {'Name': buyer.first_name + ' ' + buyer.last_name, 'address': buyer.address}
     title = f"The purchase of your products has been paid for in orders {order.id}"
     products_order = ProductOrder.objects.filter(order=order.id)
-    dict_prod = {}
+    dict_prod = {'products': {}}
     for product_order in products_order:
         inventory = Inventory.objects.get(product=product_order.product.id)
         if inventory:
             dict_prod['vendor'] = inventory.vendor.first_name + ' ' + inventory.vendor.last_name
-            dict_prod['products']= {[f'{product_order.product.name}']: product_order.quantity}
-
+            dict_prod['products'].update({product_order.product.name: str(product_order.quantity)})
         else:
             pass
-
-    body = (f"{dict_prod['vendor']}"
-            f"Lista zakupionych productów {dict_prod['products']}")
+    sold_products = unpacking_products(dict_prod)
+    body = (f"Hi {dict_prod['vendor']} \n"
+            f"\n Sold products: {sold_products}")
+    print(body)
     note = Notification(user=inventory.vendor, title=title, body=body)
     note.save()
     return note

@@ -1,168 +1,119 @@
 {% extends 'market/base.html' %}
 {% block content %}
-    <body>
+    <main>
         {% csrf_token %}
-        <!-- Single Page Header start -->
         <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Cart</h1>
         </div>
-        <!-- Single Page Header End -->
-        <!-- Cart Page Start -->
-        <div class="container-fluid py-5">
-            <div class="container py-5">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
+        <div class="container py-5">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Products</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Handle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
                             <tr>
-                                <th scope="col">Products</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Total</th>
-                                <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <!-- Items in cart -->
-                        <tbody>
-                            {% for product in products %}
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center">
-                                            {% for image in product.product.image.all %}
-                                                {% if image.miniature %}
-                                                    <img src="{{ image.image.url }}"
-                                                         class="img-fluid me-5 rounded-circle"
-                                                         style="width: 80px;
-                                                                height: 80px"
-                                                         alt="">
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                    </th>
-                                    <td>
-                                        <p class="mb-0 mt-4">{{ product.product }}</p>
-                                    </td>
-                                    <td>
-                                        {% if product.is_sale %}
+                                <th scope="row">
+                                    <div class="d-flex align-items-center">
+                                        {% for image in product.product.image.all %}
+                                            {% if image.miniature %}
+                                                <img src="{{ image.image.url }}"
+                                                     class="img-fluid me-5 rounded-circle"
+                                                     style="width: 80px; height: 80px" alt="">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </th>
+                                <td>
+                                    <p class="mb-0 mt-4">{{ product.product }}</p>
+                                </td>
+                                <td>
+                                    {% if product.is_sale %}
                                             <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
                                         {% else %}
                                             <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
                                         {% endif %}
-                                    </td>
-
-                                    <td>
-                                        <!-- One less or more button -->
-                                        <div>
-                                            <form action="{% url 'decrease-numbers-of-item-in-cart' product.product.id %}"
-                                                  method="post">
-                                                {% csrf_token %}
-                                                <div class="input-group-btn">
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            <input type="text"
-                                                   class="form-control form-control-sm text-center border-0"
-                                                   value="{{ product.quantity }}">
-                                            <form action="{% url 'increase-numbers-of-item-in-cart' product.product.id %}"
-                                                  method="post">
-                                                {% csrf_token %}
-                                                <div class="input-group-btn">
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                    <!-- One less and more button End-->
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {% if product.is_sale %}
+                                </td>
+                                <td>
+                                    <div>
+                                        <form action="{% url 'decrease-numbers-of-item-in-cart' product.product.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </form>
+                                        <input type="text" class="form-control form-control-sm text-center border-0" value="{{ product.quantity }}" readonly>
+                                        <form action="{% url 'increase-numbers-of-item-in-cart' product.product.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if product.is_sale %}
                                             <p class="mb-0 mt-4">{{ product.sale_total_price }} $</p>
                                         {% else %}
                                             <p class="mb-0 mt-4">{{ product.total_price }} $</p>
                                         {% endif %}
-                                    </td>
-                                    <td>
-                                        <!-- Remove Item button -->
-                                        {% if product %}
-                                            <form method="post"
-                                                  action="{% url 'remove-product-from-cart' product.product.id %}">
-                                                {% csrf_token %}
-                                                <button type="submit"
-                                                        class="btn-danger border border-secondary rounded-pill px-3 text-primary">
-                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Remove
-                                                </button>
-                                            </form>
-                                        {% endif %}
-                                        <!-- Remove Item Button End -->
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Items in Cart End -->
-                <!-- Coupon -->
-                <div class="mt-5">
-                    <form method="post" action="{% url 'remove-all-products-from-cart' %}">
-                        {% csrf_token %}
-                        <button type="submit"
-                                class="btn-danger border border-secondary rounded-pill px-3 text-primary">
-                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Clear Cart
-                        </button>
-                    </form>
-                </div>
-                <!-- Coupon End -->
-                <!-- Clear Cart -->
-                <div class="mt-5">
-                    <input type="text"
-                           class="border-0 border-bottom rounded me-5 py-3 mb-4"
-                           placeholder="Coupon Code">
-                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary"
-                            type="button">Apply Coupon</button>
-                </div>
-                <!-- Clear Cart End -->
-                <!-- Cart Total Price -->
-                <!-- Total Price -->
-                <div class="row g-4 justify-content-end">
-                    <div class="col-8"></div>
-                    <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                        <div class="bg-light rounded">
-                            <div class="p-4">
-                                <h1 class="display-6 mb-4">
-                                    Cart <span class="fw-normal"></span>
-                                </h1>
-                                <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                                    <h5 class="mb-0 ps-4 me-4">Number of Items</h5>
-                                    <p class="mb-0 pe-4">{{ items_in_cart }}</p>
-                                    <h5 class="mb-0 ps-4 me-4">Total Price</h5>
-                                    <p class="mb-0 pe-4">${{ total_price }}</p>
-                                    <!-- Total Price End -->
-                                </div>
-                                <!-- Proceed checkout -->
-                                {% if total_price > 0 %}
-                                    <form method="post" action="{% url 'remove-all-products-from-cart' %}" >
-                                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                                            type="submit">
-                                        <a href="{% url 'customer-create-order' %}" methods="get"><i class="fas fa-apple-alt me-2"></i>Proceed Checkout</a>
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'remove-product-from-cart' product.product.id %}">
                                         {% csrf_token %}
-                                    </button>
+                                        <button type="submit" class="btn-danger border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Remove
+                                        </button>
                                     </form>
-                                {% else %}
-                                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                                            type="button">Proceed Checkout</button>
-                                {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-5">
+                <form method="post" action="{% url 'remove-all-products-from-cart' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-danger border border-secondary rounded-pill px-3 text-primary">
+                        <i class="fa fa-shopping-bag me-2 text-primary"></i> Clear Cart
+                    </button>
+                </form>
+            </div>
+            <div class="mt-5">
+                <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
+                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
+            </div>
+            <div class="row g-4 justify-content-end">
+                <div class="col-8"></div>
+                <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                    <div class="bg-light rounded">
+                        <div class="p-4">
+                            <h1 class="display-6 mb-4">Cart</h1>
+                            <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                                <h5 class="mb-0 ps-4 me-4">Number of Items</h5>
+                                <p class="mb-0 pe-4">{{ items_in_cart }}</p>
+                                <h5 class="mb-0 ps-4 me-4">Total Price</h5>
+                                <p class="mb-0 pe-4">${{ total_price }}</p>
                             </div>
-                            <!-- Proceed checkout End-->
+                            {% if total_price > 0 %}
+                                <a href="{% url 'customer-create-order' %}" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">
+                                    <i class="fas fa-apple-alt me-2"></i>Proceed Checkout
+                                </a>
+                            {% else %}
+                                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Cart Page End -->
-    </body>
+    </main>
 {% endblock content %}

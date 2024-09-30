@@ -5,16 +5,17 @@
         <h1 class="text-center text-white display-6">Delete Account</h1>
     </div>
     <!-- Single Page Header End -->
-    <form method="post">
-        {% csrf_token %}
-        <p>Are you sure you want to delete "{{ object }}" account?</p>
-        <input type="submit" value="Confirm">
-    </form>
-    <h3 class="border-top pt-3">
+
+    <div class="container py-5 text-center">
         <form method="post">
-            <small class="text-muted">
-                Are you? Or go to ... <a class="nl-2" href="{% url 'market-products' %}">Market</a>
-            </small>
+            {% csrf_token %}
+            <p>Are you sure you want to delete the account for "{{ object }}"?</p>
+            <button type="submit" class="btn btn-danger">Confirm</button>
         </form>
-    </h3>
+        <h3 class="border-top pt-3">
+            <small class="text-muted">
+                Not sure? Go back to the <a href="{% url 'market-products' %}">Market</a>.
+            </small>
+        </h3>
+    </div>
 {% endblock content %}

@@ -1,3 +1,4 @@
+from typing import Any
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 
@@ -17,7 +18,7 @@ class VendorInventoryListView(TemplateView):
     """Display all existing products created by vendor"""
     template_name = 'inventories/inventory.html'
 
-    def get_context_data(self, **kwargs) -> dict:
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         inventory = Inventory.objects.get_or_create(vendor=self.request.user)
         context['inventory'] = inventory[0]

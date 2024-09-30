@@ -5,9 +5,10 @@ from .cart import Cart
 from products.models import Product
 from orders.models import ProductOrder
 from icecream import ic
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 
-def cart(request) -> render:
+def cart(request: HttpRequest) -> HttpResponse:
     """Renders Cart """
     cart = Cart(request)
     
@@ -18,7 +19,7 @@ def cart(request) -> render:
     return render(request, 'cart/cart.html', {'products': products, 'total_price': total_price, 'items_in_cart': items_in_cart})
 
 
-def add_product_to_cart_view(request, pk: int, quantity=1) -> redirect:
+def add_product_to_cart_view(request: HttpRequest, pk: int, quantity=1) -> HttpResponseRedirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -29,7 +30,7 @@ def add_product_to_cart_view(request, pk: int, quantity=1) -> redirect:
     return redirect('market-products')
 
 
-def increase_quantity_of_product(request, pk: int) -> redirect:
+def increase_quantity_of_product(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -40,7 +41,7 @@ def increase_quantity_of_product(request, pk: int) -> redirect:
     return redirect('market-cart')
 
 
-def decrease_quantity_of_product(request, pk: int) -> redirect:
+def decrease_quantity_of_product(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -51,7 +52,7 @@ def decrease_quantity_of_product(request, pk: int) -> redirect:
     return redirect('market-cart')
 
 
-def remove_item_from_cart(request, pk: int) -> redirect:
+def remove_item_from_cart(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     cart = Cart(request)
 
     if request.method == 'POST':
@@ -62,7 +63,7 @@ def remove_item_from_cart(request, pk: int) -> redirect:
     return redirect('market-cart')
 
 
-def clear_cart(request) -> redirect:
+def clear_cart(request: HttpRequest) -> HttpResponseRedirect:
     cart = Cart(request)
 
     cart.clear()
@@ -70,7 +71,7 @@ def clear_cart(request) -> redirect:
     return redirect('market-cart')
 
 
-def renew_order(request, pk: int) -> redirect:
+def renew_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     if request.method == 'POST':
         items = ProductOrder.objects.filter(order=pk)
         for item in items:

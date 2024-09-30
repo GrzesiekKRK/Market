@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, DeleteView
 
@@ -7,7 +9,7 @@ from .models import Notification
 class NotificationListView(LoginRequiredMixin, TemplateView):
     template_name = 'notification/notification.html'
 
-    def get_context_data(self, **kwargs) -> dict:
+    def get_context_data(self, **kwargs) -> dict[str: Any]:
         notification = Notification.objects.filter(user=self.request.user.id).order_by('is_read')
 
         context = super().get_context_data(**kwargs)
@@ -19,7 +21,7 @@ class NotificationDetailView(LoginRequiredMixin, TemplateView):
     model = Notification
     template_name = 'notification/notification-detail.html'
 
-    def get_context_data(self, **kwargs) -> dict:
+    def get_context_data(self, **kwargs) -> dict[str: Any]:
         context = super().get_context_data(**kwargs)
         notification = Notification.objects.get(id=context['pk'])
 
@@ -33,7 +35,7 @@ class NotificationDetailView(LoginRequiredMixin, TemplateView):
         return context
 
     @staticmethod
-    def read(notification) -> Notification:
+    def read(notification: Notification) -> Notification:
         notification.is_read = True
         notification.save()
         return notification

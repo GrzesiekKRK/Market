@@ -2,137 +2,75 @@
 {% block content %}
     {% if request.user.is_authenticated %}
         <div class="top-info ps-2">
-            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Address</a></small>
             <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
         <div class="top-link pe-2">
             <h3>
-                <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
+                <i class="fas fa-user me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
             </h3>
-            <form action="{% url 'user-logout' %}" method="POST">
+            <form action="{% url 'user-logout' %}" method="POST" style="display:inline;">
                 {% csrf_token %}
-                <button style="height:25px;width:70px" type="submit">Log out</button>
+                <button class="btn btn-link text-white">Log out</button>
             </form>
         </div>
-        <!-- User End -->
-        <!-- If not sign up or login-->
     {% else %}
         <div class="top-info ps-2">
-            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Address</a></small>
             <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
         <div class="top-link pe-2">
-            <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
-            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
+            <a href="{% url 'user-login' %}" class="text-white"><small class="text-white mx-2">Login</small>/</a>
+            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign Up</small></a>
         </div>
-    </div>
-</div>
-{% endif %}
-<!-- If not sign up or login End -->
-<body>
+    {% endif %}
+
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5">
         <h1 class="text-center text-white display-6">Order History</h1>
     </div>
     <!-- Single Page Header End -->
-    <!-- Filters  -->
-    <div class="col-lg-12">
-        <div class="mb-3">
-            <h4>Filters</h4>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-1"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-1">New</label>
+
+    <!-- Orders -->
+    <div class="container">
+        {% for order in orders %}
+            <div class="order-card mb-4 p-4 border rounded">
+                <h3 class="text-secondary fw-bold text-center">Order {{ order.id }}</h3>
+                <p class="text-center">Made at: {{ order.date }}</p>
+                {% if order.status %}
+                    <p class="text-center">Status: Paid</p>
+                {% else %}
+                    <p class="text-center">Status: Awaiting payment</p>
+                {% endif %}
+                <div class="text-center">
+                    <a href="{% url 'market-customer-order-detail' order.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">Detail</a>
+                </div>
+                {% if not order.status %}
+                    <div class="text-center mt-2">
+                        <a href="{% url 'customer-delete-unpaid-order' order.id %}" class="btn border border-secondary rounded-pill px-3 text-danger">Delete Unpaid</a>
+                    </div>
+                {% endif %}
             </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-2"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-2">Used</label>
+        {% empty %}
+            <div class="text-center">
+                <p>No orders found.</p>
             </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-3"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-3">Sales</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-4"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-4">Out of order</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio"
-                       class="me-2"
-                       id="Categories-5"
-                       name="Categories-1"
-                       value="Beverages">
-                <label for="Categories-5">Don't ask</label>
-            </div>
+        {% endfor %}
+    </div>
+    <!-- Orders End -->
+
+    <!-- Page Buttons -->
+    <div class="col-12">
+        <div class="pagination d-flex justify-content-center mt-5">
+            <a href="#" class="rounded">&laquo;</a>
+            <a href="#" class="active rounded">1</a>
+            <a href="#" class="rounded">2</a>
+            <a href="#" class="rounded">3</a>
+            <a href="#" class="rounded">4</a>
+            <a href="#" class="rounded">5</a>
+            <a href="#" class="rounded">6</a>
+            <a href="#" class="rounded">&raquo;</a>
         </div>
     </div>
-    <!-- Filters End -->
-    <!-- Products -->
-    {% for order in orders %}
-        <div class="col-lg-12">
-            <h3 align="center" class="text-secondary fw-bold">Order {{ order.id }}</h3>
-            <p align="center">Made at: {{ order.date }}</p>
-            {% if order.status %}
-                <p align="center">Status: Paid</p>
-            {% else %}
-                <p align="center">Status: Awaiting payment</p>
-            {% endif %}
-            <p align="center">
-                <button type="submit"
-                        class="btn border border-secondary rounded-pill px-3 text-primary">
-                    <a href="{% url 'market-customer-order-detail' order.id %}"
-                       methods="get">Detail</a>
-                </button>
-            </p>
-            <br>
-        <p>
-            {% if not order.status %}
-            <button type="submit"
-                        class="btn border border-secondary rounded-pill px-3 text-primary">
-                    <a href="{% url 'customer-delete-unpaid-order' order.id %}"
-                       methods="get">Delete unpaid </a>
-                </button>
-            {% endif %}
-        </p>
-        </div>
-    {% endfor %}
-</div>
-<!-- Products End -->
-<!-- Page Buttons -->
-<div class="col-12">
-    <div class="pagination d-flex justify-content-center mt-5">
-        <a href="#" class="rounded">&laquo;</a>
-        <a href="#" class="active rounded">1</a>
-        <a href="#" class="rounded">2</a>
-        <a href="#" class="rounded">3</a>
-        <a href="#" class="rounded">4</a>
-        <a href="#" class="rounded">5</a>
-        <a href="#" class="rounded">6</a>
-        <a href="#" class="rounded">&raquo;</a>
-    </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Page Buttons End -->
-</body>
+    <!-- Page Buttons End -->
 {% endblock content %}

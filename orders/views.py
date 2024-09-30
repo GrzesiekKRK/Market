@@ -1,4 +1,5 @@
-
+from typing import Any
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +15,7 @@ from payments.services import stripe_checkout_session
 
 class CreateOrderView(LoginRequiredMixin):
     @staticmethod
-    def create_order(request) -> render:
+    def create_order(request: HttpRequest) -> HttpResponse:
 
         context = {}
 
@@ -39,7 +40,11 @@ class CreateOrderView(LoginRequiredMixin):
         order_before_payment.save()
         for product in products:
             item = Product.objects.get(id=product['product'].id)
-            order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['quantity'], price=product['price'])
+            if item.is_sale:
+                price = item.sale_price
+            else:
+                price = item.price
+            order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['quantity'], price=price)
             order_product.save()
 
         order_products = ProductOrder.objects.filter(order=order_before_payment)
@@ -72,7 +77,7 @@ class OrderDetailView(LoginRequiredMixin, TemplateView):
     model = Order
     template_name = 'orders/order-detail.html'
 
-    def get_context_data(self, **kwargs) -> dict:
+    def get_context_data(self, **kwargs) -> dict[str: Any]:
         context = super().get_context_data(**kwargs)
         order = Order.objects.get(id=context['pk'])
         products = ProductOrder.objects.filter(order=order)

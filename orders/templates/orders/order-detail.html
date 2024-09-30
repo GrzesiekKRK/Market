@@ -1,118 +1,94 @@
 {% extends 'market/base.html' %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
         <div class="top-info ps-2">
-            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Address</a></small>
             <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
         <div class="top-link pe-2">
             <h3>
-                <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
+                <i class="fas fa-user-circle me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
             </h3>
-            <form action="{% url 'user-logout' %}" method="POST">
+            <form action="{% url 'user-logout' %}" method="POST" style="display:inline;">
                 {% csrf_token %}
-                <button style="height:25px;width:70px" type="submit">Log out</button>
+                <button class="btn btn-link text-white">Log out</button>
             </form>
         </div>
-        <!-- User End -->
-        <!-- If not sign up or login-->
     {% else %}
         <div class="top-info ps-2">
-            products_order
-            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Address</a></small>
             <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
         </div>
         <div class="top-link pe-2">
-            <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
-            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
+            <a href="{% url 'user-login' %}" class="text-white"><small class="text-white mx-2">Login</small>/</a>
+            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign Up</small></a>
         </div>
-    </div>
-</div>
-{% endif %}
-<!-- If not sign up or login End -->
-<body>
-    <!-- Single Page Header start -->
+    {% endif %}
+
     <div class="container-fluid page-header py-5">
         <h1 class="text-center text-white display-6">Order {{ orders.id }}</h1>
     </div>
-    <!-- Single Page Header End -->
-    <!-- First Name and Last Name on the Label -->
-    <h3 align="center">Data on the label</h3>
-    <p align="center">First name: {{ customer.first_name }}</p>
-    <p align="center">Last name: {{ customer.last_name }}</p>
-    <!-- First Name and Last Name on the Label End -->
-    <!-- Address -->
-    <p align="center">Address: {{ customer.address }}</p>
-    <p align="center">Postal Code: {{ customer.postal_code }}</p>
-    <!-- Address End-->
-    <!-- Products -->
-</div>
-</div>
-</div>
-</div>
-<div class="col-lg-9">
-    <div class="row g-4 justify-content-center">
-        <div class="col-md-6 col-lg-6 col-xl-4">
-            <table class="table">
-                <thead>
+
+    <h3 class="text-center">Data on the label</h3>
+    <p class="text-center">First name: {{ customer.first_name }}</p>
+    <p class="text-center">Last name: {{ customer.last_name }}</p>
+    <p class="text-center">Address: {{ customer.address }}</p>
+    <p class="text-center">Postal Code: {{ customer.postal_code }}</p>
+
+    <div class="col-lg-9">
+        <h3 class="text-center">Products</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products_order %}
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Total Price</th>
-                    </tr>
-                </thead>
-                <!-- Items in cart -->
-                <h3 align="center">Products</h3>
-                <tbody>
-                    {% for item in products_order %}
-                        <tr>
-                            <td>
-                                <p class="mb-0 mt-4">{{ item.product }}</p>
-                            </td>
-                            <td>
-                                {% for image in item.product.image.all %}
+                        <td>{{ product.product }}</td>
+                        <td>
+                            {% for image in product.product.image.all %}
                                 {% if image.miniature %}
                                     <img src="{{ image.image.url }}"
-                                         class="img-fluid w-100 rounded-top border border-secondary"
-                                         alt="Image of {{ product.name }}">
+                                         class="img-fluid w-100 rounded-top border border-secondary image-fit"
+                                         alt="Image of {{ product.product.name }}">
                                 {% endif %}
                             {% endfor %}
-                            </td>
-                            <td>
-                                <p class="text-dark fs-5 fw-bold mb-0">{{ item.price }} $</p>
-                            </td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ item.total_price }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <!-- Products End -->
-            <!-- Page Buttons -->
-        </div>
+                        </td>
+                        <td>
+                            {% if product.is_sale %}
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
+                            {% else %}
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
+                            {% endif %}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.total_price }} $</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No products in this order.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if not orders.status %}
+            <div class="text-center">
+                <a href="{{ stripe_session_url.url }}">
+                    <button class="btn btn-primary" id="submitBtn">Purchase!</button>
+                </a>
+            </div>
+        {% else %}
+            <form action="{% url 'renew-order' orders.id %}" method="post" class="text-center">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Renew Order</button>
+            </form>
+        {% endif %}
     </div>
-</div>
-</div>
-</div>
-</div>
-    {% if not orders.status %}
-        <a href="{{ stripe_session_url.url }}">
-            <button class="button is-primary" id="submitBtn">Purchase!</button>
-        </a>
-    {% else %}
-         <form action="{% url 'renew-order' orders.id  %}" method="post">
-             {% csrf_token %}
-             <div class="input-group-btn">
-                 <button type="submit"
-                         class="btn btn-sm btn-minus rounded-circle bg-light border">
-                     Renew
-                 </button>
-             </div>
-         </form>
-    {% endif %}
-</div>
-<!-- Page Buttons End -->
-</body>
 {% endblock content %}

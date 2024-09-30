@@ -3,7 +3,7 @@ from typing import Any
 from .models import Notification
 
 
-def messages_number(request) -> dict[str: Any]:
+def messages_number(request) -> dict[str: int]:
     """Display number of unread Notification"""
     user = request.user
 
