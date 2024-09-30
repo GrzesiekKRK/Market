@@ -46,7 +46,6 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Detail</a>
                                 <div class="dropdown-menu m-0 bg-secondary rounded-0">
                                     <a href="{% url 'market-cart' %}" class="dropdown-item">Cart</a>
-                                    <a href="{% url 'market-checkout' %}" class="dropdown-item">Checkout</a>
                                     <a href="{% url 'market-customer-order' %}" class="dropdown-item">Order History</a>
                                     {% load roles %}
                                     {% has_one_of_roles CUSTOMER_USER_ROLE_VENDOR as has %}
