@@ -11,7 +11,7 @@ from products.models import Product
 from icecream import ic
 
 
-class MyWishlistView(TemplateView): # MyWishListTemplateView
+class WishListTemplateView(TemplateView):
     template_name = 'wishlist/wishlist.html'
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
