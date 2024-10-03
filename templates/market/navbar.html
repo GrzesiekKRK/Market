@@ -52,6 +52,7 @@
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'market-wishlist' %}" class="nav-item nav-link">Wishlist</a>
                 {% endif %}
+            {% if request.user.is_authenticated %}
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Detail</a>
                     <div class="dropdown-menu m-0 bg-light rounded-0 border-0">
@@ -59,14 +60,16 @@
                         <a href="{% url 'market-customer-order' %}" class="dropdown-item">Order History</a>
                         {% load roles %}
                         {% has_one_of_roles CUSTOMER_USER_ROLE_VENDOR as has %}
-                        {% if request.user.is_authenticated and has %}
+                        {% if  has %}
                             <a href="{% url 'market-vendor-inventory' %}" class="dropdown-item">Inventory</a>
                             <a href="{% url 'market-vendor-add-product' %}" class="dropdown-item">Add Product</a>
                         {% endif %}
+                    {% endif %}
                     </div>
                 </div>
                 <a href="{% url 'market-contact' %}" class="nav-item nav-link">Contact</a>
             </div>
+            {% if request.user.is_authenticated %}
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-primary me-3" data-bs-toggle="modal" data-bs-target="#searchModal">
                     <i class="fas fa-search"></i>
@@ -81,6 +84,7 @@
                 <a href="{% url 'user-profile' %}" class="btn btn-outline-primary">
                     <i class="fas fa-user"></i>
                 </a>
+                {% endif %}
             </div>
         </div>
     </nav>

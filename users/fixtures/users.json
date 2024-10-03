@@ -32,6 +32,23 @@
                 "role": 2,
                 "password": "pbkdf2_sha256$720000$k690GSGiJW7UGFJH3VEqVw$01WrlZuC+zQm1YCFjMTunxIQnL6qbwDu0dlbjKqVtYg="
             }
+        },
+       {
+            "model": "users.CustomUser",
+            "pk": 3,
+            "fields": {
+                "username": "zx",
+                "first_name": "NJohn",
+                "last_name": "Rede",
+                "email": "Rede@wp.pl",
+                "pesel": "12345677710",
+                "bank_account": "1234756890123456782223450",
+                "secondary_email": "elsder@wp.pl",
+                "address": "Cracow ul. Kazimierz 12/2",
+                "created_at": "2024-05-13",
+                "role": 3,
+                "password": "pbkdf2_sha256$720000$k690GSGiJW7UGFJH3VEqVw$01WrlZuC+zQm1YCFjMTunxIQnL6qbwDu0dlbjKqVtYg="
+            }
         }
  ]
 

@@ -113,14 +113,15 @@ class ProductUpdateView(UpdateView):
 
             if product.is_sale:
                 wishlists_with_product_on_sale = Wishlist.objects.filter(product=product)
+                ic(wishlists_with_product_on_sale)
                 for wishlist_owner in wishlists_with_product_on_sale:
                     title = f"Special Offer: {product.name}"
-
+                    ic(wishlist_owner)
                     body = f"<a href =\"http://127.0.0.1:8000/products/detail/{product.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>{product.name}</a>"
-                    user = CustomUser.objects.get(id=wishlist_owner.id)
+                    user = CustomUser.objects.get(id=wishlist_owner.user.id)
                     notification = Notification(user=user, title=title, body=body)
                     notification.save()
-
+                    ic(notification)
             return render(request, 'products/product-detail.html', {'product': product})
 
         return render(request, 'products/update.html', {'product_form': product_form, 'product': product})

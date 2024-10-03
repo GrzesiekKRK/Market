@@ -5,6 +5,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from django.db.models import QuerySet
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login
 from django.views.generic import CreateView, UpdateView
@@ -31,6 +32,7 @@ class UserLoginView(LoginView):
 
     def get_success_url(self) -> HttpResponse:
         user = CustomUser.objects.get(id=self.request.user.id)
+
         return render(self.request, 'users/update.html', {'user': user})
 
     def form_invalid(self, form: LoginForm) -> TemplateResponse:
@@ -45,7 +47,7 @@ class UserSignUpView(CreateView):
     success_message = "Your profile was created successfully"
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'users/update.html'
     form_class = UpdateUserForm
 
