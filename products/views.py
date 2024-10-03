@@ -21,7 +21,7 @@ class BaseView(LoginRequiredMixin, TemplateView):
     template_name = 'market/index.html'
 
 
-class ProductListView(LoginRequiredMixin, TemplateView):
+class ProductListTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'products/products.html'
 
     def dispatch(self, *args, **kwargs):
@@ -38,7 +38,7 @@ class ProductListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ProductDetailView(LoginRequiredMixin, TemplateView):
+class ProductDetailTemplateView(LoginRequiredMixin, TemplateView):
     model = Product
     template_name = 'products/product-detail.html'
 
@@ -51,7 +51,7 @@ class ProductDetailView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CategoryView(LoginRequiredMixin, TemplateView):
+class CategoryTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'products/category.html'
 
     def get_context_data(self, **kwargs) -> dict[str: Any]:

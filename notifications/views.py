@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, DeleteView
 from .models import Notification
 
 
-class NotificationListView(LoginRequiredMixin, TemplateView):
+class NotificationListTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'notification/notification.html'
 
     def get_context_data(self, **kwargs) -> dict[str: Any]:
@@ -17,7 +17,7 @@ class NotificationListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class NotificationDetailView(LoginRequiredMixin, TemplateView):
+class NotificationDetailTemplateView(LoginRequiredMixin, TemplateView):
     model = Notification
     template_name = 'notification/notification-detail.html'
 
@@ -27,7 +27,7 @@ class NotificationDetailView(LoginRequiredMixin, TemplateView):
 
         read = notification.is_read
         if not read:
-            read = NotificationDetailView.read(notification)
+            read = NotificationDetailTemplateView.read(notification)
         context['notification'] = notification
         context['title'] = notification.title
         context['body'] = notification.body

@@ -10,7 +10,7 @@ from products.models import ProductImage
 
 
 @method_decorator(account_role_required([CUSTOMER_USER_ROLE_VENDOR]), name='dispatch')
-class VendorInventoryListView(TemplateView):
+class InventoryListTemplateView(TemplateView):
     """Display all existing products created by vendor"""
     template_name = 'inventories/inventory.html'
 

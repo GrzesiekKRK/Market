@@ -14,10 +14,6 @@ from notifications.models import Notification
 from icecream import ic
 
 
-class HomePageView(TemplateView):
-    template_name = 'market/home.html'
-
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -59,11 +55,11 @@ def vendor_notification(order: Order) -> Notification:
     return note
 
 
-class SuccessView(TemplateView):
+class SuccessTemplateView(TemplateView):
     template_name = 'payments/success.html'
 
 
-class CancelledView(TemplateView):
+class CancelledTemplateView(TemplateView):
     template_name = 'payments/cancel.html'
 
 

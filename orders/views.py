@@ -13,7 +13,7 @@ from cart.cart import Cart
 from payments.services import stripe_checkout_session
 
 
-class CreateOrderView(LoginRequiredMixin):
+class CreateOrderClass(LoginRequiredMixin): # TODO Co z cls
     @staticmethod
     def create_order(request: HttpRequest) -> HttpResponse:
 
@@ -62,7 +62,7 @@ class CreateOrderView(LoginRequiredMixin):
         return render(request, 'orders/create_order.html', context)
 
 
-class YourOrderListView(LoginRequiredMixin, TemplateView):
+class OrderListTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'orders/order.html'
     model = Order
 
@@ -73,7 +73,7 @@ class YourOrderListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class OrderDetailView(LoginRequiredMixin, TemplateView):
+class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
     model = Order
     template_name = 'orders/order-detail.html'
 
