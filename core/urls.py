@@ -7,9 +7,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('testimonial/', views.testimonial, name='market-testimonial'),
-    path('contact/', views.ConcatView.as_view(), name='market-contact'),
     path('', views.DashboardView.as_view(), name='market-dashboard'),
+    path('contact/', views.ConcatView.as_view(), name='market-contact'),
     path('products/', include('products.urls')),
     path('shop/', include('cart.urls')),
     path('accounts/', include('users.urls')),

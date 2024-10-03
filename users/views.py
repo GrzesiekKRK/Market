@@ -1,7 +1,9 @@
-from typing import Any
+from typing import Optional
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.template.response import TemplateResponse
 
 from django.shortcuts import render, redirect
+from django.db.models import QuerySet
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login
@@ -16,7 +18,7 @@ class UserLoginView(LoginView):
     template_name = 'users/login.html'
     redirect_authenticated_user = True
 
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -31,7 +33,7 @@ class UserLoginView(LoginView):
         user = CustomUser.objects.get(id=self.request.user.id)
         return render(self.request, 'users/update.html', {'user': user})
 
-    def form_invalid(self, form):
+    def form_invalid(self, form: LoginForm) -> TemplateResponse:
         messages.error(self.request, 'Invalid username or password')
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -47,7 +49,7 @@ class UserUpdateView(UpdateView):
     template_name = 'users/update.html'
     form_class = UpdateUserForm
 
-    def get_object(self) -> CustomUser:
+    def get_object(self, queryset: Optional[QuerySet[CustomUser]] = None) -> CustomUser:
         user = CustomUser.objects.get(id=self.request.user.id)
         return user
 
@@ -55,7 +57,7 @@ class UserUpdateView(UpdateView):
         user = CustomUser.objects.get(id=self.request.user.id)
         return render(self.request, 'users/update.html', {'user': user})
 
-    def post(self, request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse | HttpResponseRedirect:
         if request.method == "POST":
             form = UpdateUserForm(request.POST, instance=request.user)
             if form.is_valid():
@@ -66,7 +68,7 @@ class UserUpdateView(UpdateView):
             form = form = UpdateUserForm()
         return render(request, 'users/update.html', {'form': form})
 
-    def form_invalid(self, form):
+    def form_invalid(self, form: UpdateUserForm) -> TemplateResponse:
         messages.error(self.request, 'Invalid change')
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -74,4 +76,4 @@ class UserUpdateView(UpdateView):
 class UserDeleteView(DeleteView):
     model = CustomUser
     template_name = 'users/delete.html'
-    success_url = '/'
+    success_url = '/' # TODO reverse_lazy('view-name-from-urls.py')

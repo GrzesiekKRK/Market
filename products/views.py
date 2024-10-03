@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, reverse
 
 from products.models import Category, Product
 from .models import ProductImage
-from .foms import AddProductForm, ImageForm
+from .forms import AddProductForm, ImageForm
 
 from inventories.models import Inventory
 from wishlists.models import Wishlist

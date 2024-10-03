@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .context_processors import Cart
 
-# Register your models here.
+admin.site.register(Cart)
+

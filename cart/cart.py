@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.http import HttpRequest
+
 from decimal import Decimal
 from products.models import Product
 from icecream import ic
@@ -6,14 +8,14 @@ from icecream import ic
 
 class Cart:
     """Context processor Cart working on session"""
-    def __init__(self, request) -> None:
+    def __init__(self, request: HttpRequest) -> None:
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product: Product, quantity=1, override_quantity=False) -> None:
+    def add(self, product: Product, quantity: int = 1, override_quantity: bool = False) -> None:
         """Increase or Decrease quantity of single product in cart by one"""
         product_id = str(product.id)
         if product_id not in self.cart:
