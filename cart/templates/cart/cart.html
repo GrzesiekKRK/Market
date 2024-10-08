@@ -44,7 +44,7 @@
                                 </td>
                                 <td>
                                     <div>
-                                        <form action="{% url 'decrease-numbers-of-item-in-cart' product.product.id %}" method="post">
+                                        <form action="{% url 'decrease-numbers-of-item-in-cart' product.product.id  %}" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-sm btn-minus rounded-circle bg-light border">
                                                 <i class="fa fa-minus"></i>

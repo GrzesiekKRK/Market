@@ -1,6 +1,10 @@
+from typing import Any
+
+from rest_framework import status
+from rest_framework.response import Response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.views.generic import View
+from django.views.generic import TemplateView, View
 from .cart import Cart
 
 from products.models import Product
@@ -9,77 +13,163 @@ from icecream import ic
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 
-def cart(request: HttpRequest) -> HttpResponse: # TODO Refactor to TemplateView
-    """Renders Cart """
-    cart = Cart(request)
-    
-    products = cart
-    total_price = cart.get_sub_total_price()
-    items_in_cart = cart.__len__() # TODO len(cart)
+class CartTemplateView(TemplateView):
+    template_name = 'cart/cart.html'
 
-    return render(request, 'cart/cart.html', {'products': products, 'total_price': total_price, 'items_in_cart': items_in_cart})
+    def get_context_data(self, **kwargs) -> dict[str: Any]: # TODO Refactor to TemplateView
+        context = super().get_context_data(**kwargs)
+        cart = Cart(self.request)
+        products = cart
+        total_price = cart.get_sub_total_price()
+        items_in_cart = len(cart)
+        context['products'] = products
+        context['total_price'] = total_price
+        context['items_in_cart'] = items_in_cart
+
+        return context
 
 
-def add_product_to_cart_view(request: HttpRequest, pk: int, quantity: int = 1) -> HttpResponseRedirect: # TODO View
-    cart = Cart(request)
+class CartAddView(View):
+    model = Cart
 
-    if request.method == 'POST':
+    def post(self, request, *args, **kwargs):
+        pk = kwargs['pk']
+
         product = get_object_or_404(Product, id=pk)
-        cart.add(product=product, quantity=quantity)
+        self.model.add(Cart(request), product=product, quantity=1)
 
-    messages.success(request, f'Product {product.name} added.')
-    return redirect('market-products')
+        messages.success(request, f'Product {product.name} added.')
+        return redirect('market-products')
 
 
-def increase_quantity_of_product(request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
-    cart = Cart(request)
+class CartIncreaseProductQuantityView(View):
+    model = Cart
 
-    if request.method == 'POST':
+    def post(self, request: HttpRequest, *args, ** kwargs) -> HttpResponseRedirect: # TODO View
+        product = get_object_or_404(Product, id=kwargs['pk'])
+        self.model.add(Cart(request), product=product, quantity=+1)
+
+        messages.success(request, f'Product {product.name} quantity change.')
+        return redirect('market-cart')
+
+
+class CartDecreaseProductQuantityView(View):
+    model = Cart
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
+
         product = get_object_or_404(Product, id=pk)
-        cart.add(product=product, quantity=+1)
+        self.model.add(Cart(request), product=product, quantity=-1)
         messages.success(request, f'Product {product.name} quantity change.')
 
-    return redirect('market-cart')
+        return redirect('market-cart')
 
 
-def decrease_quantity_of_product(request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
-    cart = Cart(request)
+class CartRemoveProductView(View):
+    model = Cart
 
-    if request.method == 'POST':
+    def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
         product = get_object_or_404(Product, id=pk)
-        cart.add(product=product, quantity=-1)
-        messages.success(request, f'Product {product.name} quantity change.')
+        self.model.remove(Cart(request), product=product)
 
-    return redirect('market-cart')
-
-
-def remove_item_from_cart(request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
-    cart = Cart(request)
-
-    if request.method == 'POST':
-        product = get_object_or_404(Product, id=pk)
-        cart.remove(product=product)
         messages.success(request, f'Product {product.name} remove.')
-
-    return redirect('market-cart')
-
-
-def clear_cart(request: HttpRequest) -> HttpResponseRedirect: # TODO View post
-    cart = Cart(request)
-
-    cart.clear()
-    messages.success(request, f'Cart clear.')
-    return redirect('market-cart')
+        return redirect('market-cart')
 
 
-def renew_order(request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
-    if request.method == 'POST':
+class CartClearView(View):
+    model = Cart
+
+    def post(self, request: HttpRequest) -> HttpResponseRedirect: # TODO View post
+        self.model.clear(Cart(request))
+        
+        messages.success(request, f'Cart clear.')
+        return redirect('market-cart')
+
+
+class RenewOrderView(View):
+    model = Cart
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect: # TODO View
         items = ProductOrder.objects.filter(order=pk)
         for item in items:
             product = Product.objects.get(id=item.product.id)
-            add_product_to_cart_view(request, pk=product.id, quantity=int(item.quantity))
+            self.model.add(Cart(request), product=product, quantity=int(item.quantity))
+
         return redirect('market-cart')
 
+
+#
+# def cart(request: HttpRequest) -> HttpResponse:  # TODO Refactor to TemplateView
+#     """Renders Cart """
+#     cart = Cart(request)
+#
+#     products = cart
+#     total_price = cart.get_sub_total_price()
+#     items_in_cart = cart.__len__()  # TODO len(cart)
+#
+#     return render(request, 'cart/cart.html',
+#                   {'products': products, 'total_price': total_price, 'items_in_cart': items_in_cart})
+#
+#
+# def add_product_to_cart_view(request: HttpRequest, pk: int, quantity: int = 1) -> HttpResponseRedirect:  # TODO View
+#     cart = Cart(request)
+#
+#     if request.method == 'POST':
+#         product = get_object_or_404(Product, id=pk)
+#         cart.add(product=product, quantity=quantity)
+#
+#     messages.success(request, f'Product {product.name} added.')
+#     return redirect('market-products')
+#
+#
+# def increase_quantity_of_product(request: HttpRequest, pk: int) -> HttpResponseRedirect:  # TODO View
+#     cart = Cart(request)
+#
+#     if request.method == 'POST':
+#         product = get_object_or_404(Product, id=pk)
+#         cart.add(product=product, quantity=+1)
+#         messages.success(request, f'Product {product.name} quantity change.')
+#
+#     return redirect('market-cart')
+#
+#
+# def decrease_quantity_of_product(request: HttpRequest, pk: int) -> HttpResponseRedirect:  # TODO View
+#     cart = Cart(request)
+#
+#     if request.method == 'POST':
+#         product = get_object_or_404(Product, id=pk)
+#         cart.add(product=product, quantity=-1)
+#         messages.success(request, f'Product {product.name} quantity change.')
+#
+#     return redirect('market-cart')
+#
+#
+# def remove_item_from_cart(request: HttpRequest, pk: int) -> HttpResponseRedirect:  # TODO View
+#     cart = Cart(request)
+#
+#     if request.method == 'POST':
+#         product = get_object_or_404(Product, id=pk)
+#         cart.remove(product=product)
+#         messages.success(request, f'Product {product.name} remove.')
+#
+#     return redirect('market-cart')
+#
+#
+# def clear_cart(request: HttpRequest) -> HttpResponseRedirect:  # TODO View post
+#     cart = Cart(request)
+#
+#     cart.clear()
+#     messages.success(request, f'Cart clear.')
+#     return redirect('market-cart')
+#
+#
+# def renew_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:  # TODO View
+#     if request.method == 'POST':
+#         items = ProductOrder.objects.filter(order=pk)
+#         for item in items:
+#             product = Product.objects.get(id=item.product.id)
+#             add_product_to_cart_view(request, pk=product.id, quantity=int(item.quantity))
+#         return redirect('market-cart')
 
 # class RenewOrderView(View):
 #     def post(self, request, pk):

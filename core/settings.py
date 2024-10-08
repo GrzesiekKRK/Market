@@ -1,6 +1,7 @@
 
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 
 # TODO remove boilerplate comments
@@ -151,5 +152,5 @@ LOGIN_REDIRECT_URL = '/login'
 
 # Stripe
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51PETcT05Gsg5Ch9YFmXTCMQ38hITal9A2aSlxIQOB72STArVKxFBveoviEA7WRsK8oGiTZP1yjkWVwA4TgCrR2yp009bQ4AyAh'
-STRIPE_SECRET_KEY = 'sk_test_51PETcT05Gsg5Ch9YJnBzDiiLCFDyRjEmxaEVmthJLpnMh0bghv81TUvIkYDmE1EGHWKMxJ84CVRHSG8O6YoQPoxO00yZ0qxWog'
-STRIPE_ENDPOINT_SECRET = 'whsec_1dba7b17f959527c0604467a4a0c89dea3a9acf176902a2c334760c1f5879c94'
+STRIPE_SECRET_KEY = load_dotenv(os.getenv('STRIPE_SECRET_KEY'))
+STRIPE_ENDPOINT_SECRET= load_dotenv(os.getenv('STRIPE_ENDPOINT_SECRET'))
