@@ -10,6 +10,7 @@ from orders.models import Order, ProductOrder
 from users.models import CustomUser
 from inventories.models import Inventory
 from notifications.models import Notification
+from core.settings import STRIPE_SECRET_KEY, STRIPE_ENDPOINT_SECRET
 
 from icecream import ic
 
@@ -49,7 +50,7 @@ def vendor_notification(order: Order) -> Notification:
     sold_products = unpacking_products(dict_prod)
     body = (f"Hi {dict_prod['vendor']} \n"
             f"\n Sold products: {sold_products}")
-    print(body)
+
     note = Notification(user=inventory.vendor, title=title, body=body)
     note.save()
     return note
@@ -65,8 +66,9 @@ class CancelledTemplateView(TemplateView):
 
 @csrf_exempt
 def stripe_webhook(request) -> HttpResponse:
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+    stripe.api_key = STRIPE_SECRET_KEY
+    endpoint_secret = STRIPE_ENDPOINT_SECRET
+
     payload = request.body
     order = json.loads(payload.decode())
     order_id = order['data']['object']['metadata']

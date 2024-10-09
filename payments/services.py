@@ -1,20 +1,24 @@
 from datetime import datetime
 
+
 from orders.models import Order, ProductOrder
 from products.models import ProductImage
 from users.models import CustomUser
+from core.settings import STRIPE_SECRET_KEY
 
 import stripe
 
 from icecream import ic
 
+
 DOMAIN = 'http://127.0.0.1:8000/'
+stripe.api_key = STRIPE_SECRET_KEY
 
 
 def stripe_checkout_session(order: Order) -> stripe.checkout:
     user = CustomUser.objects.get(id=order.customer.id)
     line_items_list = []
-    products = ProductOrder.objects.filter(order=order)
+    products = ProductOrder.objects.filter(order=order.id)
 
     for product in products:
 
