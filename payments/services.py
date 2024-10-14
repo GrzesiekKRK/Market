@@ -8,8 +8,6 @@ from core.settings import STRIPE_SECRET_KEY
 
 import stripe
 
-from icecream import ic
-
 
 DOMAIN = 'http://127.0.0.1:8000/'
 stripe.api_key = STRIPE_SECRET_KEY

@@ -6,18 +6,18 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.DashboardView.as_view(), name='market-dashboard'),
-    path('contact/', views.ConcatView.as_view(), name='market-contact'),
-    path('products/', include('products.urls')),
-    path('shop/', include('cart.urls')),
-    path('accounts/', include('users.urls')),
-    path('inventory/', include('inventories.urls')),
-    path('order/', include('orders.urls')),
-    path('wishlist/', include('wishlists.urls')),
-    path('messages/', include('notifications.urls')),
-    path('payments/', include('payments.urls')),
-    ]
+                path('admin/', admin.site.urls),
+                path('', views.DashboardView.as_view(), name='market-dashboard'),
+                path('contact/', views.ConcatView.as_view(), name='market-contact'),
+                path('products/', include('products.urls')),
+                path('shop/', include('cart.urls')),
+                path('accounts/', include('users.urls')),
+                path('inventory/', include('inventories.urls')),
+                path('order/', include('orders.urls')),
+                path('wishlist/', include('wishlists.urls')),
+                path('messages/', include('notifications.urls')),
+                path('payments/', include('payments.urls')),
+                ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

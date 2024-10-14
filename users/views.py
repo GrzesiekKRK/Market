@@ -27,7 +27,7 @@ class UserLoginView(LoginView):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                return redirect('market-products')
+                return redirect('products')
         return render(request, 'users/login.html', {'form': form})
 
     def get_success_url(self) -> HttpResponse:
@@ -78,4 +78,4 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 class UserDeleteView(DeleteView):
     model = CustomUser
     template_name = 'users/delete.html'
-    success_url = '/' # TODO reverse_lazy('view-name-from-urls.py')
+    success_url = reverse_lazy('user-login')

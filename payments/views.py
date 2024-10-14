@@ -65,7 +65,7 @@ class CancelledTemplateView(TemplateView):
 
 
 @csrf_exempt
-def stripe_webhook(request) -> HttpResponse:
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
     stripe.api_key = STRIPE_SECRET_KEY
     endpoint_secret = STRIPE_ENDPOINT_SECRET
 
@@ -95,5 +95,6 @@ def stripe_webhook(request) -> HttpResponse:
 
         buyer = buyer_notification(order_status)
         vendor = vendor_notification(order_status)
-
+        ic(buyer)
+        ic(vendor)
     return HttpResponse(status=200)

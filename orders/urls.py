@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import OrderListTemplateView, OrderDetailTemplateView, CreateOrderClass, OrderDeleteView
+from .views import CreateOrderTemplateView, OrderListTemplateView, OrderDetailTemplateView, OrderDeleteView
 
 urlpatterns = [
-    path('', OrderListTemplateView.as_view(), name='market-customer-order'),
-    path('detail/<int:pk>/', OrderDetailTemplateView.as_view(), name='market-customer-order-detail'),
-    path('create_order/', CreateOrderClass.create_order, name='customer-create-order'),
-    path('delete/<int:pk>/', OrderDeleteView.as_view(), name='customer-delete-unpaid-order')
+    path('', OrderListTemplateView.as_view(), name='customer-order'),
+    path('detail/<int:pk>/', OrderDetailTemplateView.as_view(), name='customer-order-detail'),
+    path('delete/<int:pk>/', OrderDeleteView.as_view(), name='customer-delete-unpaid-order'),
+
+    path('create_order/', CreateOrderTemplateView.as_view(), name='customer-create-order'),
     ]

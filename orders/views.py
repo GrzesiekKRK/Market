@@ -1,7 +1,7 @@
 from typing import Any
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
-from django.views.generic import TemplateView, DeleteView
+from django.views.generic import TemplateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from datetime import datetime
@@ -11,11 +11,13 @@ from products.models import Product
 from users.models import CustomUser
 from cart.cart import Cart
 from payments.services import stripe_checkout_session
+from icecream import ic
 
 
-class CreateOrderClass(LoginRequiredMixin): # TODO Co z cls
-    @staticmethod
-    def create_order(request: HttpRequest) -> HttpResponse:
+class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
+    model = Order
+
+    def post(self, request: HttpRequest) -> HttpResponse:
 
         context = {}
 
@@ -26,10 +28,9 @@ class CreateOrderClass(LoginRequiredMixin): # TODO Co z cls
 
         cart = Cart(request)
         products = cart
-        order_quantity = cart.__len__()
+        order_quantity = len(cart)
         total_price = cart.get_sub_total_price()
-
-        order_before_payment = Order(
+        order_before_payment = self.model(
                                         customer=customer,
                                         order_quantity=order_quantity,
                                         address=address,
@@ -47,7 +48,8 @@ class CreateOrderClass(LoginRequiredMixin): # TODO Co z cls
             order_product = ProductOrder(product=item, order=order_before_payment, quantity=product['quantity'], price=price)
             order_product.save()
 
-        order_products = ProductOrder.objects.filter(order=order_before_payment)
+        order_products = ProductOrder.objects.filter(order=order_before_payment.id)
+        ic(order_before_payment.id)
         if len(products) == order_quantity:
             cart.clear()
 

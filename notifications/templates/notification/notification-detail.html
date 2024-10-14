@@ -14,7 +14,7 @@
                         <h4>{{ title }}</h4>
                         <p class="mt-3">{{ body | safe }}</p>
 
-                        <form action="{% url 'market-notification-delete' notification.id %}" method="post">
+                        <form action="{% url 'notification-delete' notification.id %}" method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger rounded-pill px-3 mt-4">
                                 <i class="fa fa-trash me-2"></i> Delete Message

@@ -14,14 +14,14 @@
                         <div class="p-4">
                             <h4>{{ message.title }}</h4>
                             <button class="btn border-secondary rounded-pill px-4 py-2 text-primary text-uppercase mb-2">
-                                <a href="{% url 'market-notification-detail' message.id %}" class="text-primary text-decoration-none">
+                                <a href="{% url 'notification-detail' message.id %}" class="text-primary text-decoration-none">
                                     <i class="fas fa-envelope me-2 text-secondary"></i> Open Notification
                                 </a>
                             </button>
 
                             {% if message.is_read %}
                                 <p class="text-success">Status: Read</p>
-                                <form action="{% url 'market-notification-delete' message.id %}" method="post">
+                                <form action="{% url 'notification-delete' message.id %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger rounded-pill px-3">
                                         <i class="fa fa-trash me-2"></i> Delete Message

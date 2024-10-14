@@ -6,8 +6,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0*43b=$2q5vw36c)=+m&&$z4d!@_uh=t**cy6q%tumm!wwj)uy'
+SECRET_KEY = os.getenv('django')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -72,10 +71,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-DATABASES = { # TODO Move to postgreSQL.
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'MarketDB',
+        'USER': 'MarketOwner',
+        'PASSWORD': 'myPassWordDEi',
     }
 }
 
@@ -125,7 +126,7 @@ CART_SESSION_ID = 'cart'
 
 LOGIN_REDIRECT_URL = '/login'
 
-# Stripe
+
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51PETcT05Gsg5Ch9YFmXTCMQ38hITal9A2aSlxIQOB72STArVKxFBveoviEA7WRsK8oGiTZP1yjkWVwA4TgCrR2yp009bQ4AyAh'
 STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_KEY')
 STRIPE_ENDPOINT_SECRET = os.getenv('STRIPE_ENDPOINT_SECRET')

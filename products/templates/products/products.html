@@ -14,7 +14,7 @@
                     <h4 class="mb-4">Categories</h4>
                     <div class="d-flex flex-column">
                         {% for category in categories %}
-                            <a href="{% url 'market-category-products' category.id %}" class="mb-2">
+                            <a href="{% url 'category-products' category.id %}" class="mb-2">
                                 <i class="fas fa-apple-alt me-2"></i>{{ category.name }}
                             </a>
                         {% endfor %}
@@ -88,7 +88,7 @@
                                                     <i class="fa fa-shopping-bag me-1"></i> Add
                                                 </button>
                                             </form>
-                                            <a href="{% url 'market-product-detail' product.id %}" class="btn btn-sm btn-outline-secondary">
+                                            <a href="{% url 'product-detail' product.id %}" class="btn btn-sm btn-outline-secondary">
                                                 <i class="fas fa-info-circle me-1"></i> Details
                                             </a>
                                         </div>

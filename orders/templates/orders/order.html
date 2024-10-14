@@ -46,7 +46,7 @@
                                 <p class="text-center">Status: Awaiting payment</p>
                             {% endif %}
                             <div class="text-center">
-                                <a href="{% url 'market-customer-order-detail' order.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">Detail</a>
+                                <a href="{% url 'customer-order-detail' order.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">Detail</a>
                             </div>
                             {% if not order.status %}
                                 <p class="text-success">Status: Read</p>
