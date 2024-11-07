@@ -1,0 +1,18 @@
+
+import factory
+from factory.django import DjangoModelFactory
+from faker import Faker
+from users.factories import CustomUserFactory
+from .models import Order
+fake = Faker()
+
+
+class OrderFactory(DjangoModelFactory):
+    class Meta:
+        model = Order
+
+    customer = factory.SubFactory(CustomUserFactory)
+    address = factory.LazyAttribute(lambda obj: obj.customer.address)
+    postal_code = factory.LazyAttribute(lambda obj: obj.customer.postal_code)
+    date = factory.Faker('date_time_this_decade')
+    total_price = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)

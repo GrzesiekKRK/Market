@@ -75,8 +75,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'MarketDB',
-        'USER': 'MarketOwner',
-        'PASSWORD': 'myPassWordDEi',
+        'USER': 'postgres',
+        # 'USER': 'MarketOwner',
+        # 'PASSWORD': 'myPassWordDEi',
+        'PASSWORD': '9261',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 

@@ -14,5 +14,5 @@ class NotificationFactory(DjangoModelFactory):
 
     user = factory.SubFactory(CustomUserFactory)
     is_read = False
-    title = factory.LazyFunction(lambda: fake.sentence(nb_words=6))
+    title = factory.LazyFunction(lambda: fake.sentence(nb_words=3,))
     body = factory.Faker('paragraph', nb_sentences=3)

@@ -43,7 +43,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     miniature = models.BooleanField(default=False)
-    image = models.FileField(upload_to='uploads/product/', default='media/brak_jpg.jpg')
+    image = models.FileField(upload_to='uploads/product/', default='uploads/product/default.jpg')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='image')
 
 

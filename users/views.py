@@ -46,6 +46,10 @@ class UserSignUpView(CreateView):
     form_class = RegisterUserForm
     success_message = "Your profile was created successfully"
 
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'users/update.html'

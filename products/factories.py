@@ -3,36 +3,64 @@ from factory.django import DjangoModelFactory
 from django.contrib.auth import get_user_model
 from faker import Faker
 import random
-from .models import Product, ProductImage
+from .models import Category, Product, ProductImage
 
 fake = Faker()
 
+"""Carrot
+Broccoli
+Spinach
+Potato
+Tomato
+Cucumber
+Bell Pepper
+Zucchini
+Cauliflower
+Onion
+Garlic
+Lettuce
+Cabbage
+Radish
+Eggplant"""
+
+CATEGORIES = [
+                'Beverages',
+                'Fruits',
+                'Vegetables'
+            ]
+
+
+PRODUCTS_BY_CATEGORY = {
+    'Beverages': ['Watermelon Juice', 'Kiwi Juice', 'Banana Juice', "Pineapple Juice", "Carrot Juice"],
+    'Fruits': ['Watermelon', 'Kiwi', 'Banana', 'Pineapple'],
+    'Vegetables': ['Broccoli', 'Potato', 'Carrot'],
+}
+
+
+class CategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = Category
+        django_get_or_create = ('name', )
+
+    name = factory.LazyFunction(lambda: random.choice(CATEGORIES))
+
 
 class ProductFactory(DjangoModelFactory):
-    class meta:
+    class Meta:
         model = Product
 
-    PRODUCT_CHOICES = [
-        ...
-    ]
-
-    name = factory.Faker('word')
-    # category = factory.SubFactory(CategoryFactory)
+    category = factory.SubFactory(CategoryFactory)
+    name = factory.LazyAttribute(lambda obj: random.choice(PRODUCTS_BY_CATEGORY[obj.category.name]))
     price = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
-    miniature_description = factory.Faker('word')
+    miniature_description = factory.Faker('sentence', nb_words=5)
     description = factory.Faker('word')
-    quantity = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999) # zmienić na int
-    units_of_measurement = models.PositiveSmallIntegerField(choices=UNITS_CHOICES,
-                                                            default=product_units.PRODUCT_UNITS_PIECE)
-    reviews = models.DecimalField(decimal_places=2, max_digits=6, default=5.0)
-    is_sale = models.BooleanField(default=False)
-    sale_price = models.DecimalField(decimal_places=2, max_digits=6, default=0, )
+    quantity = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
+    units_of_measurement = factory.LazyFunction(lambda: str(random.randint(1, 3)))
 
 
 class ProductImageFactory(DjangoModelFactory):
-    class meta:
+    class Meta:
         model = ProductImage
 
     miniature = False
-    image =
     product = factory.SubFactory(ProductFactory)
