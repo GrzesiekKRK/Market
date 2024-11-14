@@ -23,24 +23,24 @@ class WishListTemplateView(TemplateView):
 
         return context
 
-    @staticmethod
-    def add_wish(request: HttpRequest, pk: int) -> HttpResponse:
-        wishlist = Wishlist.objects.get_or_create(user=request.user)
-        wishlist[0].save()
+    def add_wish(self, request: HttpRequest, pk: int) -> HttpResponse:
+        wishlist, created = Wishlist.objects.get_or_create(user=self.request.user)
+        if not created:
+            wishlist.save()
+
         product = Product.objects.get(id=pk)
 
         if product:
 
-            wishlist[0].product.add(product)
-            products = wishlist[0].product.all()
+            wishlist.product.add(product)
+            products = wishlist.product.all()
 
         else:
-            products = wishlist[0].product.all()
+            products = wishlist.product.all()
         return render(request, 'wishlist/wishlist.html', {'products': products})
 
-    @staticmethod
-    def remove_from_wishlist(request: HttpRequest, pk: int) -> HttpResponse:
-        wishlist = Wishlist.objects.get(user=request.user)
+    def remove_from_wishlist(self, request: HttpRequest, pk: int) -> HttpResponse:
+        wishlist = Wishlist.objects.get(user=self.request.user)
         wishlist.save()
         product = Product.objects.get(id=pk)
 

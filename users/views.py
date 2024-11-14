@@ -21,11 +21,14 @@ class UserLoginView(LoginView):
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         form = LoginForm(request.POST)
+        print('HI')
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
+            print(user)
             if user:
+                print('XYZ')
                 login(request, user)
                 return redirect('products')
         return render(request, 'users/login.html', {'form': form})
@@ -36,6 +39,7 @@ class UserLoginView(LoginView):
         return render(self.request, 'users/update.html', {'user': user})
 
     def form_invalid(self, form: LoginForm) -> TemplateResponse:
+        print(form.errors)
         messages.error(self.request, 'Invalid username or password')
         return self.render_to_response(self.get_context_data(form=form))
 

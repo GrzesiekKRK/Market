@@ -64,10 +64,7 @@ class TestCustomUserLoginView(TestCase):
 
     def setUp(self) -> None:
         self.sign_in = reverse('user-login')
-
-    @classmethod
-    def setUpTestData(cls):
-        CustomUserFactory.create(password=make_password('1X<ISRUkw+tuK'))
+        self.user = CustomUserFactory.create()
 
     def test_login_uses_correct_template(self):
         response = self.client.get(reverse('user-login'))
@@ -81,15 +78,16 @@ class TestCustomUserLoginView(TestCase):
         self.assertTemplateUsed(response, 'users/login.html')
         self.assertIsInstance(response.context['form'], LoginForm)
 
-    def test_correct_login(self):
-        user = CustomUser.objects.last()
-        response = self.client.post(self.sign_in)
+    def test_login_correct(self):
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'users/login.html')
-        self.assertIsInstance(response.context['form'], LoginForm)
-        # self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        # self.assertRedirects(response, reverse('products'), status_code=200)
+        data = {
+                'username': self.user.username,
+                'password': 'defaultpassword',
+               }
+        response = self.client.post(self.sign_in, data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertRedirects(response, reverse('products'), status_code=302)
 
     def test_invalid_form(self):
         data = {'username': 'fail_user',
@@ -126,5 +124,5 @@ class TestUserDeleteView(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/accounts/login/')
         self.assertEqual(response.wsgi_request.user.is_authenticated, False)
-        # self.assertEqual(response, user.id) # Post jak sprawdzić useraname
+
 

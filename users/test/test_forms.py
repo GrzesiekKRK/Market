@@ -54,7 +54,6 @@ class RegisterUserFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertFormError(form, field='first_name', errors='This field is required.')
 
-    @tag('x')
     def test_form_data_is_valid(self):
         random_user_data = CustomUser.objects.last()
 

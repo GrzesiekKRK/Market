@@ -7,22 +7,6 @@ from .models import Category, Product, ProductImage
 
 fake = Faker()
 
-"""Carrot
-Broccoli
-Spinach
-Potato
-Tomato
-Cucumber
-Bell Pepper
-Zucchini
-Cauliflower
-Onion
-Garlic
-Lettuce
-Cabbage
-Radish
-Eggplant"""
-
 CATEGORIES = [
                 'Beverages',
                 'Fruits',
