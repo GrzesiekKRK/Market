@@ -40,9 +40,11 @@
                                     <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                 </button>
                             </form>
-                            <a href="{% url 'wishlist-remove' product.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                <i class="fas fa-apple-alt me-2"></i> Remove
-                            </a>
+                            <form action="{% url 'wishlist-remove' product.id %}"   method="post" style="display:inline;">
+                                {% csrf_token %}<button type="submit"  class="btn border border-secondary rounded-pill px-3 text-primary" >
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Remove
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,9 @@
 from typing import Any
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.shortcuts import render, redirect
 
 
@@ -23,7 +25,9 @@ class WishListTemplateView(TemplateView):
 
         return context
 
-    def add_wish(self, request: HttpRequest, pk: int) -> HttpResponse:
+
+class WishlistAddProductView(View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         wishlist, created = Wishlist.objects.get_or_create(user=self.request.user)
         if not created:
             wishlist.save()
@@ -39,18 +43,23 @@ class WishListTemplateView(TemplateView):
             products = wishlist.product.all()
         return render(request, 'wishlist/wishlist.html', {'products': products})
 
-    def remove_from_wishlist(self, request: HttpRequest, pk: int) -> HttpResponse:
-        wishlist = Wishlist.objects.get(user=self.request.user)
-        wishlist.save()
-        product = Product.objects.get(id=pk)
 
-        if product:
-            wishlist.product.remove(product)
+class WishlistRemoveProductView(View):
+    #TODO wyjątek
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        try:
+            product = Product.objects.get(id=pk)
+        except Product.DoesNotExist:
+            wishlist = Wishlist.objects.get(user=self.request.user)
             products = wishlist.product.all()
-            return render(request, 'wishlist/wishlist.html', {'products': products})
 
         else:
+            wishlist = Wishlist.objects.get(user=self.request.user)
+            wishlist.product.remove(product)
             products = wishlist.product.all()
-        return render(request, 'wishlist/wishlist.html', {'products': products})
+
+        finally:
+            return render(request, 'wishlist/wishlist.html', {'products': products})
+
 
 

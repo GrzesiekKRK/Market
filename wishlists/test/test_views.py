@@ -32,31 +32,77 @@ class WishlistListViewTest(TestCase):
         self.assertTemplateUsed(response, 'wishlist/wishlist.html')
 
 
-class AddToWishListTest(TestCase):
+class WishlistAddProductViewTest(TestCase):
     def setUp(self) -> None:
-        self.factory = RequestFactory()
+        self.factory = ProductFactory.create()
         self.user = CustomUserFactory.create()
+        self.additional_factory_wishlist = WishlistFactory.create(user=self.user)
 
-    #TODO co z request i session, request udało sie ale potem żąda session
-    def test_add_wish(self):
-        ProductFactory.create()
-        wishlist = WishlistFactory.create(user=self.user)
+    def test_post_with_created_wishlist(self):
+        self.client.force_login(self.user)
         product = Product.objects.last()
-        wishlist.save()
-
         data = {
                 'pk': product.id,
-
         }
-        request = self.factory.get(reverse('add-to-wishlist', kwargs=data))
-        request.user = self.user
-        # request.session['my_key'] = 'my_value'
-        view = WishListTemplateView()
-        view.setup(request)
-        response = view.add_wish(request=request, pk=product.id)
-        # response = self.client.post(reverse('add-to-wishlist', kwargs=data))
-        print(response)
-        self.assertEqual(response.status_code, 200)
-        # self.assertTemplateUsed(response, 'wishlist/wishlist.html')
-        # self.assertEqual(str(response.context['wishlist']), f' {user.first_name} {user.last_name} your wishlist')
 
+        response = self.client.post(reverse('add-to-wishlist', kwargs=data))
+        print(response.context)
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
+        self.assertEqual(str(response.context['products']), f'<QuerySet [<Product: {product.name}>]>')
+
+    def test_post_with_wishlist_creation(self):
+        user = CustomUserFactory.create()
+        self.client.force_login(user)
+
+        product = Product.objects.last()
+        data = {
+            'pk': product.id,
+        }
+
+        response = self.client.post(reverse('add-to-wishlist', kwargs=data))
+        wish = Wishlist.objects.get(user=user)
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
+        self.assertEqual(str(response.context['products']), f'<QuerySet [<Product: {product.name}>]>')
+        self.assertEqual(str(wish), f' {user.first_name} {user.last_name} your wishlist')
+
+
+class WishlistRemoveProductViewTest(TestCase):
+    def setUp(self) -> None:
+        self.factory = ProductFactory.create()
+        self.user = CustomUserFactory.create()
+        self.additional_factory_wishlist = WishlistFactory.create(user=self.user)
+
+    def test_post_with_created_wishlist(self):
+        self.client.force_login(self.user)
+        product = Product.objects.last()
+        data = {
+                'pk': product.id,
+        }
+        wish = Wishlist.objects.get(user=self.user)
+        print(wish)
+        response = self.client.post(reverse('wishlist-remove', kwargs=data))
+        print(response.context)
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
+        self.assertEqual(str(response.context['products']), f'<QuerySet []>')
+
+    @tag('x')
+    def test_post_with_none_existing_product(self):
+        Product.objects.all().delete()
+        self.client.force_login(self.user)
+        data = {
+            'pk': 5,
+        }
+
+        response = self.client.post(reverse('wishlist-remove', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
+        self.assertEqual(str(response.context['products']), f'<QuerySet []>')

@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views.generic import TemplateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse
 
 from products.models import Category, Product
@@ -131,6 +132,6 @@ class ProductUpdateView(UpdateView):
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'products/delete.html'
-    success_url = '/'
+    success_url = reverse_lazy('products')
 
 

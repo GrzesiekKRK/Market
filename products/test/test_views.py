@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.test import tag
 from products.models import Category, Product, ProductImage
 from products.forms import ImageForm, AddProductForm, UpdateImageForm
-from products.views import ProductUpdateView, ProductDeleteView
 from products.factories import ProductFactory, CategoryFactory, ProductImageFactory
 
 from users.factories import CustomUserFactory
@@ -11,6 +10,8 @@ from users.models import CustomUser
 
 from products.factories import ProductFactory
 from products.models import Product
+
+from wishlists.models import Wishlist
 
 
 class ProductListTemplateViewTest(TestCase):
@@ -112,10 +113,10 @@ class CategoryTemplateViewTest(TestCase):
 class CreateProductTest(TestCase):
     def setUp(self) -> None:
         self.view = reverse('vendor-add-product')
-        self.user = CustomUserFactory.create()
-        self.factory = ProductFactory.create_batch(10,)
-        self.additional_factory_deals = ProductFactory.create_batch(5, is_sale=True)
-
+        """Vendor only"""
+        self.user = CustomUserFactory.create(role=2)
+        self.factory = ProductFactory.create()
+        self.additional_factory_image = ProductImageFactory.create(product=self.factory, miniature=True)
 
     def test_create_product_page_loads_correctly(self):
         self.client.force_login(self.user)
@@ -130,17 +131,127 @@ class CreateProductTest(TestCase):
         self.assertIsInstance(add_product_form, AddProductForm)
         self.assertTemplateUsed(response, 'products/add_product.html')
 
-    #TODO co z request
+    #TODO ImageForm
     def test_create_product_page_form_is_valid_loads_correctly(self):
         self.client.force_login(self.user)
-        response = self.client.post(self.view, )
-        print(response)
+        product = Product.objects.last()
 
-        image_form = response.context['form']
-        add_product_form = response.context['product_form']
+        product_data = {
+                        'name': product.name,
+                        'category': product.category,
+                        'price': product.price,
+                        'miniature_description': product.miniature_description,
+                        'description': product.description,
+                        'quantity': product.quantity,
+                        'units_of_measurement': product.units_of_measurement,
+                        'sale_price': product.sale_price,
+                        # 'miniature': self.additional_factory_image.miniature,
+                        # 'image': self.additional_factory_image.image
+                        }
+
+        response = self.client.post(self.view, data=product_data)
+        add_product_form = AddProductForm(product_data)
+        image_form = ImageForm(product_data)
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(image_form, ImageForm)
+        # self.assertEqual(image_form.is_valid(), True)
         self.assertIsInstance(add_product_form, AddProductForm)
+        self.assertEqual(add_product_form.is_valid(), True)
         # self.assertTemplateUsed(response, 'products/product-detail.html')
+
+
+class ProductUpdateViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user = CustomUserFactory.create(role=2)
+        self.factory = ProductFactory.create()
+        self.additional_factory_image = ProductImageFactory.create(product=self.factory)
+        self.additional_product_is_sale = ProductFactory(is_sale=True)
+        self.additional_factory_image_is_sale = ProductImageFactory.create(product=self.additional_product_is_sale)
+
+    def test_get_products_update_page_loads_correctly(self):
+        self.client.force_login(self.user)
+        product = Product.objects.last()
+
+        data = {
+                'pk': product.id,
+        }
+
+        response = self.client.get(reverse('product-update', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['product'], product)
+        self.assertTemplateUsed(response, 'products/update.html')
+
+    #TODO Forma i is_sale w view co dalej
+    def test_post_products_update_page_loads_correctly(self):
+        self.client.force_login(self.user)
+        product = Product.objects.last()
+
+        data = {
+            'pk': product.id,
+        }
+
+        product_form_data = {
+            'name': product.name,
+            'category': product.category,
+            'price': product.price,
+            'miniature_description': product.miniature_description,
+            'description': product.description,
+            'quantity': product.quantity,
+            'units_of_measurement': product.units_of_measurement,
+            'is_sale': True,
+            'sale_price': product.sale_price,
+        }
+
+        add_product_form = AddProductForm(product_form_data)
+        response = self.client.post(reverse('product-update', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.wsgi_request.method, "POST")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['product'], product)
+        self.assertEqual(add_product_form.is_valid(), True)
+        self.assertTemplateUsed(response, 'products/update.html')
+
+
+class ProductDeleteViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user = CustomUserFactory.create(role=2)
+        self.factory = ProductFactory.create()
+        self.additional_factory_image = ProductImageFactory.create(product=self.factory)
+        self.additional_product_is_sale = ProductFactory(is_sale=True)
+        self.additional_factory_image_is_sale = ProductImageFactory.create(product=self.additional_product_is_sale)
+
+
+    def test_get_products_delete_page_loads_correctly(self):
+        self.client.force_login(self.user)
+        product = Product.objects.last()
+
+        data = {
+                'pk': product.id,
+        }
+        response = self.client.get(reverse('product-delete', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['product'], product)
+        self.assertTemplateUsed(response, 'products/delete.html')
+
+    #TODO post
+    def test_post_products_delete_view_works_correctly(self):
+        self.client.force_login(self.user)
+        product = Product.objects.last()
+
+        data = {
+            'pk': product.id,
+        }
+        response = self.client.post(reverse('product-delete', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, )
+        self.assertEqual(response.context['product'], product)
+        self.assertTemplateUsed(response, 'products/delete.html')
