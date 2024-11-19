@@ -72,7 +72,10 @@
                     </div>
                     <div align="center">
                         <a href="{% url 'product-update' product.id %}" class="text-black-50">
-                            <small>Update {{ product.name }}</small>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fa fa-shopping-bag me-1"></i> Update {{ product.name }}
+                            </button>
+
                         </a>
                     </div>
                 </div>

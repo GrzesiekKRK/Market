@@ -16,6 +16,7 @@ from icecream import ic
 
 class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
     model = Order
+    template_name = 'orders/create_order.html'
 
     def post(self, request: HttpRequest) -> HttpResponse:
 
@@ -49,7 +50,7 @@ class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
             order_product.save()
 
         order_products = ProductOrder.objects.filter(order=order_before_payment.id)
-        ic(order_before_payment.id)
+
         if len(products) == order_quantity:
             cart.clear()
 
@@ -61,6 +62,7 @@ class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
         context['total_price'] = total_price
         context['products'] = order_products
         context['stripe_session_url'] = stripe_checkout_session(order_before_payment)
+
         return render(request, 'orders/create_order.html', context)
 
 
@@ -92,6 +94,6 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class OrderDeleteView(LoginRequiredMixin, DeleteView):
+class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
     model = Order
     success_url = '/order'

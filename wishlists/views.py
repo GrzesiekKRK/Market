@@ -1,9 +1,9 @@
 from typing import Any
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, DeleteView
 from django.shortcuts import render, redirect
 
 
@@ -45,21 +45,26 @@ class WishlistAddProductView(View):
 
 
 class WishlistRemoveProductView(View):
+    def get(self, request, pk):
+        raise Http404("This page cannot be accessed via GET method.")
+
     #TODO wyjątek
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
             product = Product.objects.get(id=pk)
         except Product.DoesNotExist:
-            wishlist = Wishlist.objects.get(user=self.request.user)
-            products = wishlist.product.all()
+            return HttpResponse(status=404, content="Product not found.")
 
-        else:
-            wishlist = Wishlist.objects.get(user=self.request.user)
-            wishlist.product.remove(product)
-            products = wishlist.product.all()
+        try:
+            wishlist = Wishlist.objects.get(user=request.user)
+        except Wishlist.DoesNotExist:
+            return render(request, 'wishlist/wishlist.html', {'products': []})
 
-        finally:
-            return render(request, 'wishlist/wishlist.html', {'products': products})
+        wishlist.product.remove(product)
+
+        products = wishlist.product.all()
+
+        return render(request, 'wishlist/wishlist.html', {'products': products})
 
 
 

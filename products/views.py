@@ -101,8 +101,8 @@ class ProductUpdateView(UpdateView):
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         product = self.get_object()
-
         product_form = AddProductForm(instance=product)
+
         return render(request, 'products/update.html', {'product_form': product_form, 'product': product})
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -111,7 +111,6 @@ class ProductUpdateView(UpdateView):
 
         if product_form.is_valid():
             product_form.save()
-
             if product.is_sale:
                 wishlists_with_product_on_sale = Wishlist.objects.filter(product=product)
                 for wishlist_owner in wishlists_with_product_on_sale:
@@ -120,9 +119,10 @@ class ProductUpdateView(UpdateView):
                     user = CustomUser.objects.get(id=wishlist_owner.user.id)
                     notification = Notification(user=user, title=title, body=body)
                     notification.save()
-            return render(request, 'products/product-detail.html', {'product': product})
 
-        return render(request, 'products/update.html', {'product_form': product_form, 'product': product})
+            return render(request, 'products/product-detail.html', {'product': product, })
+        elif not product_form.is_valid():
+            return render(request, 'products/update.html', {'product_form': product_form, 'product': product})
 
     def form_invalid(self, form):
         messages.error(self.request, 'Invalid change')

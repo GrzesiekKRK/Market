@@ -71,6 +71,7 @@ class WishlistAddProductViewTest(TestCase):
         self.assertEqual(str(wish), f' {user.first_name} {user.last_name} your wishlist')
 
 
+#TODO wyjatek czy jest ok?
 class WishlistRemoveProductViewTest(TestCase):
     def setUp(self) -> None:
         self.factory = ProductFactory.create()
@@ -92,7 +93,6 @@ class WishlistRemoveProductViewTest(TestCase):
         self.assertTemplateUsed(response, 'wishlist/wishlist.html')
         self.assertEqual(str(response.context['products']), f'<QuerySet []>')
 
-    @tag('x')
     def test_post_with_none_existing_product(self):
         Product.objects.all().delete()
         self.client.force_login(self.user)
@@ -103,6 +103,6 @@ class WishlistRemoveProductViewTest(TestCase):
         response = self.client.post(reverse('wishlist-remove', kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
-        self.assertEqual(str(response.context['products']), f'<QuerySet []>')
+        self.assertEqual(response.status_code, 404)
+
+

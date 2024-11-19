@@ -2,9 +2,6 @@ from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.test import tag
 from products.models import Category, Product, ProductImage
-from products.forms import ImageForm, AddProductForm, UpdateImageForm
-from products.factories import ProductFactory, CategoryFactory, ProductImageFactory
-
 from users.factories import CustomUserFactory
 from users.models import CustomUser
 
