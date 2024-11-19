@@ -21,7 +21,7 @@ class ProductListTemplateViewTest(TestCase):
         self.factory = ProductFactory.create_batch(10,)
         self.additional_factory_deals = ProductFactory.create_batch(5, is_sale=True)
 
-    def test_products_page_loads_correctly(self):
+    def test_get_products_page_loads_correctly(self):
         self.client.force_login(self.user)
         response = self.client.get(self.view,)
 
@@ -31,11 +31,17 @@ class ProductListTemplateViewTest(TestCase):
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
-        self.assertCountEqual(list(response.context['products']), products)
-        self.assertCountEqual(list(response.context['categories']), categories)
-        self.assertCountEqual(list(response.context['deals']), deals)
+        self.assertCountEqual(response.context['products'], products)
+        self.assertCountEqual(response.context['categories'], categories)
+        self.assertCountEqual(response.context['deals'], deals)
         self.assertTemplateUsed(response, 'products/products.html')
 
+    def test_post_products_page_method_not_allowed(self):
+        self.client.force_login(self.user)
+        response = self.client.post(self.view)
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 405)
 
 class ProductDetailTemplateViewTest(TestCase):
     def setUp(self) -> None:

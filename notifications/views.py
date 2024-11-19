@@ -13,7 +13,7 @@ class NotificationListTemplateView(LoginRequiredMixin, TemplateView):
         notification = Notification.objects.filter(user=self.request.user.id).order_by('is_read')
 
         context = super().get_context_data(**kwargs)
-        context['messages'] = notification
+        context['notifications'] = notification
         return context
 
 
@@ -43,5 +43,4 @@ class NotificationDetailTemplateView(LoginRequiredMixin, TemplateView):
 
 class NotificationDeleteView(DeleteView):
     model = Notification
-    template_name = 'notification/notification-delete.html'
     success_url = '/products/'

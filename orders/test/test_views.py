@@ -83,7 +83,7 @@ class OrderDeleteUnpaidViewTest(TestCase):
         self.user = CustomUserFactory.create()
         self.factory = OrderFactory.create(customer=self.user)
 
-    @tag('x')
+
     def test_delete_unpaid_order_get_page_loads_correctly(self):
         self.client.force_login(self.user)
         order = Order.objects.last()
