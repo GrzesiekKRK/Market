@@ -5,7 +5,7 @@ from django.views.generic import TemplateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render
 
 from products.models import Category, Product
 from .models import ProductImage

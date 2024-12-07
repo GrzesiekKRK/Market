@@ -38,7 +38,8 @@ class ProductFactory(DjangoModelFactory):
     price = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
     miniature_description = factory.Faker('sentence', nb_words=5)
     description = factory.Faker('word')
-    quantity = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
+    quantity = factory.Faker('pyint', min_value=0, max_value=10)
+
     units_of_measurement = factory.LazyFunction(lambda: str(random.randint(1, 3)))
 
 

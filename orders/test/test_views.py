@@ -1,6 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.test import tag
+
+from unittest import mock
+
 from orders.models import Order, ProductOrder
 from orders.factories import OrderFactory, ProductOrderFactory
 
@@ -10,6 +13,8 @@ from users.factories import CustomUserFactory
 from products.models import Product
 from products.factories import ProductFactory
 
+mock_instance = mock.Mock()
+
 
 class CreateOrderTemplateViewTest(TestCase):
 
@@ -18,7 +23,7 @@ class CreateOrderTemplateViewTest(TestCase):
         self.user = CustomUserFactory.create()
         self.factory = ProductFactory.create_batch(10, )
 
-    #TODO CART jest w view co i jak
+    #TODO CART/Stripe mock
     def test_order_create_page_loads_correctly(self):
         self.client.force_login(self.user)
         response = self.client.post(self.view, )
@@ -42,8 +47,6 @@ class OrderListTemplateViewTest(TestCase):
         last_order = Order.objects.last()
         customer = last_order.customer
 
-        order_by = Order.objects.filter(customer=self.user).order_by('-id')
-
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['orders'], self.factory)
@@ -55,47 +58,67 @@ class OrderDetailTemplateViewTest(TestCase):
 
     def setUp(self) -> None:
         self.user = CustomUserFactory.create()
-        self.factory = OrderFactory.create(customer=self.user)
+        self.order = OrderFactory.create(customer=self.user)
+        self.factory = ProductOrderFactory.create(order=self.order)
 
-
-    #TODO Stripe line items
-    def test_order_get_page_loads_correctly(self):
+    def test_get_order_page_loads_correctly(self):
         self.client.force_login(self.user)
         order = Order.objects.last()
         data = {
                 'pk': order.id,
         }
-        print(data)
-        response = self.client.get(reverse('customer-order-detail', kwargs=data))
 
-        print(response)
+        with mock.patch('orders.views.stripe_checkout_session', return_value={}):
+            response = self.client.get(reverse('customer-order-detail', kwargs=data))
+
+        product_order = ProductOrder.objects.all()
+
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
-        self.assertCountEqual(response.context['customer'], self.user)
-        self.assertCountEqual(response.context['orders'], order)
-        self.assertCountEqual(response.context['products_order'], self.user)
+        self.assertEqual(response.context['customer'], self.user)
+        self.assertEqual(response.context['orders'], order)
+        self.assertEqual(str(response.context['products_order']), str(product_order))
         self.assertTemplateUsed(response, 'orders/order-detail.html')
 
+    def test_post_order_method_not_allowed(self):
+        self.client.force_login(self.user)
+        order = Order.objects.last()
+        data = {
+            'pk': order.id,
+        }
 
-#TODO django.urls.exceptions.NoReverseMatch: Reverse for 'market-products' not found? success_url = '/order'
+        with mock.patch('orders.views.stripe_checkout_session', return_value={}):
+            response = self.client.post(reverse('customer-order-detail', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 405)
+
+
 class OrderDeleteUnpaidViewTest(TestCase):
     def setUp(self) -> None:
         self.user = CustomUserFactory.create()
         self.factory = OrderFactory.create(customer=self.user)
 
-
-    def test_delete_unpaid_order_get_page_loads_correctly(self):
+    def test_get_delete_unpaid_order_page_loads_correctly(self):
         self.client.force_login(self.user)
         order = Order.objects.last()
         data = {
                 'pk': order.id,
         }
-        print(data)
         response = self.client.get(reverse('customer-delete-unpaid-order', kwargs=data))
-        print(response)
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
-        self.assertCountEqual(response.context['customer'], self.user)
-        self.assertCountEqual(response.context['orders'], order)
-        self.assertCountEqual(response.context['products_order'], self.user)
+        self.assertEqual(response.context['object'], order)
+
+    def test_post_delete_unpaid_order_page_loads_correctly(self):
+        self.client.force_login(self.user)
+        order = Order.objects.last()
+        data = {
+                'pk': order.id,
+        }
+        response = self.client.post(reverse('customer-delete-unpaid-order', kwargs=data))
+
+        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/order/')
 

@@ -51,7 +51,7 @@ class WishlistRemoveProductView(View):
     #TODO wyjątek
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
-            product = Product.objects.get(id=pk)
+            product = Product.objects.get(id=pk) # get_object_or_404(Product, id=pk)
         except Product.DoesNotExist:
             return HttpResponse(status=404, content="Product not found.")
 

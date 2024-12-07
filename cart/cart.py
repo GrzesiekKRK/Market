@@ -7,7 +7,7 @@ from icecream import ic
 
 
 class Cart:
-    """Context processor Cart working on session"""
+    """Context processor working on session"""
     def __init__(self, request: HttpRequest) -> None:
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
@@ -41,6 +41,7 @@ class Cart:
     def __iter__(self) -> None:
         """Get the product objects and add them to the cart """
         product_ids = self.cart.keys()
+        print('products', product_ids)
         products = Product.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
         for product in products:
@@ -64,7 +65,7 @@ class Cart:
 
     def clear(self) -> None:
         """ Remove all items from the cart."""
-        for key in list(self.cart.keys()):  # Use list() to create a copy of keys
+        for key in list(self.cart.keys()):
             del self.cart[key]
         self.session.save()
 

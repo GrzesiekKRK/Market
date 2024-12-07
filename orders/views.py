@@ -3,7 +3,8 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from django.views.generic import TemplateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from django.urls import reverse_lazy
 from datetime import datetime
 from .models import Order, ProductOrder
 
@@ -96,4 +97,4 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
 
 class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
     model = Order
-    success_url = '/order'
+    success_url = reverse_lazy('customer-order')

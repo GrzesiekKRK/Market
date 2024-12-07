@@ -3,12 +3,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf import settings
-from . import views
+from .views import DashboardView, ConcatView
 
 urlpatterns = [
                 path('admin/', admin.site.urls),
-                path('', views.DashboardView.as_view(), name='market-dashboard'),
-                path('contact/', views.ConcatView.as_view(), name='market-contact'),
+                path('', DashboardView.as_view(), name='market-dashboard'),
+                path('contact/', ConcatView.as_view(), name='market-contact'),
                 path('products/', include('products.urls')),
                 path('shop/', include('cart.urls')),
                 path('accounts/', include('users.urls')),

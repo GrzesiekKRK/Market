@@ -14,7 +14,6 @@ class NotificationModelTest(TestCase):
         self.user = CustomUserFactory.create()
         self.factory = NotificationFactory.create_batch(10, user=self.user)
 
-
     def test_model_str_method_output(self):
         user_notifications = Notification.objects.filter(user=self.user)
         last_notification = Notification.objects.last()

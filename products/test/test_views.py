@@ -43,6 +43,7 @@ class ProductListTemplateViewTest(TestCase):
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 405)
 
+
 class ProductDetailTemplateViewTest(TestCase):
     def setUp(self) -> None:
         self.user = CustomUserFactory.create()
@@ -185,7 +186,7 @@ class ProductUpdateViewTest(TestCase):
         self.assertEqual(response.context['product'], product)
         self.assertTemplateUsed(response, 'products/update.html')
 
-    #TODO Forma i is_sale w view co dalej
+    #TODO ImageForma i is_sale w view co dalej
     def test_post_products_update_page_loads_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()

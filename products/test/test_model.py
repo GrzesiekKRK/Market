@@ -6,6 +6,7 @@ from products.factories import ProductFactory, CategoryFactory
 
 
 class CategoryModelTest(TestCase):
+
     def setUp(self) -> None:
         self.factory = CategoryFactory.create()
 
@@ -17,7 +18,6 @@ class CategoryModelTest(TestCase):
 
 
 class ProductModelTest(TestCase):
-
     def setUp(self) -> None:
         self.factory = ProductFactory.create()
 
