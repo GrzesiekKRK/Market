@@ -39,7 +39,7 @@ class UserLoginView(LoginView):
         return render(self.request, 'users/update.html', {'user': user})
 
     def form_invalid(self, form: LoginForm) -> TemplateResponse:
-        print(form.errors)
+        # print(form.errors)
         messages.error(self.request, 'Invalid username or password')
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -51,7 +51,7 @@ class UserSignUpView(CreateView):
     success_message = "Your profile was created successfully"
 
     def form_invalid(self, form):
-        print(form.errors)
+        # print(form.errors)
         return super().form_invalid(form)
 
 

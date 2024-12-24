@@ -1,5 +1,6 @@
 
 import factory
+from datetime import timezone
 from factory.django import DjangoModelFactory
 from faker import Faker
 from users.factories import CustomUserFactory
@@ -15,7 +16,7 @@ class OrderFactory(DjangoModelFactory):
     customer = factory.SubFactory(CustomUserFactory)
     address = factory.LazyAttribute(lambda obj: obj.customer.address)
     postal_code = factory.LazyAttribute(lambda obj: obj.customer.postal_code)
-    date = factory.Faker('date_time_this_decade')
+    date = factory.Faker('date_time_this_decade', tzinfo=timezone.utc)
     total_price = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
 
 

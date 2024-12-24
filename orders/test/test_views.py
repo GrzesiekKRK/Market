@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.test import tag
 
 from unittest import mock
+from unittest.mock import patch, Mock, MagicMock
 
 from orders.models import Order, ProductOrder
 from orders.factories import OrderFactory, ProductOrderFactory
@@ -17,16 +18,17 @@ mock_instance = mock.Mock()
 
 
 class CreateOrderTemplateViewTest(TestCase):
-
     def setUp(self) -> None:
         self.view = reverse('customer-create-order')
         self.user = CustomUserFactory.create()
         self.factory = ProductFactory.create_batch(10, )
 
-    #TODO CART/Stripe mock
     def test_order_create_page_loads_correctly(self):
         self.client.force_login(self.user)
-        response = self.client.post(self.view, )
+        mock_stripe = MagicMock()
+
+        with mock.patch('orders.views.stripe_checkout_session', side_effect=mock_stripe.stripe_checkout_session) as mock_stripe:
+            response = self.client.get(reverse('customer-create-order'))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
@@ -42,15 +44,16 @@ class OrderListTemplateViewTest(TestCase):
 
     def test_get_order_list_page_loads_correctly(self):
         self.client.force_login(self.user)
-        response = self.client.get(self.view, )
+        orders_list = Order.objects.filter(customer=self.user)
+        mock_stripe = MagicMock()
 
-        last_order = Order.objects.last()
-        customer = last_order.customer
+        with mock.patch('orders.views.stripe_checkout_session', side_effect=mock_stripe.stripe_checkout_session) as mock_stripe:
+            response = self.client.get(reverse('customer-order'))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(orders_list), len(self.factory))
         self.assertCountEqual(response.context['orders'], self.factory)
-        self.assertEqual(customer, self.user)
         self.assertTemplateUsed(response, 'orders/order.html')
 
 

@@ -13,7 +13,7 @@ class Notification(models.Model):
     """Notification of events like payment accepted, wishlist Product sale and inform vendor of sales"""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
     is_read = models.BooleanField(verbose_name='read', default=False)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=100)
     body = models.TextField()
 
     def __str__(self):

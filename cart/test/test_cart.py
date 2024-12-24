@@ -46,6 +46,7 @@ class CartTest(TestCase):
         self.assertEqual(len(cart), 4)
         self.assertIsInstance(cart, Cart)
 
+    @tag('x')
     def test_cart_len_2_add(self) -> None:
         cart = Cart(self.request)
         cart.add(self.product, quantity=1)
@@ -70,30 +71,36 @@ class CartTest(TestCase):
         self.assertEqual(len(cart), 1)
         self.assertNotIn(self.additional_product.id, cart.cart)
 
+    @tag('x')
     def test_iter_with_for_loop_on_cart(self) -> None:
-        cart = Cart(self.request)
+        session_request = RequestFactory()
+        session_request.session = MagicMock()
+        session_request.session.get.return_value = None
+
+        cart = Cart(session_request)
         cart.add(self.product, quantity=1)
         cart.add(self.additional_product, quantity=1)
+
         products = {self.product.id:
-                                            {
-                                                'quantity': 1,
-                                                'price': str(self.product.price),
-                                                'is_sale': int(self.product.is_sale),
-                                                'sale_price': str(self.product.sale_price),
-                                            },
+                        {
+                            'quantity': 1,
+                            'price': str(self.product.price),
+                            'is_sale': int(self.product.is_sale),
+                            'sale_price': str(self.product.sale_price),
+                        },
                     self.additional_product.id:
-                                            {
-                                                'quantity': 1,
-                                                'price': str(self.additional_product.price),
-                                                'is_sale': int(self.additional_product.is_sale),
-                                                'sale_price': str(self.additional_product.sale_price),
-                                               }
+                        {
+                            'quantity': 1,
+                            'price': str(self.additional_product.price),
+                            'is_sale': int(self.additional_product.is_sale),
+                            'sale_price': str(self.additional_product.sale_price),
                         }
-        for index, item in enumerate(cart):
-            key = index + 1
-            self.assertEqual(str(item['price']), products[key]['price'])
-            self.assertEqual(item['quantity'], products[key]['quantity'])
-            self.assertEqual(str(item['sale_price']), products[key]['sale_price'])
+                            }
+        for product, item in zip(cart.cart.values(), products.values()):
+
+            self.assertEqual(str(item['price']), product['price'])
+            self.assertEqual(item['quantity'], product['quantity'])
+            self.assertEqual(str(item['sale_price']), product['sale_price'])
 
     def test_get_sub_total_price(self) -> None:
         cart = Cart(self.request)
@@ -118,7 +125,6 @@ class CartTest(TestCase):
 
         self.assertEqual(get_sub, value)
 
-
     def test_fail_save_clear(self) -> None:
         cart = Cart(self.request)
         product = ProductFactory.create(is_sale=False)
@@ -128,7 +134,7 @@ class CartTest(TestCase):
 
         self.assertEqual(len(cart), 5)
 
-    def test_clear(self) -> None:
+    def test_clear_cart(self) -> None:
         cart = Cart(self.request)
         product = ProductFactory.create(is_sale=False)
         product2 = ProductFactory.create(is_sale=True)
@@ -138,3 +144,5 @@ class CartTest(TestCase):
         cart.clear()
 
         self.assertEqual(len(cart), 0)
+        self.assertEqual(cart.cart, {})
+

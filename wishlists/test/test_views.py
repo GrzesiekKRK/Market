@@ -49,7 +49,7 @@ class WishlistAddProductViewTest(TestCase):
         }
 
         response = self.client.post(reverse('add-to-wishlist', kwargs=data))
-        print(response.context)
+
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'wishlist/wishlist.html')

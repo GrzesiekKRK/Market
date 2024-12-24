@@ -2,6 +2,7 @@
 
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
 from products.models import Product
 from users.models import CustomUser
 
@@ -12,7 +13,7 @@ class Order(models.Model):
     order_quantity = models.IntegerField(default=1)
     address = models.CharField(max_length=100, blank=True, null=True)
     postal_code = models.CharField(max_length=6)
-    date = models.DateTimeField(default=datetime.today)
+    date = models.DateTimeField(default=timezone.now)
     status = models.BooleanField(default=False)
     total_price = models.DecimalField(decimal_places=2, max_digits=6,)
 

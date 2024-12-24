@@ -32,6 +32,7 @@ INSTALLED_EXTENSIONS = [
     'products',
     'users',
     'wishlists',
+    'django_extensions',
     ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS

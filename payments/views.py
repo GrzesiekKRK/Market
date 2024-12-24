@@ -38,6 +38,7 @@ def unpacking_products(products_dict: dict) -> str:
 
 def vendor_notification(order: Order) -> Notification:
     title = f"The purchase of your products has been paid for in orders {order.id}"
+
     products_order = ProductOrder.objects.filter(order=order.id)
     dict_prod = {'products': {}}
     for product_order in products_order:
@@ -45,15 +46,13 @@ def vendor_notification(order: Order) -> Notification:
         if inventory:
             dict_prod['vendor'] = inventory.vendor.first_name + ' ' + inventory.vendor.last_name
             dict_prod['products'].update({product_order.product.name: str(product_order.quantity)})
-        else:
-            pass
     sold_products = unpacking_products(dict_prod)
-    body = (f"Hi {dict_prod['vendor']} \n"
-            f"\n Sold products: {sold_products}")
+    print(len(sold_products))
+    body = f"Hi {dict_prod['vendor']} \n\n Sold products:{sold_products}"
 
-    note = Notification(user=inventory.vendor, title=title, body=body)
-    note.save()
-    return note
+    notification = Notification(user=inventory.vendor, title=title, body=body)
+    notification.save()
+    return notification
 
 
 class SuccessTemplateView(TemplateView):
@@ -95,6 +94,5 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
 
         buyer = buyer_notification(order_status)
         vendor = vendor_notification(order_status)
-        ic(buyer)
-        ic(vendor)
+
     return HttpResponse(status=200)

@@ -71,7 +71,6 @@ class ProductDetailTemplateViewTest(TestCase):
 
         product = Product.objects.get(is_sale=True)
 
-        product_image = ProductImage.objects.get(id=product.id)
 
         data = {
                 'pk': product.id,
@@ -83,13 +82,12 @@ class ProductDetailTemplateViewTest(TestCase):
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['product'], product)
-        self.assertEqual(did_get_correct_image, product_image)
+        self.assertEqual(self.additional_factory_image_is_sale, did_get_correct_image)
         self.assertTemplateUsed(response, 'products/product-detail.html')
 
 
 class CategoryTemplateViewTest(TestCase):
     def setUp(self) -> None:
-        # self.view = reverse('category-products')# jak to użyć poprawnie
         self.user = CustomUserFactory.create()
         self.factory = ProductFactory.create_batch(10,)
         self.factory_deals = ProductFactory.create_batch(5, is_sale=True)
