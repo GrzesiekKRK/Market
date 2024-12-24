@@ -4,6 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, DeleteView
 
 from .models import Notification
+from inventories.models import Inventory
+from orders.models import Order, ProductOrder
+from users.models import CustomUser
 
 
 class NotificationListTemplateView(LoginRequiredMixin, TemplateView):
@@ -44,3 +47,40 @@ class NotificationDetailTemplateView(LoginRequiredMixin, TemplateView):
 class NotificationDeleteView(DeleteView):
     model = Notification
     success_url = '/products/'
+
+
+def buyer_notification(order: Order) -> Notification:
+    buyer = CustomUser.objects.get(id=order.customer.id)
+    title = f"Order {order.id} payment accepted"
+    body = f"'Hi your payment was accepted. To see your order click: <a href=\"http://127.0.0.1:8000/order/detail/{order.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>Open notification</a>'"
+    notification = Notification(user=buyer, title=title, body=body)
+    notification.save()
+    return notification
+
+
+def unpacking_products(products_dict: dict) -> str:
+    products = products_dict['products']
+    literal = ''
+    for product, quantity in products.items():
+        literal += ' ' + product + ' ' + quantity + '\r\n'
+
+    return literal
+
+
+def vendor_notification(order: Order) -> Notification:
+    title = f"The purchase of your products has been paid for in orders {order.id}"
+
+    products_order = ProductOrder.objects.filter(order=order.id)
+    dict_prod = {'products': {}}
+    for product_order in products_order:
+        inventory = Inventory.objects.get(product=product_order.product.id)
+        if inventory:
+            dict_prod['vendor'] = inventory.vendor.first_name + ' ' + inventory.vendor.last_name
+            dict_prod['products'].update({product_order.product.name: str(product_order.quantity)})
+    sold_products = unpacking_products(dict_prod)
+    print(len(sold_products))
+    body = f"Hi {dict_prod['vendor']} \n\n Sold products:{sold_products}"
+
+    notification = Notification(user=inventory.vendor, title=title, body=body)
+    notification.save()
+    return notification

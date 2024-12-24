@@ -2,9 +2,13 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test import tag
 from notifications.models import Notification
+from notifications.views import buyer_notification, vendor_notification
 from notifications.factories import NotificationFactory
 
 from users.factories import CustomUserFactory
+from products.factories import ProductFactory
+from orders.factories import OrderFactory, ProductOrderFactory
+from inventories.factories import InventoryFactory
 
 
 class NotificationListTemplateViewTest(TestCase):
@@ -92,3 +96,32 @@ class NotificationDeleteViewTest(TestCase):
     #     self.assertEqual(response.wsgi_request.user.is_authenticated, True)
     #     self.assertEqual(response.status_code, 200)
     #     self.assertRedirects(response, '/products/')
+
+class BuyerVendorNotificationCreationTest(TestCase):
+
+    def setUp(self) -> None:
+        self.user = CustomUserFactory.create()
+        self.factory = ProductFactory.create()
+        self.order = OrderFactory.create(customer=self.user)
+        self.order_products = ProductOrderFactory.create(order=self.order, product=self.factory)
+
+    def test_buyer_notification_works_correctly(self):
+        notification = buyer_notification(self.order)
+
+        self.assertIsInstance(notification, Notification)
+        self.assertEqual(self.user, notification.user)
+        self.assertEqual(notification.title, f"Order {self.order.id} payment accepted")
+        self.assertEqual(notification.body, f"'Hi your payment was accepted. To see your order click: <a href=\"http://127.0.0.1:8000/order/detail/{self.order.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>Open notification</a>'")
+
+    @tag('x')
+    def test_vendor_notification(self):
+            vendor = CustomUserFactory.create(role=2)
+            inventory = InventoryFactory.create(vendor=vendor)
+            inventory.product.add(self.factory)
+
+            vendor_note = vendor_notification(self.order)
+            body = f"Hi {vendor} \n\n Sold products: {self.factory.name} {self.order_products.quantity}\r\n"
+
+            self.assertIsInstance(vendor_note, Notification)
+            self.assertEqual(vendor_note.title, f"The purchase of your products has been paid for in orders {self.order.id}")
+            self.assertEqual(vendor_note.body, body)
