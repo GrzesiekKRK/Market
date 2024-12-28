@@ -1,8 +1,15 @@
-1. python manage.py makemigrations
-2. python manage.py migrate
-3. python  manage.py loaddata users.json
-4. python  manage.py loaddata products.json #only creates categories
-5. python manage.py createsuperuser
+
+* populatedata with Command
+ 1.python manage.py populatedata
+
+
+
+for Fixture (outdated)
+    1. python manage.py makemigrations
+    2. python manage.py migrate
+    3. python  manage.py loaddata users.json
+    4. python  manage.py loaddata products.json #only creates categories
+    5. python manage.py createsuperuser
 
 
 Tworzenie hasła dla usera

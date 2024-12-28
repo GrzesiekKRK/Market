@@ -19,8 +19,12 @@ def stripe_checkout_session(order: Order) -> stripe.checkout:
     products = ProductOrder.objects.filter(order=order.id)
 
     for product in products:
+        try:
+            product_image = ProductImage.objects.get(product=product.product.id, miniature=True)
 
-        product_image = ProductImage.objects.get(product=product.product.id, miniature=True)
+        except ProductImage.DoesNotExist:
+            product_image = ProductImage(product=product.product)
+            product_image.save()
         miniature = [DOMAIN + product_image.image.url]
         stripe_product = {
                             'quantity': int(product.quantity),

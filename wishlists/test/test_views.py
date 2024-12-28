@@ -18,7 +18,6 @@ class WishlistListViewTest(TestCase):
         self.user = CustomUserFactory.create()
 
     def test_wishlist_page_loads_correctly(self):
-        # Arrange
         self.client.force_login(self.user)
         wishlist = WishlistFactory.create(user=self.user)
 
@@ -26,10 +25,8 @@ class WishlistListViewTest(TestCase):
         wishlist.product.add(*products)
         wishlist.save()
 
-        # Act
         response = self.client.get(self.view, id=wishlist.id)
 
-        # Assert
         self.assertCountEqual(products, list(response.context['products']))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'wishlist/wishlist.html')

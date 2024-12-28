@@ -113,7 +113,7 @@ class BuyerVendorNotificationCreationTest(TestCase):
         self.assertEqual(notification.title, f"Order {self.order.id} payment accepted")
         self.assertEqual(notification.body, f"'Hi your payment was accepted. To see your order click: <a href=\"http://127.0.0.1:8000/order/detail/{self.order.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>Open notification</a>'")
 
-    @tag('x')
+
     def test_vendor_notification(self):
             vendor = CustomUserFactory.create(role=2)
             inventory = InventoryFactory.create(vendor=vendor)
