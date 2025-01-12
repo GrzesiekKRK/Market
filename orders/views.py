@@ -77,7 +77,7 @@ class OrderListTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "orders/order.html"
     model = Order
 
-    def get_context_data(self, **kwargs) -> dict[str : list[Order]]:
+    def get_context_data(self, **kwargs) -> dict[str: list[Order]]:
         context = super().get_context_data(**kwargs)
         orders = Order.objects.filter(customer=self.request.user).order_by("-id")
         context["orders"] = orders
@@ -88,7 +88,7 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
     model = Order
     template_name = "orders/order-detail.html"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Order:
         order = get_object_or_404(Order, pk=self.kwargs["pk"])
         if order.customer != self.request.user:
             raise Http404("Order not found or you don't have permission to view it.")
@@ -112,7 +112,7 @@ class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
     model = Order
     success_url = reverse_lazy("customer-order")
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Order:
         order = get_object_or_404(Order, pk=self.kwargs["pk"])
         if order.customer != self.request.user:
             raise Http404("Order not found or you don't have permission to view it.")

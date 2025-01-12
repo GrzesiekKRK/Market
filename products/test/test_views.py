@@ -255,6 +255,7 @@ class ProductUpdateViewTest(TestCase):
 class ProductDeleteViewTest(TestCase):
     def setUp(self) -> None:
         self.user = CustomUserFactory.create(role=2)
+        self.inventory = InventoryFactory.create(vendor=self.user)
         self.factory = ProductFactory.create()
         self.additional_factory_image = ProductImageFactory.create(product=self.factory)
         self.additional_product_is_sale = ProductFactory(is_sale=True)
@@ -272,13 +273,14 @@ class ProductDeleteViewTest(TestCase):
         response = self.client.get(reverse("product-delete", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(response.context["product"], product)
         self.assertTemplateUsed(response, "products/delete.html")
 
     def test_post_products_delete_view_works_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
+        self.inventory.products.add(product)
 
         data = {
             "pk": product.id,
@@ -286,5 +288,5 @@ class ProductDeleteViewTest(TestCase):
         response = self.client.post(reverse("product-delete", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 404)
         self.assertRedirects(response, "/products/")

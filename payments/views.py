@@ -1,8 +1,10 @@
+from typing import Any
+
 from django.conf import settings
-from django.views import View
+
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponse, HttpRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 import json
@@ -12,7 +14,6 @@ from orders.models import Order
 from notifications.views import OrderNotification
 from core.settings import STRIPE_SECRET_KEY, STRIPE_ENDPOINT_SECRET
 from django.contrib.auth.mixins import LoginRequiredMixin
-from icecream import ic
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -21,7 +22,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 class SuccessTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "payments/success.html"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Order:
 
         order = get_object_or_404(Order, pk=self.kwargs["pk"])
 
@@ -30,7 +31,7 @@ class SuccessTemplateView(LoginRequiredMixin, TemplateView):
 
         return order
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str:Any]:
         context = super().get_context_data(**kwargs)
         context["order"] = self.get_object()
         return context
@@ -39,7 +40,7 @@ class SuccessTemplateView(LoginRequiredMixin, TemplateView):
 class CancelledTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "payments/cancel.html"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Order:
         order = get_object_or_404(Order, pk=self.kwargs["pk"])
 
         if order.customer != self.request.user:
@@ -47,7 +48,7 @@ class CancelledTemplateView(LoginRequiredMixin, TemplateView):
 
         return order
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str:Any]:
         context = super().get_context_data(**kwargs)
         context["order"] = self.get_object()
         return context

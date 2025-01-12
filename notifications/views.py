@@ -28,7 +28,7 @@ class NotificationDetailTemplateView(LoginRequiredMixin, TemplateView):
     model = Notification
     template_name = "notification/notification-detail.html"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Notification:
         notification = get_object_or_404(Notification, pk=self.kwargs["pk"])
 
         if notification.user != self.request.user:
@@ -62,7 +62,7 @@ class NotificationDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "notification/notification_confirm_delete.html"
     success_url = "/products/"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Notification:
         notification = get_object_or_404(Notification, pk=self.kwargs["pk"])
 
         if notification.user != self.request.user:
@@ -71,7 +71,7 @@ class NotificationDeleteView(LoginRequiredMixin, DeleteView):
             )
         return notification
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str:Any]:
         context = super().get_context_data(**kwargs)
         context["notification"] = self.get_object()
         return context

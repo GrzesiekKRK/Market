@@ -10,7 +10,7 @@ class Inventory(models.Model):
     """
 
     vendor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    product = models.ManyToManyField(Product)
+    products = models.ManyToManyField(Product)
 
     def __str__(self) -> str:
         return f"{self.vendor.first_name} your inventory"

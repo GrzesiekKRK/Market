@@ -2,14 +2,14 @@
 {% block content %}
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6">Delete Account</h1>
+        <h1 class="text-center text-white display-6">Delete Product</h1>
     </div>
     <!-- Single Page Header End -->
 
     <div class="container py-5 text-center">
         <form method="post">
             {% csrf_token %}
-            <p>Are you sure you want to delete the account for "{{ object }}"?</p>
+            <p>Are you sure you want to delete the  "{{ object }}"?</p>
             <button type="submit" class="btn btn-danger">Confirm</button>
         </form>
         <h3 class="border-top pt-3">

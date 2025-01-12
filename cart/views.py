@@ -31,7 +31,7 @@ class CartTemplateView(TemplateView):
 class CartAddView(LoginRequiredMixin, View):
     model = Cart
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
         pk = kwargs["pk"]
 
         product = get_object_or_404(Product, id=pk)

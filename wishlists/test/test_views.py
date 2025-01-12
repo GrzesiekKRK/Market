@@ -21,7 +21,7 @@ class WishlistListViewTest(TestCase):
         wishlist = WishlistFactory.create(user=self.user)
 
         products = ProductFactory.create_batch(5)
-        wishlist.product.add(*products)
+        wishlist.products.add(*products)
         wishlist.save()
 
         response = self.client.get(self.view, id=wishlist.id)

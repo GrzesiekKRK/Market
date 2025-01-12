@@ -50,8 +50,7 @@ class UserSignUpView(CreateView):
     form_class = RegisterUserForm
     success_message = "Your profile was created successfully"
 
-    def form_invalid(self, form):
-        # print(form.errors)
+    def form_invalid(self, form) -> str:
         return super().form_invalid(form)
 
 
@@ -85,7 +84,6 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-# TODO get_object
 class UserDeleteView(DeleteView, LoginRequiredMixin):
     model = CustomUser
     template_name = "users/delete.html"

@@ -18,7 +18,7 @@ class WishListTemplateView(TemplateView, LoginRequiredMixin):
         wishlist = Wishlist.objects.get_or_create(user=self.request.user)
 
         context["wishlist"] = wishlist[0]
-        context["products"] = wishlist[0].product.all()
+        context["products"] = wishlist[0].products.all()
 
         return context
 
@@ -42,7 +42,7 @@ class WishlistAddProductView(View, LoginRequiredMixin):
 
 
 class WishlistRemoveProductView(View, LoginRequiredMixin):
-    def get(self, request, pk):
+    def get(self, request, pk) -> None:
         raise Http404("This page cannot be accessed via GET method.")
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:

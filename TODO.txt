@@ -2,7 +2,7 @@
 2. Komentarze opisy / https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 Done     3. Pre-commit run vs all files poukładać kod
 4. Postgree dane admina i bazy
-5. Usunąć martwe importy oraz martwe templaty po pre commit
+Done 5. Usunąć martwe importy oraz martwe templaty po pre commit
 6. front z chatboi
 7. Dorzucic testy od stacha
 8. CI

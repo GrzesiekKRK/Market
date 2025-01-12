@@ -26,7 +26,7 @@ class BaseView(LoginRequiredMixin, TemplateView):
 class ProductListTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "products/products.html"
 
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, *args, **kwargs) -> dict[str:Any]:
         return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
@@ -104,7 +104,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     form_class = AddProductForm
     model = Product
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> Product:
 
         product = get_object_or_404(Product, pk=self.kwargs["pk"])
         inventory = get_object_or_404(Inventory, product=product)
@@ -154,13 +154,21 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
                 {"product_form": product_form, "product": product},
             )
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> str:
         messages.error(self.request, "Invalid change")
         return self.render_to_response(self.get_context_data(form=form))
 
 
-# TODO Get_object 404
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "products/delete.html"
     success_url = reverse_lazy("products")
+
+    def get_object(self, queryset=None) -> Product:
+
+        product = get_object_or_404(Product, pk=self.kwargs["pk"])
+        inventory = get_object_or_404(Inventory, product=product)
+        if inventory.vendor == self.request.user:
+            return product
+
+        raise Http404("Inventory not found or you don't have permission to view it.")
