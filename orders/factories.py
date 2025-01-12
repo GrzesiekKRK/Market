@@ -1,4 +1,3 @@
-
 import factory
 from datetime import timezone
 from factory.django import DjangoModelFactory
@@ -6,6 +5,7 @@ from faker import Faker
 from users.factories import CustomUserFactory
 from products.factories import ProductFactory
 from .models import Order, ProductOrder
+
 fake = Faker()
 
 
@@ -16,8 +16,10 @@ class OrderFactory(DjangoModelFactory):
     customer = factory.SubFactory(CustomUserFactory)
     address = factory.LazyAttribute(lambda obj: obj.customer.address)
     postal_code = factory.LazyAttribute(lambda obj: obj.customer.postal_code)
-    date = factory.Faker('date_time_this_decade', tzinfo=timezone.utc)
-    total_price = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
+    date = factory.Faker("date_time_this_decade", tzinfo=timezone.utc)
+    total_price = factory.Faker(
+        "pydecimal", left_digits=4, right_digits=2, positive=True, max_value=9999
+    )
 
 
 class ProductOrderFactory(DjangoModelFactory):
@@ -26,5 +28,9 @@ class ProductOrderFactory(DjangoModelFactory):
 
     product = factory.SubFactory(ProductFactory)
     order = factory.SubFactory(OrderFactory)
-    quantity = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
-    price = factory.Faker('pydecimal', left_digits=4, right_digits=2, positive=True, max_value=9999)
+    quantity = factory.Faker(
+        "pydecimal", left_digits=4, right_digits=2, positive=True, max_value=9999
+    )
+    price = factory.Faker(
+        "pydecimal", left_digits=4, right_digits=2, positive=True, max_value=9999
+    )

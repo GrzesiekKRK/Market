@@ -11,4 +11,3 @@ class ConcatView(TemplateView):
 
 class CheckoutView(TemplateView):
     template_name = "market/checkout.html"
-

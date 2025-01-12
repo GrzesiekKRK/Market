@@ -10,18 +10,17 @@ from users.consts import CUSTOMER_USER_ROLE_VENDOR
 from products.models import ProductImage
 
 
-@method_decorator(account_role_required([CUSTOMER_USER_ROLE_VENDOR]), name='dispatch')
+@method_decorator(account_role_required([CUSTOMER_USER_ROLE_VENDOR]), name="dispatch")
 class InventoryListTemplateView(LoginRequiredMixin, TemplateView):
     """Display all existing products created by vendor"""
-    template_name = 'inventories/inventory.html'
+
+    template_name = "inventories/inventory.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         inventory = Inventory.objects.get_or_create(vendor=self.request.user)
-        context['inventory'] = inventory[0]
-        context['products'] = inventory[0].product.all()
-        context['images'] = ProductImage.objects.filter(product=1)
+        context["inventory"] = inventory[0]
+        context["products"] = inventory[0].product.all()
+        context["images"] = ProductImage.objects.filter(product=1)
 
         return context
-
-

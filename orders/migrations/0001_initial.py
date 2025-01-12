@@ -11,32 +11,65 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('products', '0006_alter_productimage_image'),
+        ("products", "0006_alter_productimage_image"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('order_quantity', models.IntegerField(default=1)),
-                ('address', models.CharField(blank=True, max_length=100, null=True)),
-                ('postal_code', models.CharField(max_length=6)),
-                ('date', models.DateTimeField(default=django.utils.timezone.now)),
-                ('status', models.BooleanField(default=False)),
-                ('total_price', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("order_quantity", models.IntegerField(default=1)),
+                ("address", models.CharField(blank=True, max_length=100, null=True)),
+                ("postal_code", models.CharField(max_length=6)),
+                ("date", models.DateTimeField(default=django.utils.timezone.now)),
+                ("status", models.BooleanField(default=False)),
+                ("total_price", models.DecimalField(decimal_places=2, max_digits=6)),
+                (
+                    "customer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProductOrder',
+            name="ProductOrder",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='orders.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='products.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.DecimalField(decimal_places=2, max_digits=6)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=6)),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="orders.order"
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="products.product",
+                    ),
+                ),
             ],
         ),
     ]

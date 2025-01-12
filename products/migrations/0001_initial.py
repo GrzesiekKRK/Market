@@ -8,47 +8,113 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
             ],
             options={
-                'verbose_name_plural': 'Categories',
-                'ordering': ('name',),
+                "verbose_name_plural": "Categories",
+                "ordering": ("name",),
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('price', models.DecimalField(decimal_places=2, default=0, max_digits=6)),
-                ('miniature_description', models.CharField(blank=True, default='', max_length=100, null=True)),
-                ('description', models.CharField(blank=True, default='', max_length=400, null=True)),
-                ('quantity', models.DecimalField(decimal_places=2, default=1, max_digits=9)),
-                ('units_of_measurement', models.PositiveSmallIntegerField(choices=[(1, 'Piece'), (2, 'Grams'), (3, 'Kilograms'), (4, 'Liters')], default=1)),
-                ('reviews', models.DecimalField(decimal_places=2, default=5.0, max_digits=6)),
-                ('is_sale', models.BooleanField(default=False)),
-                ('sale_price', models.DecimalField(decimal_places=2, default=0, max_digits=6)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='category', to='products.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                (
+                    "price",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=6),
+                ),
+                (
+                    "miniature_description",
+                    models.CharField(blank=True, default="", max_length=100, null=True),
+                ),
+                (
+                    "description",
+                    models.CharField(blank=True, default="", max_length=400, null=True),
+                ),
+                (
+                    "quantity",
+                    models.DecimalField(decimal_places=2, default=1, max_digits=9),
+                ),
+                (
+                    "units_of_measurement",
+                    models.PositiveSmallIntegerField(
+                        choices=[
+                            (1, "Piece"),
+                            (2, "Grams"),
+                            (3, "Kilograms"),
+                            (4, "Liters"),
+                        ],
+                        default=1,
+                    ),
+                ),
+                (
+                    "reviews",
+                    models.DecimalField(decimal_places=2, default=5.0, max_digits=6),
+                ),
+                ("is_sale", models.BooleanField(default=False)),
+                (
+                    "sale_price",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=6),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="category",
+                        to="products.category",
+                    ),
+                ),
             ],
             options={
-                'ordering': ('name',),
+                "ordering": ("name",),
             },
         ),
         migrations.CreateModel(
-            name='ProductImage',
+            name="ProductImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('miniature', models.BooleanField(default=False)),
-                ('image', models.FileField(upload_to='uploads/product/')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='image', to='products.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("miniature", models.BooleanField(default=False)),
+                ("image", models.FileField(upload_to="uploads/product/")),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="image",
+                        to="products.product",
+                    ),
+                ),
             ],
         ),
     ]

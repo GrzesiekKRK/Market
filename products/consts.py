@@ -1,7 +1,7 @@
 CATEGORIES = (
-    'Beverages',
-    'Fruits',
-    'Vegetables',
+    "Beverages",
+    "Fruits",
+    "Vegetables",
 )
 
 PRODUCT_UNITS_PIECE = 1

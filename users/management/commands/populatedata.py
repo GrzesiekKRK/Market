@@ -10,7 +10,8 @@ from orders.factories import OrderFactory
 
 
 class Command(BaseCommand):
-    """Creat Users, 5 x Notifications per user, and Inventory if user is vendor """
+    """Creat Users, 5 x Notifications per user, and Inventory if user is vendor"""
+
     def handle(self, *args, **options) -> None:
         users = self.users_factories()
         self.notification_factories(users)
@@ -19,7 +20,9 @@ class Command(BaseCommand):
 
     @staticmethod
     def users_factories() -> CustomUser:
-        users = CustomUserFactory.create_batch(20, )
+        users = CustomUserFactory.create_batch(
+            20,
+        )
         return users
 
     @staticmethod
@@ -50,4 +53,3 @@ class Command(BaseCommand):
     def order_factories(users: CustomUser):
         for user in users:
             OrderFactory.create_batch(2, customer=user, address=user.address)
-

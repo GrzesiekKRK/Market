@@ -16,41 +16,60 @@ class AddProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'price', 'miniature_description', 'description',  'quantity', 'units_of_measurement', 'is_sale', 'sale_price']
+        fields = [
+            "name",
+            "category",
+            "price",
+            "miniature_description",
+            "description",
+            "quantity",
+            "units_of_measurement",
+            "is_sale",
+            "sale_price",
+        ]
 
 
 class ImageForm(forms.ModelForm):
     miniature = forms.ImageField()
-    image = forms.FileField(widget=forms.TextInput(attrs={
-            "name": "images",
-            "type": "File",
-            "class": "form-control",
-            "multiple": "True",
-        }), label="")
+    image = forms.FileField(
+        widget=forms.TextInput(
+            attrs={
+                "name": "images",
+                "type": "File",
+                "class": "form-control",
+                "multiple": "True",
+            }
+        ),
+        label="",
+    )
 
     class Meta:
         model = ProductImage
-        fields = ['miniature', 'image']
+        fields = ["miniature", "image"]
 
     def __init__(self, *args, **kwargs):
-        initial_images = kwargs.pop('initial_images', None)
+        initial_images = kwargs.pop("initial_images", None)
         super().__init__(*args, **kwargs)
 
         if initial_images:
-            print('Initial_Images')
-            self.fields['image'].initial = initial_images
+            print("Initial_Images")
+            self.fields["image"].initial = initial_images
 
 
 class UpdateImageForm(forms.ModelForm):
     miniature = forms.ImageField()
-    images = forms.FileField(widget=forms.TextInput(attrs={
-            "name": "images",
-            "type": "File",
-            "class": "form-control",
-            "multiple": "True",
-        }), label="")
+    images = forms.FileField(
+        widget=forms.TextInput(
+            attrs={
+                "name": "images",
+                "type": "File",
+                "class": "form-control",
+                "multiple": "True",
+            }
+        ),
+        label="",
+    )
 
     class Meta:
         model = ProductImage
-        fields = ['miniature', 'image']
-
+        fields = ["miniature", "image"]

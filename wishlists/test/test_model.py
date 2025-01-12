@@ -12,4 +12,7 @@ class WishlistModelTest(TestCase):
 
     def test_model_str_method_output(self):
         wish = Wishlist.objects.last()
-        self.assertEqual(str(self.factory), f" {wish.user.first_name} {wish.user.last_name} your wishlist")
+        self.assertEqual(
+            str(self.factory),
+            f" {wish.user.first_name} {wish.user.last_name} your wishlist",
+        )

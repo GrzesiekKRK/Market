@@ -13,14 +13,14 @@ from icecream import ic
 
 
 class WishListTemplateView(TemplateView, LoginRequiredMixin):
-    template_name = 'wishlist/wishlist.html'
+    template_name = "wishlist/wishlist.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         wishlist = Wishlist.objects.get_or_create(user=self.request.user)
 
-        context['wishlist'] = wishlist[0]
-        context['products'] = wishlist[0].product.all()
+        context["wishlist"] = wishlist[0]
+        context["products"] = wishlist[0].product.all()
 
         return context
 
@@ -40,7 +40,7 @@ class WishlistAddProductView(View, LoginRequiredMixin):
 
         else:
             products = wishlist.product.all()
-        return render(request, 'wishlist/wishlist.html', {'products': products})
+        return render(request, "wishlist/wishlist.html", {"products": products})
 
 
 class WishlistRemoveProductView(View, LoginRequiredMixin):
@@ -49,20 +49,17 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
-            product = Product.objects.get(id=pk) # get_object_or_404(Product, id=pk)
+            product = Product.objects.get(id=pk)  # get_object_or_404(Product, id=pk)
         except Product.DoesNotExist:
             return HttpResponse(status=404, content="Product not found.")
 
         try:
             wishlist = Wishlist.objects.get(user=request.user)
         except Wishlist.DoesNotExist:
-            return render(request, 'wishlist/wishlist.html', {'products': []})
+            return render(request, "wishlist/wishlist.html", {"products": []})
 
         wishlist.product.remove(product)
 
         products = wishlist.product.all()
 
-        return render(request, 'wishlist/wishlist.html', {'products': products})
-
-
-
+        return render(request, "wishlist/wishlist.html", {"products": products})

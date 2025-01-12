@@ -13,7 +13,9 @@ class InventoryListTemplateViewTest(TestCase):
 
     def setUp(self) -> None:
         self.user = CustomUserFactory.create(role=2)
-        self.factory = ProductFactory.create_batch(10, )
+        self.factory = ProductFactory.create_batch(
+            10,
+        )
         self.inventory_factory = InventoryFactory.create(vendor=self.user)
 
     def test_get(self):
@@ -23,18 +25,15 @@ class InventoryListTemplateViewTest(TestCase):
             inventory.product.add(product)
 
         vendor_products = inventory.product.all()
-        response = self.client.get(reverse('vendor-inventory'))
+        response = self.client.get(reverse("vendor-inventory"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(vendor_products), 10)
-        self.assertEqual(inventory.vendor.role, 2)# vendor role
-        self.assertTemplateUsed(response, 'inventories/inventory.html')
-
+        self.assertEqual(inventory.vendor.role, 2)  # vendor role
+        self.assertTemplateUsed(response, "inventories/inventory.html")
 
     def test_get_invalid_user_role(self):
         user = CustomUserFactory.create(role=1)
         self.client.force_login(user)
 
-        response = self.client.get(reverse('vendor-inventory'))
+        response = self.client.get(reverse("vendor-inventory"))
         self.assertEqual(response.status_code, 403)
-
-

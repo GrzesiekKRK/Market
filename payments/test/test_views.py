@@ -20,18 +20,22 @@ class SuccessTemplateViewTest(TestCase):
     def test_success_template_load_correctly(self):
         self.client.force_login(self.user)
 
-        response = self.client.get(reverse('successful-payment', kwargs={'pk': self.order.id}))
+        response = self.client.get(
+            reverse("successful-payment", kwargs={"pk": self.order.id})
+        )
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'payments/success.html')
+        self.assertTemplateUsed(response, "payments/success.html")
 
     def test_success_template_does_not_work(self):
         self.client.force_login(self.user)
 
-        response = self.client.get(reverse('successful-payment', kwargs={'pk': self.user.id}))
+        response = self.client.get(
+            reverse("successful-payment", kwargs={"pk": self.user.id})
+        )
 
         self.assertEqual(response.status_code, 404)
-        self.assertTemplateNotUsed(response, 'payments/success.html')
+        self.assertTemplateNotUsed(response, "payments/success.html")
 
 
 class CancelledTemplateViewTest(TestCase):
@@ -42,17 +46,19 @@ class CancelledTemplateViewTest(TestCase):
     def test_cancelled_template_load_correctly(self):
         self.client.force_login(self.user)
 
-        response = self.client.get(reverse('cancelled-payment', kwargs={'pk': self.order.id}))
+        response = self.client.get(
+            reverse("cancelled-payment", kwargs={"pk": self.order.id})
+        )
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'payments/cancel.html')
+        self.assertTemplateUsed(response, "payments/cancel.html")
 
-    @tag('x')
+    @tag("x")
     def test_cancelled_template_does_not_work(self):
         self.user = CustomUserFactory.create()
         self.client.force_login(self.user)
 
-        response = self.client.get(reverse('cancelled-payment', kwargs={'pk': 999}))
+        response = self.client.get(reverse("cancelled-payment", kwargs={"pk": 999}))
 
         self.assertEqual(response.status_code, 404)
-        self.assertTemplateNotUsed(response, 'payments/cancel.html')
+        self.assertTemplateNotUsed(response, "payments/cancel.html")

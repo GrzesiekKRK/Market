@@ -19,11 +19,11 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class SuccessTemplateView(LoginRequiredMixin, TemplateView):
-    template_name = 'payments/success.html'
+    template_name = "payments/success.html"
 
-    def get_object(self,  queryset=None):
+    def get_object(self, queryset=None):
 
-        order = get_object_or_404(Order, pk=self.kwargs['pk'])
+        order = get_object_or_404(Order, pk=self.kwargs["pk"])
 
         if order.customer != self.request.user:
             raise Http404("Order not found or you don't have permission to view it.")
@@ -32,15 +32,15 @@ class SuccessTemplateView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['order'] = self.get_object()
+        context["order"] = self.get_object()
         return context
 
 
 class CancelledTemplateView(LoginRequiredMixin, TemplateView):
-    template_name = 'payments/cancel.html'
+    template_name = "payments/cancel.html"
 
-    def get_object(self,  queryset=None):
-        order = get_object_or_404(Order, pk=self.kwargs['pk'])
+    def get_object(self, queryset=None):
+        order = get_object_or_404(Order, pk=self.kwargs["pk"])
 
         if order.customer != self.request.user:
             raise Http404("Order not found or you don't have permission to view it.")
@@ -49,7 +49,7 @@ class CancelledTemplateView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['order'] = self.get_object()
+        context["order"] = self.get_object()
         return context
 
 
@@ -60,15 +60,13 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
 
     payload = request.body
     order = json.loads(payload.decode())
-    order_id = order['data']['object']['metadata']
+    order_id = order["data"]["object"]["metadata"]
 
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
     event = None
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except ValueError as e:
         # Invalid payload
         return HttpResponse(status=400)
@@ -76,9 +74,9 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         # Invalid signature
         return HttpResponse(status=400)
 
-    if event['type'] == 'charge.succeeded':
+    if event["type"] == "charge.succeeded":
         print("Payment was successful.")
-        order_status = Order.objects.get(id=int(order_id['order_id']))
+        order_status = Order.objects.get(id=int(order_id["order_id"]))
         order_status.status = True
         order_status.save()
 

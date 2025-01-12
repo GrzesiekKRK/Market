@@ -12,9 +12,8 @@ def create_defaults_category(sender, **kwargs):
 
 
 class ProductConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'products'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "products"
 
     def ready(self):
         post_migrate.connect(create_defaults_category, sender=self)
-                

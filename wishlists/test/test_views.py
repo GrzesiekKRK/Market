@@ -14,7 +14,7 @@ from products.models import Product
 
 class WishlistListViewTest(TestCase):
     def setUp(self) -> None:
-        self.view = reverse('wishlist')
+        self.view = reverse("wishlist")
         self.user = CustomUserFactory.create()
 
     def test_wishlist_page_loads_correctly(self):
@@ -27,9 +27,9 @@ class WishlistListViewTest(TestCase):
 
         response = self.client.get(self.view, id=wishlist.id)
 
-        self.assertCountEqual(products, list(response.context['products']))
+        self.assertCountEqual(products, list(response.context["products"]))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
+        self.assertTemplateUsed(response, "wishlist/wishlist.html")
 
 
 class WishlistAddProductViewTest(TestCase):
@@ -42,15 +42,17 @@ class WishlistAddProductViewTest(TestCase):
         self.client.force_login(self.user)
         product = Product.objects.last()
         data = {
-                'pk': product.id,
+            "pk": product.id,
         }
 
-        response = self.client.post(reverse('add-to-wishlist', kwargs=data))
+        response = self.client.post(reverse("add-to-wishlist", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
-        self.assertEqual(str(response.context['products']), f'<QuerySet [<Product: {product.name}>]>')
+        self.assertTemplateUsed(response, "wishlist/wishlist.html")
+        self.assertEqual(
+            str(response.context["products"]), f"<QuerySet [<Product: {product.name}>]>"
+        )
 
     def test_post_with_wishlist_creation(self):
         user = CustomUserFactory.create()
@@ -58,17 +60,21 @@ class WishlistAddProductViewTest(TestCase):
 
         product = Product.objects.last()
         data = {
-            'pk': product.id,
+            "pk": product.id,
         }
 
-        response = self.client.post(reverse('add-to-wishlist', kwargs=data))
+        response = self.client.post(reverse("add-to-wishlist", kwargs=data))
         wish = Wishlist.objects.get(user=user)
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
-        self.assertEqual(str(response.context['products']), f'<QuerySet [<Product: {product.name}>]>')
-        self.assertEqual(str(wish), f' {user.first_name} {user.last_name} your wishlist')
+        self.assertTemplateUsed(response, "wishlist/wishlist.html")
+        self.assertEqual(
+            str(response.context["products"]), f"<QuerySet [<Product: {product.name}>]>"
+        )
+        self.assertEqual(
+            str(wish), f" {user.first_name} {user.last_name} your wishlist"
+        )
 
 
 class WishlistRemoveProductViewTest(TestCase):
@@ -79,29 +85,25 @@ class WishlistRemoveProductViewTest(TestCase):
 
         self.client.force_login(self.user)
 
-
     def test_post_with_created_wishlist(self):
         product = Product.objects.last()
         data = {
-                'pk': product.id,
+            "pk": product.id,
         }
         wish = Wishlist.objects.get(user=self.user)
 
-        response = self.client.post(reverse('wishlist-remove', kwargs=data))
+        response = self.client.post(reverse("wishlist-remove", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
-        self.assertEqual(str(response.context['products']), f'<QuerySet []>')
+        self.assertTemplateUsed(response, "wishlist/wishlist.html")
+        self.assertEqual(str(response.context["products"]), f"<QuerySet []>")
 
     def test_post_with_none_existing_product(self):
         data = {
-            'pk': 9999,
-
+            "pk": 9999,
         }
-        response = self.client.post(reverse('wishlist-remove', kwargs=data))
+        response = self.client.post(reverse("wishlist-remove", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 404)
-
-

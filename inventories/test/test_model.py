@@ -15,7 +15,5 @@ class InventoryModelTest(TestCase):
         inventory = Inventory.objects.last()
         first_name = inventory.vendor.first_name
 
-        self.assertEqual(str(inventory), f'{first_name} your inventory')
+        self.assertEqual(str(inventory), f"{first_name} your inventory")
         self.assertIsInstance(inventory, Inventory)
-
-

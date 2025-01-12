@@ -9,7 +9,6 @@ class CategoryModelTest(TestCase):
     def setUp(self) -> None:
         self.factory = OrderFactory.create()
 
-
     def test_model_str_method_output(self):
         order = self.factory
         self.assertEqual(str(order), f"order {order.id} ")
@@ -23,7 +22,10 @@ class ProductOrderModelTest(TestCase):
 
     def test_model_str_method_output(self):
         product_order = self.factory
-        self.assertEqual(str(product_order), f"Product {product_order.product.name}"
-                                             f" from order {product_order.order},"
-                                             f" in {product_order.quantity} and price {product_order.price}")
+        self.assertEqual(
+            str(product_order),
+            f"Product {product_order.product.name}"
+            f" from order {product_order.order},"
+            f" in {product_order.quantity} and price {product_order.price}",
+        )
         self.assertIsInstance(product_order, ProductOrder)

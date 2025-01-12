@@ -64,5 +64,3 @@ from inventories.factories import InventoryFactory
 #         with mock.patch('cart.views.Cart', side_effect=mock_cart.cart) as mock_cart:
 #             response = self.client.get(reverse('cart'))
 #
-
-
