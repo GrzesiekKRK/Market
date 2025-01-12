@@ -1,18 +1,16 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.urls import reverse
-from django.test import tag
-from products.models import Category, Product, ProductImage
-from products.forms import ImageForm, AddProductForm, UpdateImageForm
-from products.factories import ProductFactory, CategoryFactory, ProductImageFactory
+
+from products.models import Category
+from products.forms import ImageForm, AddProductForm
+from products.factories import ProductImageFactory
 
 from users.factories import CustomUserFactory
-from users.models import CustomUser
+
 
 from products.factories import ProductFactory
 from products.models import Product
 from inventories.factories import InventoryFactory
-
-from wishlists.models import Wishlist
 
 
 class ProductListTemplateViewTest(TestCase):

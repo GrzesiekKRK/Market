@@ -1,9 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse
-from django.test import tag
-from django.contrib.auth.hashers import make_password
-import random
-from products.forms import AddProductForm, ImageForm, UpdateImageForm
+from products.forms import AddProductForm, ImageForm
 from products.factories import ProductFactory, ProductImageFactory
 
 

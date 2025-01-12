@@ -1,6 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
-from django.test import tag
 from django.contrib.auth.hashers import make_password
 import random
 from users.forms import RegisterUserForm, LoginForm, UpdateUserForm

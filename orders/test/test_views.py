@@ -1,17 +1,15 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.test import tag
+
 
 from unittest import mock
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import MagicMock
 
 from orders.models import Order, ProductOrder
 from orders.factories import OrderFactory, ProductOrderFactory
 
-from users.models import CustomUser
 from users.factories import CustomUserFactory
 
-from products.models import Product
 from products.factories import ProductFactory
 
 mock_instance = mock.Mock()
@@ -41,7 +39,6 @@ class CreateOrderTemplateViewTest(TestCase):
 
 
 class OrderListTemplateViewTest(TestCase):
-
     def setUp(self) -> None:
         self.view = reverse("customer-order")
         self.user = CustomUserFactory.create()
@@ -66,7 +63,6 @@ class OrderListTemplateViewTest(TestCase):
 
 
 class OrderDetailTemplateViewTest(TestCase):
-
     def setUp(self) -> None:
         self.user = CustomUserFactory.create()
         self.order = OrderFactory.create(customer=self.user)

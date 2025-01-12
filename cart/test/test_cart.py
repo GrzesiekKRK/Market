@@ -1,12 +1,8 @@
 from django.test import TestCase, RequestFactory
-from django.urls import reverse
-from django.test import tag
-from decimal import Decimal
 from unittest.mock import MagicMock
-from unittest.mock import Mock
 from cart.cart import Cart
 
-from products.models import Product
+
 from products.factories import ProductFactory
 from users.factories import CustomUserFactory
 

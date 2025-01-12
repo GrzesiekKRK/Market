@@ -6,7 +6,6 @@ from users.factories import CustomUserFactory
 
 
 class InventoryModelTest(TestCase):
-
     def setUp(self) -> None:
         self.user = CustomUserFactory.create(role=2)
         self.inventory_factory = InventoryFactory.create(vendor=self.user)

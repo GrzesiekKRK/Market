@@ -1,11 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
 from users.forms import RegisterUserForm, LoginForm
-from django.test import tag
 from users.models import CustomUser
 from users.factories import CustomUserFactory
-from django.contrib.auth.hashers import make_password
 
 
 class TestUserSignUpView(TestCase):
@@ -62,7 +59,6 @@ class TestUserSignUpView(TestCase):
 
 
 class TestCustomUserLoginView(TestCase):
-
     def setUp(self) -> None:
         self.sign_in = reverse("user-login")
         self.user = CustomUserFactory.create()
@@ -103,7 +99,6 @@ class TestCustomUserLoginView(TestCase):
 
 
 class TestUserDeleteView(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         CustomUserFactory.create()

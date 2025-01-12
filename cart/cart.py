@@ -3,7 +3,6 @@ from django.http import HttpRequest
 
 from decimal import Decimal
 from products.models import Product
-from icecream import ic
 
 
 class Cart:

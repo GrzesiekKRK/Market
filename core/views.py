@@ -7,7 +7,3 @@ class DashboardView(TemplateView):
 
 class ConcatView(TemplateView):
     template_name = "market/contact.html"
-
-
-class CheckoutView(TemplateView):
-    template_name = "market/checkout.html"

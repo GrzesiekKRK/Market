@@ -1,12 +1,11 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.urls import reverse
-from django.test import tag
-from wishlists.models import Wishlist
-from wishlists.views import WishListTemplateView
-from wishlists.factories import WishlistFactory
 
+from wishlists.models import Wishlist
+
+from wishlists.factories import WishlistFactory
 from users.factories import CustomUserFactory
-from users.models import CustomUser
+
 
 from products.factories import ProductFactory
 from products.models import Product

@@ -1,12 +1,9 @@
 from django.test import TestCase
-from django.urls import reverse
-from django.test import tag
 from products.models import Category, Product
 from products.factories import ProductFactory, CategoryFactory
 
 
 class CategoryModelTest(TestCase):
-
     def setUp(self) -> None:
         self.factory = CategoryFactory.create()
 

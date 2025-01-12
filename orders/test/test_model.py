@@ -1,6 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
-from django.test import tag
 from orders.models import Order, ProductOrder
 from orders.factories import OrderFactory, ProductOrderFactory
 

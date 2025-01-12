@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 
 # TODO remove boilerplate comments
-# TODO add pre-commit like in Cipher project.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 

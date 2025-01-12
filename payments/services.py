@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 from orders.models import Order, ProductOrder
 from products.models import ProductImage
 from users.models import CustomUser

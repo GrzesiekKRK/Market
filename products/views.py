@@ -17,7 +17,6 @@ from inventories.models import Inventory
 from wishlists.models import Wishlist
 from notifications.models import Notification
 from users.models import CustomUser
-from icecream import ic
 
 
 class BaseView(LoginRequiredMixin, TemplateView):

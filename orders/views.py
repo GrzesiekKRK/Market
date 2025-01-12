@@ -1,7 +1,7 @@
 from typing import Any
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse
 
-from django.views.generic import TemplateView, DeleteView, View
+from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -14,7 +14,6 @@ from products.models import Product
 from users.models import CustomUser
 from cart.cart import Cart
 from payments.services import stripe_checkout_session
-from icecream import ic
 
 
 class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):

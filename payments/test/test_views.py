@@ -1,15 +1,9 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.urls import reverse
 from django.test import tag
-from unittest import mock
-from unittest.mock import patch, Mock, MagicMock
-
 
 from users.factories import CustomUserFactory
-from products.factories import ProductFactory
-from orders.factories import OrderFactory, ProductOrderFactory
-from inventories.factories import InventoryFactory
-from users.models import CustomUser
+from orders.factories import OrderFactory
 
 
 class SuccessTemplateViewTest(TestCase):

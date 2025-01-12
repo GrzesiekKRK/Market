@@ -1,8 +1,6 @@
 from typing import Any
 
-from rest_framework import status
-from rest_framework.response import Response
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,8 +9,7 @@ from .cart import Cart
 
 from products.models import Product
 from orders.models import ProductOrder
-from icecream import ic
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 
 
 class CartTemplateView(TemplateView):

@@ -2,14 +2,12 @@ from typing import Any
 from django.http import HttpRequest, HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.views.generic import TemplateView, View, DeleteView
-from django.shortcuts import render, redirect
-
+from django.views.generic import TemplateView, View
+from django.shortcuts import render
 
 from .models import Wishlist
 
 from products.models import Product
-from icecream import ic
 
 
 class WishListTemplateView(TemplateView, LoginRequiredMixin):
@@ -35,11 +33,11 @@ class WishlistAddProductView(View, LoginRequiredMixin):
 
         if product:
 
-            wishlist.product.add(product)
-            products = wishlist.product.all()
+            wishlist.products.add(product)
+            products = wishlist.products.all()
 
         else:
-            products = wishlist.product.all()
+            products = wishlist.products.all()
         return render(request, "wishlist/wishlist.html", {"products": products})
 
 
@@ -58,8 +56,8 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
         except Wishlist.DoesNotExist:
             return render(request, "wishlist/wishlist.html", {"products": []})
 
-        wishlist.product.remove(product)
+        wishlist.products.remove(product)
 
-        products = wishlist.product.all()
+        products = wishlist.products.all()
 
         return render(request, "wishlist/wishlist.html", {"products": products})

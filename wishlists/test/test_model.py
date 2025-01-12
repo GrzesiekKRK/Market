@@ -1,12 +1,9 @@
 from django.test import TestCase
-from django.urls import reverse
-from django.test import tag
 from wishlists.models import Wishlist
 from wishlists.factories import WishlistFactory
 
 
 class WishlistModelTest(TestCase):
-
     def setUp(self):
         self.factory = WishlistFactory.create()
 

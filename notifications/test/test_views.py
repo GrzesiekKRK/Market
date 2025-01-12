@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.test import tag
 from notifications.models import Notification
-from notifications.views import buyer_notification, vendor_notification
+from notifications.views import OrderNotification
 from notifications.factories import NotificationFactory
 
 from users.factories import CustomUserFactory
@@ -93,7 +92,6 @@ class NotificationDeleteViewTest(TestCase):
 
 
 class BuyerVendorNotificationCreationTest(TestCase):
-
     def setUp(self) -> None:
         self.user = CustomUserFactory.create()
         self.factory = ProductFactory.create()
@@ -103,7 +101,7 @@ class BuyerVendorNotificationCreationTest(TestCase):
         )
 
     def test_buyer_notification_works_correctly(self):
-        notification = buyer_notification(self.order)
+        notification = OrderNotification.buyer_notification(self.order)
 
         self.assertIsInstance(notification, Notification)
         self.assertEqual(self.user, notification.user)
@@ -118,7 +116,7 @@ class BuyerVendorNotificationCreationTest(TestCase):
         inventory = InventoryFactory.create(vendor=vendor)
         inventory.product.add(self.factory)
 
-        vendor_note = vendor_notification(self.order)
+        vendor_note = OrderNotification.vendor_notification(self.order)
         body = f"Hi {vendor} \n\n Sold products: {self.factory.name} {self.order_products.quantity}\r\n"
 
         self.assertIsInstance(vendor_note, Notification)

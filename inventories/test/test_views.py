@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.test import tag
 from inventories.models import Inventory
 from inventories.factories import InventoryFactory
 
@@ -10,7 +9,6 @@ from users.factories import CustomUserFactory
 
 
 class InventoryListTemplateViewTest(TestCase):
-
     def setUp(self) -> None:
         self.user = CustomUserFactory.create(role=2)
         self.factory = ProductFactory.create_batch(

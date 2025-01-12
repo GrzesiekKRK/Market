@@ -1,8 +1,4 @@
-import datetime
-
 from django.test import TestCase
-from django.urls import reverse
-from django.test import tag
 from users.models import CustomUser
 
 
