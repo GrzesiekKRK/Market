@@ -82,8 +82,8 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         messages.error(self.request, 'Invalid change')
         return self.render_to_response(self.get_context_data(form=form))
 
-
-class UserDeleteView(DeleteView):
+#TODO get_object
+class UserDeleteView(DeleteView, LoginRequiredMixin):
     model = CustomUser
     template_name = 'users/delete.html'
     success_url = reverse_lazy('user-login')

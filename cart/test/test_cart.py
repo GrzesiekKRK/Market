@@ -46,7 +46,6 @@ class CartTest(TestCase):
         self.assertEqual(len(cart), 4)
         self.assertIsInstance(cart, Cart)
 
-    @tag('x')
     def test_cart_len_2_add(self) -> None:
         cart = Cart(self.request)
         cart.add(self.product, quantity=1)
@@ -71,7 +70,6 @@ class CartTest(TestCase):
         self.assertEqual(len(cart), 1)
         self.assertNotIn(self.additional_product.id, cart.cart)
 
-    @tag('x')
     def test_iter_with_for_loop_on_cart(self) -> None:
         session_request = RequestFactory()
         session_request.session = MagicMock()

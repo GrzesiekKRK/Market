@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.generic import TemplateView, View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .cart import Cart
 
 from products.models import Product
@@ -29,7 +31,7 @@ class CartTemplateView(TemplateView):
         return context
 
 
-class CartAddView(View):
+class CartAddView(LoginRequiredMixin, View):
     model = Cart
 
     def post(self, request, *args, **kwargs):
@@ -42,7 +44,7 @@ class CartAddView(View):
         return redirect('products')
 
 
-class CartIncreaseProductQuantityView(View):
+class CartIncreaseProductQuantityView(LoginRequiredMixin, View):
     model = Cart
 
     def post(self, request: HttpRequest, *args, ** kwargs) -> HttpResponseRedirect:
@@ -53,7 +55,7 @@ class CartIncreaseProductQuantityView(View):
         return redirect('cart')
 
 
-class CartDecreaseProductQuantityView(View):
+class CartDecreaseProductQuantityView(LoginRequiredMixin, View):
     model = Cart
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect:
@@ -65,7 +67,7 @@ class CartDecreaseProductQuantityView(View):
         return redirect('cart')
 
 
-class CartRemoveProductView(View):
+class CartRemoveProductView(LoginRequiredMixin, View):
     model = Cart
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect:
@@ -76,7 +78,7 @@ class CartRemoveProductView(View):
         return redirect('cart')
 
 
-class CartClearView(View):
+class CartClearView(LoginRequiredMixin, View):
     model = Cart
 
     def post(self, request: HttpRequest) -> HttpResponseRedirect:
@@ -86,7 +88,7 @@ class CartClearView(View):
         return redirect('cart')
 
 
-class RenewOrderView(View):
+class RenewOrderView(LoginRequiredMixin, View):
     model = Cart
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect:

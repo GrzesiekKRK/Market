@@ -1,7 +1,6 @@
 from typing import Any
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
-from django.utils.decorators import method_decorator
-from django.views.decorators.http import require_POST
+from django.http import HttpRequest, HttpResponse, Http404
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.views.generic import TemplateView, View, DeleteView
 from django.shortcuts import render, redirect
@@ -13,7 +12,7 @@ from products.models import Product
 from icecream import ic
 
 
-class WishListTemplateView(TemplateView):
+class WishListTemplateView(TemplateView, LoginRequiredMixin):
     template_name = 'wishlist/wishlist.html'
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
@@ -26,7 +25,7 @@ class WishListTemplateView(TemplateView):
         return context
 
 
-class WishlistAddProductView(View):
+class WishlistAddProductView(View, LoginRequiredMixin):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         wishlist, created = Wishlist.objects.get_or_create(user=self.request.user)
         if not created:
@@ -44,11 +43,10 @@ class WishlistAddProductView(View):
         return render(request, 'wishlist/wishlist.html', {'products': products})
 
 
-class WishlistRemoveProductView(View):
+class WishlistRemoveProductView(View, LoginRequiredMixin):
     def get(self, request, pk):
         raise Http404("This page cannot be accessed via GET method.")
 
-    #TODO wyjątek
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
             product = Product.objects.get(id=pk) # get_object_or_404(Product, id=pk)

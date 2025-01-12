@@ -10,6 +10,7 @@ from users.models import CustomUser
 
 from products.factories import ProductFactory
 from products.models import Product
+from inventories.factories import InventoryFactory
 
 from wishlists.models import Wishlist
 
@@ -164,15 +165,17 @@ class CreateProductTest(TestCase):
 class ProductUpdateViewTest(TestCase):
     def setUp(self) -> None:
         self.user = CustomUserFactory.create(role=2)
+        self.inventory = InventoryFactory.create(vendor=self.user)
         self.factory = ProductFactory.create()
         self.additional_factory_image = ProductImageFactory.create(product=self.factory)
         self.additional_product_is_sale = ProductFactory(is_sale=True)
         self.additional_factory_image_is_sale = ProductImageFactory.create(product=self.additional_product_is_sale)
 
+
     def test_get_products_update_page_loads_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
-
+        self.inventory.product.add(product)
         data = {
                 'pk': product.id,
         }
@@ -184,11 +187,11 @@ class ProductUpdateViewTest(TestCase):
         self.assertEqual(response.context['product'], product)
         self.assertTemplateUsed(response, 'products/update.html')
 
-    #TODO ImageForma i is_sale w view co dalej
+
     def test_post_products_update_page_loads_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
-
+        self.inventory.product.add(product)
         data = {
             'pk': product.id,
         }
@@ -218,7 +221,7 @@ class ProductUpdateViewTest(TestCase):
     def test_post_products_update_page_invalid_form(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
-
+        self.inventory.product.add(product)
         data = {
             'pk': product.id,
         }

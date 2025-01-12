@@ -1,11 +1,13 @@
 from typing import Any
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse
 
 from django.views.generic import TemplateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from products.models import Category, Product
 from .models import ProductImage
@@ -94,10 +96,19 @@ class CreateProduct(LoginRequiredMixin):
         return render(request, "products/add_product.html", context)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'products/update.html'
     form_class = AddProductForm
     model = Product
+
+    def get_object(self, queryset=None):
+
+        product = get_object_or_404(Product, pk=self.kwargs['pk'])
+        inventory = get_object_or_404(Inventory, product=product)
+        if inventory.vendor == self.request.user:
+            return product
+
+        raise Http404("Inventory not found or you don't have permission to view it.")
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         product = self.get_object()
@@ -129,7 +140,8 @@ class ProductUpdateView(UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ProductDeleteView(DeleteView):
+#TODO Get_object 404
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'products/delete.html'
     success_url = reverse_lazy('products')

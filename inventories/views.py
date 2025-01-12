@@ -1,6 +1,7 @@
 from typing import Any
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Inventory
 from users.permissions import account_role_required
@@ -10,7 +11,7 @@ from products.models import ProductImage
 
 
 @method_decorator(account_role_required([CUSTOMER_USER_ROLE_VENDOR]), name='dispatch')
-class InventoryListTemplateView(TemplateView):
+class InventoryListTemplateView(LoginRequiredMixin, TemplateView):
     """Display all existing products created by vendor"""
     template_name = 'inventories/inventory.html'
 

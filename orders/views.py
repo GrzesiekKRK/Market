@@ -5,7 +5,9 @@ from django.views.generic import TemplateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from datetime import datetime
+from django.shortcuts import get_object_or_404
+from django.http import Http404
+
 from .models import Order, ProductOrder
 
 from products.models import Product
@@ -82,9 +84,16 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
     model = Order
     template_name = 'orders/order-detail.html'
 
+    def get_object(self,  queryset=None):
+        order = get_object_or_404(Order, pk=self.kwargs['pk'])
+        if order.customer != self.request.user:
+            raise Http404("Order not found or you don't have permission to view it.")
+
+        return order
+
     def get_context_data(self, **kwargs) -> dict[str: Any]:
         context = super().get_context_data(**kwargs)
-        order = Order.objects.get(id=context['pk'])
+        order = self.get_object()
         products = ProductOrder.objects.filter(order=order)
         customer = CustomUser.objects.get(id=order.customer.id)
 
@@ -98,3 +107,16 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
 class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
     model = Order
     success_url = reverse_lazy('customer-order')
+
+    def get_object(self,  queryset=None):
+        order = get_object_or_404(Order, pk=self.kwargs['pk'])
+        if order.customer != self.request.user:
+            raise Http404("Order not found or you don't have permission to view it.")
+
+        return order
+
+    def get_context_data(self, **kwargs) -> dict[str: Any]:
+        context = super().get_context_data(**kwargs)
+        context['orders'] = self.get_object()
+
+        return context
