@@ -33,6 +33,7 @@ INSTALLED_EXTENSIONS = [
     "users",
     "wishlists",
     "django_extensions",
+    "axes",
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS

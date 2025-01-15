@@ -11,9 +11,21 @@ from products.models import Product
 
 
 class WishListTemplateView(TemplateView, LoginRequiredMixin):
+    """
+        Displays the user's wishlist with a list of products.
+    """
     template_name = "wishlist/wishlist.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
+        """
+            Retrieves the user's wishlist and associated products.
+
+            Args:
+                **kwargs: Arbitrary keyword arguments passed to the context data.
+
+            Returns:
+                dict[str, Any]: A dictionary containing the wishlist and its products.
+        """
         context = super().get_context_data(**kwargs)
         wishlist = Wishlist.objects.get_or_create(user=self.request.user)
 
@@ -24,7 +36,20 @@ class WishListTemplateView(TemplateView, LoginRequiredMixin):
 
 
 class WishlistAddProductView(View, LoginRequiredMixin):
+    """
+        Adds a product to the user's wishlist.
+    """
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """
+            Adds the specified product to the user's wishlist.
+
+            Args:
+                request (HttpRequest): The HTTP request object containing the user's data.
+                pk (int): The ID of the product to add to the wishlist.
+
+            Returns:
+                HttpResponse: A response containing the updated list of products in the wishlist.
+        """
         wishlist, created = Wishlist.objects.get_or_create(user=self.request.user)
         if not created:
             wishlist.save()
@@ -42,10 +67,33 @@ class WishlistAddProductView(View, LoginRequiredMixin):
 
 
 class WishlistRemoveProductView(View, LoginRequiredMixin):
+    """
+        Removes a product from the user's wishlist.
+    """
     def get(self, request, pk) -> None:
+        """
+                Prevents access via GET method for this view.
+
+                Args:
+                    request: The HTTP request object.
+                    pk: The ID of the product to be removed (not used here).
+
+                Raises:
+                    Http404: The page cannot be accessed via GET method.
+        """
         raise Http404("This page cannot be accessed via GET method.")
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """
+                Removes the specified product from the user's wishlist.
+
+                Args:
+                    request (HttpRequest): The HTTP request object.
+                    pk (int): The ID of the product to remove from the wishlist.
+
+                Returns:
+                    HttpResponse: A response with the updated wishlist products.
+        """
         try:
             product = Product.objects.get(id=pk)  # get_object_or_404(Product, id=pk)
         except Product.DoesNotExist:

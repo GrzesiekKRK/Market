@@ -4,11 +4,7 @@ from products.models import Product
 
 
 class Inventory(models.Model):
-    """
-    Connect CustomUser(Vendor) with his product
-    Give vendor CRUD abilities for Product
-    """
-
+    """Represents an inventory of a vendor (a seller's collection of products)."""
     vendor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
 

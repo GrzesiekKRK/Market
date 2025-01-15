@@ -114,7 +114,7 @@ class BuyerVendorNotificationCreationTest(TestCase):
     def test_vendor_notification(self):
         vendor = CustomUserFactory.create(role=2)
         inventory = InventoryFactory.create(vendor=vendor)
-        inventory.product.add(self.factory)
+        inventory.products.add(self.factory)
 
         vendor_note = OrderNotification.vendor_notification(self.order)
         body = f"Hi {vendor} \n\n Sold products: {self.factory.name} {self.order_products.quantity}\r\n"

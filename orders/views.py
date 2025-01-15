@@ -17,10 +17,23 @@ from payments.services import stripe_checkout_session
 
 
 class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
+    """Handles the creation of an order by the logged-in customer."""
     model = Order
     template_name = "orders/create_order.html"
 
     def post(self, request: HttpRequest) -> HttpResponse:
+        """
+            Creates an order based on the current user's cart, saves the order, and creates
+            ProductOrder instances for each product in the cart. Then, redirects the user to
+            the order confirmation page with the order details.
+
+            Args:
+                request (HttpRequest): The HTTP request object containing the user's data,
+                                        including the cart and session information.
+
+            Returns:
+                HttpResponse: The HTTP response rendering the order creation page with the order details.
+        """
 
         context = {}
 
@@ -74,10 +87,22 @@ class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
 
 
 class OrderListTemplateView(LoginRequiredMixin, TemplateView):
+    """Displays the list of orders placed by the logged-in user."""
     template_name = "orders/order.html"
     model = Order
 
     def get_context_data(self, **kwargs) -> dict[str: list[Order]]:
+        """
+        Retrieves all orders placed by the logged-in user and passes them to the template
+        for display in a list format.
+
+            Args:
+                **kwargs: Additional keyword arguments passed to the method, including URL parameters.
+
+            Returns:
+                dict[str, list[Order]]: A dictionary containing the list of orders, which will be rendered
+                                              in the template under the 'orders' key.
+        """
         context = super().get_context_data(**kwargs)
         orders = Order.objects.filter(customer=self.request.user).order_by("-id")
         context["orders"] = orders
@@ -85,10 +110,24 @@ class OrderListTemplateView(LoginRequiredMixin, TemplateView):
 
 
 class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
+    """Displays the details of a specific order placed by the logged-in user."""
     model = Order
     template_name = "orders/order-detail.html"
 
     def get_object(self, queryset=None) -> Order:
+        """
+        Retrieves the specific order by its primary key (pk) and ensures the logged-in user
+        is the one who placed the order.
+
+            Args:
+                queryset (QuerySet, optional): A queryset to retrieve the object (unused in this case).
+
+            Returns:
+                Order: The order instance to be displayed.
+
+            Raises:
+                Http404: If the order does not belong to the logged-in user or does not exist.
+        """
         order = get_object_or_404(Order, pk=self.kwargs["pk"])
         if order.customer != self.request.user:
             raise Http404("Order not found or you don't have permission to view it.")
@@ -96,6 +135,16 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
         return order
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
+        """
+        Retrieves and passes the order details to the template, including the products
+        associated with the order and the Stripe session URL for payment.
+
+            Args:
+                **kwargs: Additional keyword arguments passed to the method.
+
+            Returns:
+                dict[str, Any]: A dictionary containing the order details, products, and Stripe session URL.
+        """
         context = super().get_context_data(**kwargs)
         order = self.get_object()
         products = ProductOrder.objects.filter(order=order)
@@ -109,10 +158,23 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
 
 
 class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
+    """Handles the deletion of an unpaid order placed by the logged-in user."""
     model = Order
     success_url = reverse_lazy("customer-order")
 
     def get_object(self, queryset=None) -> Order:
+        """
+        Retrieves the order to be deleted, ensuring the logged-in user is the one who placed it.
+
+            Args:
+                queryset (QuerySet, optional): A queryset used to retrieve the object (not used here).
+
+            Returns:
+                Order: The order instance to be deleted.
+
+            Raises:
+                Http404: If the order does not belong to the logged-in user or does not exist.
+        """
         order = get_object_or_404(Order, pk=self.kwargs["pk"])
         if order.customer != self.request.user:
             raise Http404("Order not found or you don't have permission to view it.")
@@ -120,6 +182,15 @@ class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
         return order
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
+        """
+        Passes the order details to the context for confirmation before deletion.
+
+            Args:
+                **kwargs: Additional keyword arguments passed to the method.
+
+            Returns:
+                dict[str, Any]: A dictionary containing the order to be deleted.
+        """
         context = super().get_context_data(**kwargs)
         context["orders"] = self.get_object()
 

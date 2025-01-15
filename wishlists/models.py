@@ -4,6 +4,9 @@ from products.models import Product
 
 
 class Wishlist(models.Model):
+    """
+        Represents a user's wishlist, where they can save products they are interested in.
+    """
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
 

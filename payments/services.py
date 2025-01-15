@@ -11,6 +11,19 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 
 def stripe_checkout_session(order: Order) -> stripe.checkout:
+    """
+    Creates a Stripe checkout session for processing payments. This session contains
+    the items in the order, customer details, and payment configurations, and it is
+    used to redirect the user to the Stripe payment page.
+
+        Args:
+            order (Order): The order for which the Stripe checkout session is being created.
+                           It contains customer details, products, prices, and shipping information.
+
+        Returns:
+            stripe.checkout.Session: A Stripe checkout session object that will be used
+                                    to initiate the payment process on the Stripe platform.
+        """
     user = CustomUser.objects.get(id=order.customer.id)
     line_items_list = []
     products = ProductOrder.objects.filter(order=order.id)

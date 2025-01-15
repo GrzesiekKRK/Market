@@ -6,9 +6,16 @@ from products.models import Product
 
 
 class Cart:
-    """Context processor working on session"""
+    """Class that manages the shopping cart in the user's session.
+    Stores products added to the cart and allows manipulation of its contents.
+    """
 
     def __init__(self, request: HttpRequest) -> None:
+        """Initializes the cart in the session context.
+
+        Arguments:
+                request: The HTTP request object containing session data.
+        """
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
@@ -18,7 +25,13 @@ class Cart:
     def add(
         self, product: Product, quantity: int = 1, override_quantity: bool = False
     ) -> None:
-        """Increase or Decrease quantity of single product in cart by one"""
+        """Adds a product to the cart or changes its quantity.
+
+        Arguments:
+            product: The product object to add.
+            quantity: The quantity of the product to add (default is 1).
+            override_quantity: Whether to override the existing quantity or increase it.
+        """
         product_id = str(product.id)
         if product_id not in self.cart:
             self.cart[product_id] = {
@@ -34,7 +47,11 @@ class Cart:
         self.session.save()
 
     def remove(self, product: Product) -> None:
-        """Remove single product from the cart"""
+        """Removes a product from the cart.
+
+        Arguments:
+            product: The product to remove.
+        """
         product_id = str(product.id)
 
         if product_id in self.cart:
@@ -42,9 +59,12 @@ class Cart:
         self.session.save()
 
     def __iter__(self) -> None:
-        """Get the product objects and add them to the cart"""
+        """Generates product objects from the cart with associated Product data.
+
+        Returns:
+            item: Each cart item (product with price, quantity, and other information).
+        """
         product_ids = self.cart.keys()
-        print("products", product_ids)
         products = Product.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
         for product in products:
@@ -58,11 +78,19 @@ class Cart:
             yield item
 
     def __len__(self) -> int:
-        """Use to display number of products in the cart"""
+        """Returns the number of products in the cart.
+
+        Returns:
+            int: The total number of products in the cart.
+        """
         return sum(item["quantity"] for item in self.cart.values())
 
     def get_sub_total_price(self) -> int:
-        """Sum price of products in the cart"""
+        """Calculates the sum of the products' prices in the cart (regular price or sale price).
+
+        Returns:
+            int: The total price of products in the cart.
+        """
         return sum(
             (
                 Decimal(item["sale_price"]) * item["quantity"]
@@ -73,7 +101,7 @@ class Cart:
         )
 
     def clear(self) -> None:
-        """Remove all items from the cart."""
+        """Removes all products from the cart."""
         for key in list(self.cart.keys()):
             del self.cart[key]
         self.session.save()

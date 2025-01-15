@@ -187,7 +187,7 @@ class ProductUpdateViewTest(TestCase):
     def test_get_products_update_page_loads_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
-        self.inventory.product.add(product)
+        self.inventory.products.add(product)
         data = {
             "pk": product.id,
         }
@@ -202,7 +202,7 @@ class ProductUpdateViewTest(TestCase):
     def test_post_products_update_page_loads_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
-        self.inventory.product.add(product)
+        self.inventory.products.add(product)
         data = {
             "pk": product.id,
         }
@@ -232,7 +232,7 @@ class ProductUpdateViewTest(TestCase):
     def test_post_products_update_page_invalid_form(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
-        self.inventory.product.add(product)
+        self.inventory.products.add(product)
         data = {
             "pk": product.id,
         }
@@ -274,8 +274,7 @@ class ProductDeleteViewTest(TestCase):
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.context["product"], product)
-        self.assertTemplateUsed(response, "products/delete.html")
+
 
     def test_post_products_delete_view_works_correctly(self):
         self.client.force_login(self.user)
@@ -288,5 +287,5 @@ class ProductDeleteViewTest(TestCase):
         response = self.client.post(reverse("product-delete", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/products/")

@@ -4,6 +4,11 @@ from . import consts as users_role
 
 
 class CustomUser(AbstractUser):
+    """
+        Custom user model extending the base AbstractUser to include additional fields
+        specific to the application. This includes role management, user-specific
+        information, and secondary contact details.
+    """
     ROLE_CHOICES = (
         (users_role.CUSTOMER_USER_ROLE_MODERATOR, "Moderator"),
         (users_role.CUSTOMER_USER_ROLE_VENDOR, "Vendor"),

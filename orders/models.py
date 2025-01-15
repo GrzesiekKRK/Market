@@ -5,7 +5,7 @@ from users.models import CustomUser
 
 
 class Order(models.Model):
-    """Gather Product and CustomUser data"""
+    """Represents an order placed by a customer, containing product and delivery details."""
 
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     order_quantity = models.IntegerField(default=1)
@@ -23,6 +23,7 @@ class Order(models.Model):
 
 
 class ProductOrder(models.Model):
+    """Represents a product in an order, with its quantity and price."""
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     quantity = models.DecimalField(decimal_places=2, max_digits=6)
@@ -32,4 +33,5 @@ class ProductOrder(models.Model):
         return f"Product {self.product.name} from order {self.order}, in {self.quantity} and price {self.price}"
 
     def total_price(self):
+        """Calculates and returns the total price for the specific product in the order."""
         return self.quantity * self.price

@@ -20,9 +20,9 @@ class InventoryListTemplateViewTest(TestCase):
         self.client.force_login(self.user)
         inventory = Inventory.objects.last()
         for product in self.factory:
-            inventory.product.add(product)
+            inventory.products.add(product)
 
-        vendor_products = inventory.product.all()
+        vendor_products = inventory.products.all()
         response = self.client.get(reverse("vendor-inventory"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(vendor_products), 10)

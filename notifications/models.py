@@ -1,16 +1,17 @@
-from django.conf import settings
+
 from django.db import models
 
 
 from users.models import CustomUser
-from wishlists.models import Wishlist
-from products.models import Product
-from orders.models import Order
-from icecream import ic
 
 
 class Notification(models.Model):
-    """Notification of events like payment accepted, wishlist Product sale and inform vendor of sales"""
+    """Represents a notification of events like payment acceptance, wishlist product sale,
+    and informing the vendor of sales.
+
+    This model is used to store notifications for users, which can be read or unread.
+    It helps keep users informed about various events or updates in the system.
+    """
 
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="notifications"
