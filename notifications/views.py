@@ -1,14 +1,15 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, DeleteView
-from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django.views.generic import DeleteView, TemplateView
 
-from .models import Notification
 from inventories.models import Inventory
 from orders.models import Order, ProductOrder
 from users.models import CustomUser
+
+from .models import Notification
 
 
 class NotificationListTemplateView(LoginRequiredMixin, TemplateView):
@@ -105,6 +106,7 @@ class NotificationDetailTemplateView(LoginRequiredMixin, TemplateView):
 
 class NotificationDeleteView(LoginRequiredMixin, DeleteView):
     """Handles the deletion of a notification."""
+
     model = Notification
     template_name = "notification/notification_confirm_delete.html"
     success_url = "/products/"

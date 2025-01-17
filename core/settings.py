@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 # TODO remove boilerplate comments
 
@@ -47,10 +47,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
-
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -130,7 +134,7 @@ CART_SESSION_ID = "cart"
 
 LOGIN_REDIRECT_URL = "/login"
 
-# TODO ukryć publisher
-STRIPE_PUBLISHABLE_KEY = "pk_test_51PETcT05Gsg5Ch9YFmXTCMQ38hITal9A2aSlxIQOB72STArVKxFBveoviEA7WRsK8oGiTZP1yjkWVwA4TgCrR2yp009bQ4AyAh"
+
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_TEST_KEY")
 STRIPE_ENDPOINT_SECRET = os.getenv("STRIPE_ENDPOINT_SECRET")

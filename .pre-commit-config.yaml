@@ -13,3 +13,13 @@ repos:
     rev: 1.7.5
     hooks:
     -   id: bandit
+-   repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+        name: isort (python)
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.2
+    hooks:
+      - id: ruff

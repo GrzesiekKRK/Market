@@ -1,16 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from products.models import Category
-from products.forms import ImageForm, AddProductForm
-from products.factories import ProductImageFactory
-
-from users.factories import CustomUserFactory
-
-
-from products.factories import ProductFactory
-from products.models import Product
 from inventories.factories import InventoryFactory
+from products.factories import ProductFactory, ProductImageFactory
+from products.forms import AddProductForm, ImageForm
+from products.models import Category, Product
+from users.factories import CustomUserFactory
 
 
 class ProductListTemplateViewTest(TestCase):
@@ -274,7 +269,6 @@ class ProductDeleteViewTest(TestCase):
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 404)
-
 
     def test_post_products_delete_view_works_correctly(self):
         self.client.force_login(self.user)

@@ -1,10 +1,9 @@
+import stripe
+
+from core.settings import STRIPE_SECRET_KEY
 from orders.models import Order, ProductOrder
 from products.models import ProductImage
 from users.models import CustomUser
-from core.settings import STRIPE_SECRET_KEY
-
-import stripe
-
 
 DOMAIN = "http://127.0.0.1:8000/"
 stripe.api_key = STRIPE_SECRET_KEY
@@ -23,7 +22,7 @@ def stripe_checkout_session(order: Order) -> stripe.checkout:
         Returns:
             stripe.checkout.Session: A Stripe checkout session object that will be used
                                     to initiate the payment process on the Stripe platform.
-        """
+    """
     user = CustomUser.objects.get(id=order.customer.id)
     line_items_list = []
     products = ProductOrder.objects.filter(order=order.id)

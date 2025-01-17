@@ -1,12 +1,14 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+
+from inventories.factories import InventoryFactory
+from notifications.factories import NotificationFactory
+from orders.factories import OrderFactory
+from products.factories import ProductFactory, ProductImageFactory
+from products.models import Product
+from wishlists.factories import WishlistFactory
+
 from ...factories import CustomUserFactory
 from ...models import CustomUser
-from products.models import Product
-from notifications.factories import NotificationFactory
-from inventories.factories import InventoryFactory
-from products.factories import ProductFactory, ProductImageFactory
-from wishlists.factories import WishlistFactory
-from orders.factories import OrderFactory
 
 
 class Command(BaseCommand):
@@ -37,8 +39,8 @@ class Command(BaseCommand):
                 inventory = InventoryFactory(vendor=user)
                 products = ProductFactory.create_batch(5)
                 for product in products:
-                    img = ProductImageFactory.create(product=product)
-                    inventory.product.add(product)
+                    ProductImageFactory.create(product=product)
+                    inventory.products.add(product)
                 Command.wishlist_factories(products)
 
     @staticmethod
@@ -47,7 +49,7 @@ class Command(BaseCommand):
 
         for wish in wishs:
             for product in products:
-                wish.product.add(product)
+                wish.products.add(product)
 
     @staticmethod
     def order_factories(users: CustomUser):

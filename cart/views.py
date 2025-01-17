@@ -1,15 +1,15 @@
 from typing import Any
 
-from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
-from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import TemplateView, View
+
+from orders.models import ProductOrder
+from products.models import Product
 
 from .cart import Cart
-
-from products.models import Product
-from orders.models import ProductOrder
-from django.http import HttpRequest, HttpResponseRedirect
 
 
 class CartTemplateView(TemplateView):
@@ -18,11 +18,11 @@ class CartTemplateView(TemplateView):
     def get_context_data(self, **kwargs) -> dict[str:Any]:
         """Generates the context for the cart page, including the cart contents and total price.
 
-            Arguments:
-                    kwargs: Additional keyword arguments for context generation.
+        Arguments:
+                kwargs: Additional keyword arguments for context generation.
 
-            Returns:
-                    A dictionary containing the cart products, total price, and item count.
+        Returns:
+                A dictionary containing the cart products, total price, and item count.
         """
         context = super().get_context_data(**kwargs)
         cart = Cart(self.request)
@@ -42,12 +42,12 @@ class CartAddView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
         """Handles adding a product to the cart.
 
-                Arguments:
-                    request: The HTTP request object.
-                    kwargs: Contains the product ID (`pk`) to be added to the cart.
+        Arguments:
+            request: The HTTP request object.
+            kwargs: Contains the product ID (`pk`) to be added to the cart.
 
-                Returns:
-                    A redirect to the products page with a success message.
+        Returns:
+            A redirect to the products page with a success message.
         """
         pk = kwargs["pk"]
 
@@ -64,12 +64,12 @@ class CartIncreaseProductQuantityView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
         """Handles increasing the quantity of a product in the cart.
 
-                Arguments:
-                    request: The HTTP request object.
-                    kwargs: Contains the product ID (`pk`) whose quantity will be increased.
+        Arguments:
+            request: The HTTP request object.
+            kwargs: Contains the product ID (`pk`) whose quantity will be increased.
 
-                Returns:
-                    A redirect to the cart page with a success message.
+        Returns:
+            A redirect to the cart page with a success message.
         """
         product = get_object_or_404(Product, id=kwargs["pk"])
         self.model.add(Cart(request), product=product, quantity=+1)
@@ -84,12 +84,12 @@ class CartDecreaseProductQuantityView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect:
         """Handles decreasing the quantity of a product in the cart.
 
-                Arguments:
-                    request: The HTTP request object.
-                    pk: The product ID (`pk`) whose quantity will be decreased.
+        Arguments:
+            request: The HTTP request object.
+            pk: The product ID (`pk`) whose quantity will be decreased.
 
-                Returns:
-                    A redirect to the cart page with a success message.
+        Returns:
+            A redirect to the cart page with a success message.
         """
 
         product = get_object_or_404(Product, id=pk)
@@ -105,12 +105,12 @@ class CartRemoveProductView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect:
         """Handles removing a product from the cart.
 
-                Arguments:
-                    request: The HTTP request object.
-                    pk: The product ID (`pk`) to be removed from the cart.
+        Arguments:
+            request: The HTTP request object.
+            pk: The product ID (`pk`) to be removed from the cart.
 
-                Returns:
-                    A redirect to the cart page with a success message.
+        Returns:
+            A redirect to the cart page with a success message.
         """
         product = get_object_or_404(Product, id=pk)
         self.model.remove(Cart(request), product=product)
@@ -125,15 +125,15 @@ class CartClearView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest) -> HttpResponseRedirect:
         """Handles clearing the entire cart.
 
-                Arguments:
-                    request: The HTTP request object.
+        Arguments:
+            request: The HTTP request object.
 
-                Returns:
-                    A redirect to the cart page with a success message.
+        Returns:
+            A redirect to the cart page with a success message.
         """
         self.model.clear(Cart(request))
 
-        messages.success(request, f"Cart clear.")
+        messages.success(request, "Cart clear.")
         return redirect("cart")
 
 
@@ -143,12 +143,12 @@ class RenewOrderView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponseRedirect:
         """Handles renewing an order by adding its products to the cart.
 
-                Arguments:
-                    request: The HTTP request object.
-                    pk: The order ID (`pk`) to renew.
+        Arguments:
+            request: The HTTP request object.
+            pk: The order ID (`pk`) to renew.
 
-                Returns:
-                    A redirect to the cart page after adding the products from the order.
+        Returns:
+            A redirect to the cart page after adding the products from the order.
         """
         items = ProductOrder.objects.filter(order=pk)
         for item in items:

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+
 from products.models import Product
 from users.models import CustomUser
 
@@ -24,6 +25,7 @@ class Order(models.Model):
 
 class ProductOrder(models.Model):
     """Represents a product in an order, with its quantity and price."""
+
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     quantity = models.DecimalField(decimal_places=2, max_digits=6)

@@ -1,29 +1,27 @@
+import json
 from typing import Any
 
-from django.conf import settings
-
-from django.views.generic import TemplateView
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpRequest
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-import json
 import stripe
-
-from orders.models import Order
-from notifications.views import OrderNotification
-from core.settings import STRIPE_SECRET_KEY, STRIPE_ENDPOINT_SECRET
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
+from core.settings import STRIPE_ENDPOINT_SECRET, STRIPE_SECRET_KEY
+from notifications.views import OrderNotification
+from orders.models import Order
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class SuccessTemplateView(LoginRequiredMixin, TemplateView):
     """
-        Displays a success page after a successful payment has been made. It retrieves the order
-        associated with the payment and checks if the customer is the one who placed the order.
+    Displays a success page after a successful payment has been made. It retrieves the order
+    associated with the payment and checks if the customer is the one who placed the order.
     """
+
     template_name = "payments/success.html"
 
     def get_object(self, queryset=None) -> Order:
@@ -64,9 +62,10 @@ class SuccessTemplateView(LoginRequiredMixin, TemplateView):
 
 class CancelledTemplateView(LoginRequiredMixin, TemplateView):
     """
-        Displays a cancel page after a payment has been canceled. It retrieves the order associated
-        with the canceled payment and checks if the customer is the one who placed the order.
+    Displays a cancel page after a payment has been canceled. It retrieves the order associated
+    with the canceled payment and checks if the customer is the one who placed the order.
     """
+
     template_name = "payments/cancel.html"
 
     def get_object(self, queryset=None) -> Order:
@@ -108,17 +107,17 @@ class CancelledTemplateView(LoginRequiredMixin, TemplateView):
 @csrf_exempt
 def stripe_webhook(request: HttpRequest) -> HttpResponse:
     """
-        Handles Stripe webhook events, specifically processing successful payment events
-        ("charge.succeeded"). Updates the order status and sends notifications to both
-        the buyer and the vendor.
+    Handles Stripe webhook events, specifically processing successful payment events
+    ("charge.succeeded"). Updates the order status and sends notifications to both
+    the buyer and the vendor.
 
-        Args:
-            request (HttpRequest): The HTTP request object containing the webhook payload
-                                    from Stripe.
+    Args:
+        request (HttpRequest): The HTTP request object containing the webhook payload
+                                from Stripe.
 
-        Returns:
-            HttpResponse: A response indicating the success (200) or failure (400) of processing
-                           the webhook.
+    Returns:
+        HttpResponse: A response indicating the success (200) or failure (400) of processing
+                       the webhook.
     """
     stripe.api_key = STRIPE_SECRET_KEY
     endpoint_secret = STRIPE_ENDPOINT_SECRET
@@ -132,11 +131,8 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
-    except ValueError as e:
+    except ValueError:
         # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
         return HttpResponse(status=400)
 
     if event["type"] == "charge.succeeded":
@@ -145,7 +141,7 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         order_status.status = True
         order_status.save()
 
-        buyer = OrderNotification.buyer_notification(order_status)
-        vendor = OrderNotification.vendor_notification(order_status)
+        OrderNotification.buyer_notification(order_status)
+        OrderNotification.vendor_notification(order_status)
 
     return HttpResponse(status=200)

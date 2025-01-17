@@ -1,38 +1,37 @@
 from typing import Any
-from django.http import HttpRequest, HttpResponse
 
-from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.views.generic import DeleteView, TemplateView
 
-from .models import Order, ProductOrder
-
-from products.models import Product
-from users.models import CustomUser
 from cart.cart import Cart
 from payments.services import stripe_checkout_session
+from products.models import Product
+from users.models import CustomUser
+
+from .models import Order, ProductOrder
 
 
 class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
     """Handles the creation of an order by the logged-in customer."""
+
     model = Order
     template_name = "orders/create_order.html"
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """
-            Creates an order based on the current user's cart, saves the order, and creates
-            ProductOrder instances for each product in the cart. Then, redirects the user to
-            the order confirmation page with the order details.
+        Creates an order based on the current user's cart, saves the order, and creates
+        ProductOrder instances for each product in the cart. Then, redirects the user to
+        the order confirmation page with the order details.
 
-            Args:
-                request (HttpRequest): The HTTP request object containing the user's data,
-                                        including the cart and session information.
+        Args:
+            request (HttpRequest): The HTTP request object containing the user's data,
+                                    including the cart and session information.
 
-            Returns:
-                HttpResponse: The HTTP response rendering the order creation page with the order details.
+        Returns:
+            HttpResponse: The HTTP response rendering the order creation page with the order details.
         """
 
         context = {}
@@ -88,10 +87,11 @@ class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
 
 class OrderListTemplateView(LoginRequiredMixin, TemplateView):
     """Displays the list of orders placed by the logged-in user."""
+
     template_name = "orders/order.html"
     model = Order
 
-    def get_context_data(self, **kwargs) -> dict[str: list[Order]]:
+    def get_context_data(self, **kwargs) -> dict[str : list[Order]]:
         """
         Retrieves all orders placed by the logged-in user and passes them to the template
         for display in a list format.
@@ -111,6 +111,7 @@ class OrderListTemplateView(LoginRequiredMixin, TemplateView):
 
 class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
     """Displays the details of a specific order placed by the logged-in user."""
+
     model = Order
     template_name = "orders/order-detail.html"
 
@@ -159,6 +160,7 @@ class OrderDetailTemplateView(LoginRequiredMixin, TemplateView):
 
 class OrderDeleteUnpaidView(LoginRequiredMixin, DeleteView):
     """Handles the deletion of an unpaid order placed by the logged-in user."""
+
     model = Order
     success_url = reverse_lazy("customer-order")
 

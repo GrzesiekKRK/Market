@@ -1,12 +1,14 @@
 from django.db import models
-from users.models import CustomUser
+
 from products.models import Product
+from users.models import CustomUser
 
 
 class Wishlist(models.Model):
     """
-        Represents a user's wishlist, where they can save products they are interested in.
+    Represents a user's wishlist, where they can save products they are interested in.
     """
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
 

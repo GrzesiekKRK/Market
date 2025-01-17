@@ -1,4 +1,5 @@
 from django.db import models
+
 from . import consts as product_units
 
 
@@ -20,10 +21,11 @@ class Category(models.Model):
 
 class Product(models.Model):
     """
-        Represents a product that is available for purchase. Each product belongs to
-        a category, and can have a price, description, and reviews. Products can also
-        have a sale price if they are on sale.
+    Represents a product that is available for purchase. Each product belongs to
+    a category, and can have a price, description, and reviews. Products can also
+    have a sale price if they are on sale.
     """
+
     UNITS_CHOICES = (
         (product_units.PRODUCT_UNITS_PIECE, "Piece"),
         (product_units.PRODUCT_UNITS_GRAMS, "Grams"),
@@ -61,9 +63,10 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     """
-        Represents an image associated with a product. A product can have multiple images,
-        including miniature images used for product previews.
+    Represents an image associated with a product. A product can have multiple images,
+    including miniature images used for product previews.
     """
+
     miniature = models.BooleanField(default=False)
     image = models.FileField(
         upload_to="uploads/product/", default="uploads/product/default.jpg"

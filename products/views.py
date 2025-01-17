@@ -1,28 +1,27 @@
 from typing import Any
-from django.http import HttpRequest, HttpResponse
 
-from django.views.generic import TemplateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-
-from products.models import Category, Product
-from .models import ProductImage
-from .forms import AddProductForm, ImageForm
+from django.views.generic import DeleteView, TemplateView, UpdateView
 
 from inventories.models import Inventory
-from wishlists.models import Wishlist
 from notifications.models import Notification
+from products.models import Category, Product
 from users.models import CustomUser
+from wishlists.models import Wishlist
+
+from .forms import AddProductForm, ImageForm
+from .models import ProductImage
 
 
 class BaseView(LoginRequiredMixin, TemplateView):
     """
-        Base view for the home page or landing page of the market.
+    Base view for the home page or landing page of the market.
     """
+
     template_name = "market/index.html"
 
 
@@ -30,32 +29,33 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
     """
     View for displaying the list of products, including products on sale and all categories.
     """
+
     template_name = "products/products.html"
 
     def dispatch(self, *args, **kwargs) -> dict[str:Any]:
         """
-            Handles the HTTP request and prepares the response by dispatching the request
-            to the appropriate handler.
+        Handles the HTTP request and prepares the response by dispatching the request
+        to the appropriate handler.
 
-            Args:
-                *args: Variable length argument list.
-                **kwargs: Arbitrary keyword arguments.
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
 
-            Returns:
-                dict[str: Any]: The result of the super().dispatch call.
+        Returns:
+            dict[str: Any]: The result of the super().dispatch call.
         """
         return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
         """
-                Prepares the context data for the product list page, including all products,
-                categories, and products on sale.
+        Prepares the context data for the product list page, including all products,
+        categories, and products on sale.
 
-                Args:
-                    **kwargs: Arbitrary keyword arguments passed from the template context.
+        Args:
+            **kwargs: Arbitrary keyword arguments passed from the template context.
 
-                Returns:
-                    dict[str: Any]: Context data to be rendered in the template.
+        Returns:
+            dict[str: Any]: Context data to be rendered in the template.
         """
         deals = Product.objects.filter(is_sale=True)
         products = Product.objects.all()
@@ -69,21 +69,22 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
 
 class ProductDetailTemplateView(LoginRequiredMixin, TemplateView):
     """
-        View for displaying detailed information about a specific product.
+    View for displaying detailed information about a specific product.
     """
+
     model = Product
     template_name = "products/product-detail.html"
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
         """
-                Prepares the context data for the product detail page, including the product
-                information and associated images.
+        Prepares the context data for the product detail page, including the product
+        information and associated images.
 
-                Args:
-                    **kwargs: Arbitrary keyword arguments passed from the template context.
+        Args:
+            **kwargs: Arbitrary keyword arguments passed from the template context.
 
-                Returns:
-                    dict[str: Any]: Context data to be rendered in the template.
+        Returns:
+            dict[str: Any]: Context data to be rendered in the template.
         """
         context = super().get_context_data(**kwargs)
         product = Product.objects.get(id=context["pk"])
@@ -95,20 +96,21 @@ class ProductDetailTemplateView(LoginRequiredMixin, TemplateView):
 
 class CategoryTemplateView(LoginRequiredMixin, TemplateView):
     """
-        View for displaying a specific category's products and other categories.
+    View for displaying a specific category's products and other categories.
     """
+
     template_name = "products/category.html"
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
         """
-                Prepares the context data for the category page, including the selected category
-                and the products associated with it.
+        Prepares the context data for the category page, including the selected category
+        and the products associated with it.
 
-                Args:
-                    **kwargs: Arbitrary keyword arguments passed from the template context.
+        Args:
+            **kwargs: Arbitrary keyword arguments passed from the template context.
 
-                Returns:
-                    dict[str: Any]: Context data to be rendered in the template.
+        Returns:
+            dict[str: Any]: Context data to be rendered in the template.
         """
         context = super().get_context_data(**kwargs)
         category = Category.objects.get(id=context["pk"])
@@ -120,20 +122,21 @@ class CategoryTemplateView(LoginRequiredMixin, TemplateView):
 
 class CreateProduct(LoginRequiredMixin):
     """
-        View for handling the creation of a new product. This includes uploading images
-        and adding product details to the database.
+    View for handling the creation of a new product. This includes uploading images
+    and adding product details to the database.
     """
+
     @staticmethod
     def product_upload(request: HttpRequest) -> HttpResponse:
         """
-                Handles the POST request to create a new product and upload associated images.
+        Handles the POST request to create a new product and upload associated images.
 
-                Args:
-                    request (HttpRequest): The HTTP request containing product data.
+        Args:
+            request (HttpRequest): The HTTP request containing product data.
 
-                Returns:
-                    HttpResponse: The HTTP response to render the product detail page or the
-                                   product creation form.
+        Returns:
+            HttpResponse: The HTTP response to render the product detail page or the
+                           product creation form.
         """
         image_form = ImageForm()
         product_form = AddProductForm()
@@ -168,25 +171,26 @@ class CreateProduct(LoginRequiredMixin):
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
-        View for updating an existing product. This view allows the vendor to update
-        product details, such as price, description, and sale status.
+    View for updating an existing product. This view allows the vendor to update
+    product details, such as price, description, and sale status.
     """
+
     template_name = "products/update.html"
     form_class = AddProductForm
     model = Product
 
     def get_object(self, queryset=None) -> Product:
         """
-                Retrieves the product object to be updated.
+        Retrieves the product object to be updated.
 
-                Args:
-                    queryset (QuerySet): Optional query to filter products.
+        Args:
+            queryset (QuerySet): Optional query to filter products.
 
-                Returns:
-                    Product: The product object to be updated.
+        Returns:
+            Product: The product object to be updated.
 
-                Raises:
-                    Http404: If the product does not exist or the user does not have permission to update it.
+        Raises:
+            Http404: If the product does not exist or the user does not have permission to update it.
         """
 
         product = get_object_or_404(Product, pk=self.kwargs["pk"])
@@ -198,15 +202,15 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         """
-                Handles the GET request to display the product update form.
+        Handles the GET request to display the product update form.
 
-                Args:
-                    request (HttpRequest): The HTTP request.
-                    *args: Variable length argument list.
-                    **kwargs: Arbitrary keyword arguments.
+        Args:
+            request (HttpRequest): The HTTP request.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
 
-                Returns:
-                    HttpResponse: The response to render the update form with the current product data.
+        Returns:
+            HttpResponse: The response to render the update form with the current product data.
         """
         product = self.get_object()
         product_form = AddProductForm(instance=product)
@@ -219,14 +223,14 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         """
-                Handles the POST request to update the product with new data.
+        Handles the POST request to update the product with new data.
 
-                Args:
-                    request (HttpRequest): The HTTP request containing the updated product data.
+        Args:
+            request (HttpRequest): The HTTP request containing the updated product data.
 
-                Returns:
-                    HttpResponse: The response to render the updated product detail page or re-display
-                                   the form with validation errors.
+        Returns:
+            HttpResponse: The response to render the updated product detail page or re-display
+                           the form with validation errors.
         """
         product = self.get_object()
         product_form = AddProductForm(request.POST, instance=product)
@@ -260,13 +264,13 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form) -> str:
         """
-            Handles invalid form submission by showing an error message.
+        Handles invalid form submission by showing an error message.
 
-            Args:
-                form (Form): The form that was submitted.
+        Args:
+            form (Form): The form that was submitted.
 
-            Returns:
-                str: The response to render the form with error messages.
+        Returns:
+            str: The response to render the form with error messages.
         """
         messages.error(self.request, "Invalid change")
         return self.render_to_response(self.get_context_data(form=form))
