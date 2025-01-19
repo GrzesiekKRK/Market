@@ -1,8 +1,8 @@
-from django.test import TestCase, RequestFactory
 from unittest.mock import MagicMock
+
+from django.test import RequestFactory, TestCase
+
 from cart.cart import Cart
-
-
 from products.factories import ProductFactory
 from users.factories import CustomUserFactory
 

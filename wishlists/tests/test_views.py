@@ -1,14 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from wishlists.models import Wishlist
-
-from wishlists.factories import WishlistFactory
-from users.factories import CustomUserFactory
-
-
 from products.factories import ProductFactory
 from products.models import Product
+from users.factories import CustomUserFactory
+from wishlists.factories import WishlistFactory
+from wishlists.models import Wishlist
 
 
 class WishlistListViewTest(TestCase):
@@ -89,14 +86,14 @@ class WishlistRemoveProductViewTest(TestCase):
         data = {
             "pk": product.id,
         }
-        wish = Wishlist.objects.get(user=self.user)
+        Wishlist.objects.get(user=self.user)
 
         response = self.client.post(reverse("wishlist-remove", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "wishlist/wishlist.html")
-        self.assertEqual(str(response.context["products"]), f"<QuerySet []>")
+        self.assertEqual(str(response.context["products"]), "<QuerySet []>")
 
     def test_post_with_none_existing_product(self):
         data = {

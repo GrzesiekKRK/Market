@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
-from users.forms import RegisterUserForm, LoginForm
-from users.models import CustomUser
+
 from users.factories import CustomUserFactory
+from users.forms import LoginForm, RegisterUserForm
+from users.models import CustomUser
 
 
 class TestUserSignUpView(TestCase):

@@ -1,6 +1,7 @@
 from django.test import TestCase
+
+from products.factories import CategoryFactory, ProductFactory
 from products.models import Category, Product
-from products.factories import ProductFactory, CategoryFactory
 
 
 class CategoryModelTest(TestCase):

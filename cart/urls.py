@@ -1,14 +1,14 @@
 from django.urls import path
-from .views import (
-    CartTemplateView,
-    CartAddView,
-    CartIncreaseProductQuantityView,
-    CartDecreaseProductQuantityView,
-    CartRemoveProductView,
-    RenewOrderView,
-    CartClearView,
-)
 
+from .views import (
+    CartAddView,
+    CartClearView,
+    CartDecreaseProductQuantityView,
+    CartIncreaseProductQuantityView,
+    CartRemoveProductView,
+    CartTemplateView,
+    RenewOrderView,
+)
 
 urlpatterns = [
     path("cart/", CartTemplateView.as_view(), name="cart"),

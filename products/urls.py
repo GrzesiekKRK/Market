@@ -1,10 +1,11 @@
 from django.urls import path
+
 from .views import (
-    ProductListTemplateView,
     CategoryTemplateView,
-    ProductDetailTemplateView,
     CreateProduct,
     ProductDeleteView,
+    ProductDetailTemplateView,
+    ProductListTemplateView,
     ProductUpdateView,
 )
 

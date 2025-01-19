@@ -1,7 +1,7 @@
 from django.test import TestCase
-from notifications.models import Notification
-from notifications.factories import NotificationFactory
 
+from notifications.factories import NotificationFactory
+from notifications.models import Notification
 from users.factories import CustomUserFactory
 
 

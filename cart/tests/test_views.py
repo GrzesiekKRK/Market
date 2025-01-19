@@ -1,16 +1,16 @@
-from django.test import TestCase, RequestFactory
-from django.urls import reverse
-from django.test import tag
-from ..views import CartTemplateView
-from unittest import mock
-from unittest.mock import patch, Mock, MagicMock
-
-from cart.cart import Cart
-
-from products.models import Product
-from products.factories import ProductFactory
-from users.factories import CustomUserFactory
-from inventories.factories import InventoryFactory
+# from unittest import mock
+# from unittest.mock import MagicMock, Mock, patch
+#
+# from django.test import RequestFactory, TestCase, tag
+# from django.urls import reverse
+#
+# from cart.cart import Cart
+# from inventories.factories import InventoryFactory
+# from products.factories import ProductFactory
+# from products.models import Product
+# from users.factories import CustomUserFactory
+#
+# from ..views import CartTemplateView
 
 # TODO fix this test by stachu
 # class CartTemplateViewTest(TestCase):

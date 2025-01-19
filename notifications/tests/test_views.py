@@ -1,13 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
+
+from inventories.factories import InventoryFactory
+from notifications.factories import NotificationFactory
 from notifications.models import Notification
 from notifications.views import OrderNotification
-from notifications.factories import NotificationFactory
-
-from users.factories import CustomUserFactory
-from products.factories import ProductFactory
 from orders.factories import OrderFactory, ProductOrderFactory
-from inventories.factories import InventoryFactory
+from products.factories import ProductFactory
+from users.factories import CustomUserFactory
 
 
 class NotificationListTemplateViewTest(TestCase):

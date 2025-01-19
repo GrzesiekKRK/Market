@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ProductImage, Product, Category
+from .models import Category, Product, ProductImage
 
 
 class AddProductForm(forms.ModelForm):

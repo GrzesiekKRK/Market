@@ -1,8 +1,10 @@
-import factory
-from factory.django import DjangoModelFactory
-from django.contrib.auth import get_user_model
-from faker import Faker
 import random
+
+import factory
+from django.contrib.auth import get_user_model
+from factory.django import DjangoModelFactory
+from faker import Faker
+
 from .consts import USER_ROLES
 
 fake = Faker()

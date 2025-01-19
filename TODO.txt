@@ -1,9 +1,17 @@
-Sugestie 1. Uml na chwile na zakończenie
+Sugestie 1. Uml na chwile na zakończenie zależności bazy danych produkt user inventory cart wishlist
 Done z chat2. Komentarze opisy / https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 Done     3. Pre-commit run vs all files poukładać kod
-4. Postgree dane admina i bazy
+Done 4. Postgree dane admina i bazy
 Done 5. Usunąć martwe importy oraz martwe templaty po pre commit
 Done 50/50 6. front z chatboi
 7. Dorzucic testy od stacha
-8. CI
+8. CI -> Continues Integration
 Dodane 9.Django AXES
+10. Zmiana nazw test -> tests (paczek)
+
+11. help_texts do modeli
+12. https://django-debug-toolbar.readthedocs.io/en/latest/
+13. https://github.com/jazzband/django-silk
+
+Nastepny call
+CI + ew. poetry

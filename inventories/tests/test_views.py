@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-from inventories.models import Inventory
+
 from inventories.factories import InventoryFactory
-
-
+from inventories.models import Inventory
 from products.factories import ProductFactory
 from users.factories import CustomUserFactory
 

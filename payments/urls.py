@@ -1,7 +1,6 @@
 from django.urls import path
-from payments import views
-from payments import services
 
+from payments import services, views
 
 urlpatterns = [
     path(

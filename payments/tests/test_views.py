@@ -1,9 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
-from django.test import tag
 
-from users.factories import CustomUserFactory
 from orders.factories import OrderFactory
+from users.factories import CustomUserFactory
 
 
 class SuccessTemplateViewTest(TestCase):

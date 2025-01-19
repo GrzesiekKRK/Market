@@ -1,10 +1,11 @@
-from django.test import TestCase
-from django.contrib.auth.hashers import make_password
 import random
-from users.forms import RegisterUserForm, LoginForm, UpdateUserForm
 
-from users.models import CustomUser
+from django.contrib.auth.hashers import make_password
+from django.test import TestCase
+
 from users.factories import CustomUserFactory
+from users.forms import LoginForm, RegisterUserForm, UpdateUserForm
+from users.models import CustomUser
 
 
 class RegisterUserFormTest(TestCase):

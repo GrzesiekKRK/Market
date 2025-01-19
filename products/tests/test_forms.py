@@ -1,6 +1,7 @@
 from django.test import TestCase
-from products.forms import AddProductForm, ImageForm
+
 from products.factories import ProductFactory, ProductImageFactory
+from products.forms import AddProductForm, ImageForm
 
 
 class AddProductFormTest(TestCase):

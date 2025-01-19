@@ -1,7 +1,9 @@
+import random
+
 import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
-import random
+
 from .models import Category, Product, ProductImage
 
 fake = Faker()

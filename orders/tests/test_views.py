@@ -1,16 +1,13 @@
-from django.test import TestCase
-from django.urls import reverse
-
-
 from unittest import mock
 from unittest.mock import MagicMock
 
-from orders.models import Order, ProductOrder
+from django.test import TestCase
+from django.urls import reverse
+
 from orders.factories import OrderFactory, ProductOrderFactory
-
-from users.factories import CustomUserFactory
-
+from orders.models import Order, ProductOrder
 from products.factories import ProductFactory
+from users.factories import CustomUserFactory
 
 mock_instance = mock.Mock()
 

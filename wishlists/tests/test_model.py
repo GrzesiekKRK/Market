@@ -1,6 +1,7 @@
 from django.test import TestCase
-from wishlists.models import Wishlist
+
 from wishlists.factories import WishlistFactory
+from wishlists.models import Wishlist
 
 
 class WishlistModelTest(TestCase):

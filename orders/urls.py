@@ -1,9 +1,10 @@
 from django.urls import path
+
 from .views import (
     CreateOrderTemplateView,
-    OrderListTemplateView,
-    OrderDetailTemplateView,
     OrderDeleteUnpaidView,
+    OrderDetailTemplateView,
+    OrderListTemplateView,
 )
 
 urlpatterns = [

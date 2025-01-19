@@ -1,7 +1,7 @@
 from django.test import TestCase
-from inventories.models import Inventory
-from inventories.factories import InventoryFactory
 
+from inventories.factories import InventoryFactory
+from inventories.models import Inventory
 from users.factories import CustomUserFactory
 
 

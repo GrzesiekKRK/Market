@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 
-# TODO remove boilerplate comments
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -20,6 +18,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
+    "axes",
+    "silk",
 ]
 
 INSTALLED_EXTENSIONS = [
@@ -32,8 +33,6 @@ INSTALLED_EXTENSIONS = [
     "products",
     "users",
     "wishlists",
-    "django_extensions",
-    "axes",
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
@@ -48,6 +47,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "axes.middleware.AxesMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -82,8 +82,6 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "MarketDB",
         "USER": "postgres",
-        # 'USER': 'MarketOwner',
-        # 'PASSWORD': 'myPassWordDEi',
         "PASSWORD": "9261",
         "HOST": "localhost",
         "PORT": 5432,

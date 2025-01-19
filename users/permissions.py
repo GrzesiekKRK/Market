@@ -1,4 +1,5 @@
 from functools import wraps
+
 from django.contrib.auth.models import PermissionDenied
 
 

@@ -1,6 +1,7 @@
 from django.test import TestCase
-from orders.models import Order, ProductOrder
+
 from orders.factories import OrderFactory, ProductOrderFactory
+from orders.models import Order, ProductOrder
 
 
 class CategoryModelTest(TestCase):
