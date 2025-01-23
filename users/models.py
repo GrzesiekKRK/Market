@@ -25,8 +25,17 @@ class CustomUser(AbstractUser):
         max_length=25, null=True, verbose_name="Bank Account Number"
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    secondary_email = models.EmailField(max_length=50, verbose_name="Secondary Email")
-    address = models.CharField(max_length=100, null=True, verbose_name="Address")
+    secondary_email = models.EmailField(
+        max_length=50,
+        verbose_name="Secondary Email",
+        help_text="Emergency email if primary email is lost",
+    )
+    address = models.CharField(
+        max_length=100,
+        null=True,
+        verbose_name="Address",
+        help_text="Mailing or collection address",
+    )
     postal_code = models.CharField(
         max_length=6, verbose_name="Postal Code", default="32-856"
     )

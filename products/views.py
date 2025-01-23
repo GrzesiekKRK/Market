@@ -58,7 +58,9 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
             dict[str: Any]: Context data to be rendered in the template.
         """
         deals = Product.objects.filter(is_sale=True)
-        products = Product.objects.all()
+        products = (
+            Product.objects.select_related("category").prefetch_related("image").all()
+        )
         categories = Category.objects.all()
         context = super().get_context_data(**kwargs)
         context["products"] = products

@@ -1,3 +1,4 @@
+from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -17,7 +18,7 @@ urlpatterns = [
     path("wishlist/", include("wishlists.urls")),
     path("notifications/", include("notifications.urls")),
     path("payments/", include("payments.urls")),
-]
+] + debug_toolbar_urls()
 
 
 if settings.DEBUG:

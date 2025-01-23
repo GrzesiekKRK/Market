@@ -7,10 +7,10 @@ Done 50/50 6. front z chatboi
 7. Dorzucic testy od stacha
 8. CI -> Continues Integration
 Dodane 9.Django AXES
-10. Zmiana nazw test -> tests (paczek)
+Done 10. Zmiana nazw test -> tests (paczek)
 
-11. help_texts do modeli
-12. https://django-debug-toolbar.readthedocs.io/en/latest/
+Tylko kilka typu limit znaków, dlaczego drugi email czy nazwa productu nie musi być unikatowa 11. help_texts do modeli
+Done 12. https://django-debug-toolbar.readthedocs.io/en/latest/
 13. https://github.com/jazzband/django-silk
 
 Nastepny call

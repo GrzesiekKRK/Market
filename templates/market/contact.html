@@ -65,3 +65,10 @@
     </body>
 
 {% endblock content %}
+{% for image in product.image.all %}
+                                            {% if image.miniature %}
+                                                <img src="{{ image.image.url }}"
+                                                     class="img-fluid w-100 rounded-top border border-secondary"
+                                                     alt="Image of {{ product.name }}" style="height: 150%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}

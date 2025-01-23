@@ -33,15 +33,20 @@ class Product(models.Model):
         (product_units.PRODUCT_UNITS_LITERS, "Liters"),
     )
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, help_text="Does not need to be unique")
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="category"
+        Category,
+        on_delete=models.CASCADE,
+        related_name="category",
+        help_text="Check for similar products",
     )
     price = models.DecimalField(decimal_places=2, max_digits=6, default=0)
     miniature_description = models.CharField(
-        max_length=100, default="", blank=True, null=True
+        max_length=100, default="", blank=True, null=True, help_text="Limit 100 marks"
     )
-    description = models.CharField(max_length=400, default="", blank=True, null=True)
+    description = models.CharField(
+        max_length=400, default="", blank=True, null=True, help_text="Limit 400 marks"
+    )
     quantity = models.DecimalField(decimal_places=2, max_digits=9, default=1)
     units_of_measurement = models.PositiveSmallIntegerField(
         choices=UNITS_CHOICES, default=product_units.PRODUCT_UNITS_PIECE
@@ -67,7 +72,9 @@ class ProductImage(models.Model):
     including miniature images used for product previews.
     """
 
-    miniature = models.BooleanField(default=False)
+    miniature = models.BooleanField(
+        default=False, help_text="This image will be display on dashboard"
+    )
     image = models.FileField(
         upload_to="uploads/product/", default="uploads/product/default.jpg"
     )
