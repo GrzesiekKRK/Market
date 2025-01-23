@@ -18,9 +18,9 @@ jobs:
       postgres:
         image: postgres:17.2
         env:
-          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_USER: ${{ vars.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_DB: ${{ vars.DB_NAME }}
         ports:
           - 5432:5432
 
@@ -38,8 +38,8 @@ jobs:
       run: |
         python manage.py test
       env:
-        DB_NAME: ${{ env.DB_NAME }}
-        DB_USER: ${{ env.DB_USER }}
+        DB_NAME: ${{ vars.DB_NAME }}
+        DB_USER: ${{ vars.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
