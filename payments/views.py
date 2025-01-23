@@ -12,8 +12,6 @@ from django.views.generic import TemplateView
 from notifications.views import OrderNotification
 from orders.models import Order
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
 
 class SuccessTemplateView(LoginRequiredMixin, TemplateView):
     """
