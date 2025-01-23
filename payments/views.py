@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from core.settings import STRIPE_ENDPOINT_SECRET, STRIPE_SECRET_KEY
 from notifications.views import OrderNotification
 from orders.models import Order
 
@@ -119,8 +118,8 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         HttpResponse: A response indicating the success (200) or failure (400) of processing
                        the webhook.
     """
-    stripe.api_key = STRIPE_SECRET_KEY
-    endpoint_secret = STRIPE_ENDPOINT_SECRET
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
     payload = request.body
     order = json.loads(payload.decode())
