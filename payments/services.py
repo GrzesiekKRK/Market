@@ -19,7 +19,7 @@ def stripe_checkout_session(order: Order) -> stripe.checkout:
                            It contains customer details, products, prices, and shipping information.
 
         Returns:
-            stripe.checkout.Session: A Stripe checkout session object that will be used
+        stripe.checkout.Session: A Stripe checkout session object that will be used
                                     to initiate the payment process on the Stripe platform.
     """
     stripe.api_key = settings.STRIPE_SECRET_KEY
