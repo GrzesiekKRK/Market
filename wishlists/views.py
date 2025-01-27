@@ -28,10 +28,14 @@ class WishListTemplateView(TemplateView, LoginRequiredMixin):
             dict[str, Any]: A dictionary containing the wishlist and its products.
         """
         context = super().get_context_data(**kwargs)
-        wishlist = Wishlist.objects.get_or_create(user=self.request.user)
+        wishlist, create = Wishlist.objects.prefetch_related("products").get_or_create(
+            user=self.request.user
+        )
 
-        context["wishlist"] = wishlist[0]
-        context["products"] = wishlist[0].products.all()
+        context["wishlist"] = wishlist
+        context["products"] = (
+            wishlist.products.select_related("category").prefetch_related("image").all()
+        )
 
         return context
 
@@ -61,7 +65,11 @@ class WishlistAddProductView(View, LoginRequiredMixin):
         if product:
 
             wishlist.products.add(product)
-            products = wishlist.products.all()
+            products = (
+                wishlist.products.select_related("category")
+                .prefetch_related("image")
+                .all()
+            )
 
         else:
             products = wishlist.products.all()

@@ -11,7 +11,8 @@ Done 10. Zmiana nazw test -> tests (paczek)
 
 Tylko kilka typu limit znaków, dlaczego drugi email czy nazwa productu nie musi być unikatowa 11. help_texts do modeli
 Done 12. https://django-debug-toolbar.readthedocs.io/en/latest/
-13. https://github.com/jazzband/django-silk
+Done 13. https://github.com/jazzband/django-silk
 
 Nastepny call
+DONE GITHUB ACTIONS
 CI + ew. poetry

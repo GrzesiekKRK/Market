@@ -29,7 +29,11 @@ class InventoryListTemplateView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         inventory, created = Inventory.objects.get_or_create(vendor=self.request.user)
         context["inventory"] = inventory
-        context["products"] = inventory.products.all()
+        context["products"] = (
+            inventory.products.select_related("category")
+            .prefetch_related("image")
+            .all()
+        )
         context["images"] = ProductImage.objects.filter(
             product__in=inventory.products.all()
         )
