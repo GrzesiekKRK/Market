@@ -89,7 +89,11 @@ class ProductDetailTemplateView(LoginRequiredMixin, TemplateView):
             dict[str: Any]: Context data to be rendered in the template.
         """
         context = super().get_context_data(**kwargs)
-        product = Product.objects.get(id=context["pk"])
+        product = (
+            Product.objects.select_related("category")
+            .prefetch_related("image")
+            .get(id=context["pk"])
+        )
         context["product"] = product
         context["image"] = ProductImage.objects.filter(product=product.id)
         context["miniature"] = ProductImage.objects.filter(product=product.id)[0]
@@ -118,7 +122,11 @@ class CategoryTemplateView(LoginRequiredMixin, TemplateView):
         category = Category.objects.get(id=context["pk"])
         context["category"] = category
         context["categories"] = Category.objects.exclude(id=context["pk"])
-        context["products"] = Product.objects.filter(category=category)
+        context["products"] = (
+            Product.objects.select_related("category")
+            .prefetch_related("image")
+            .filter(category=category)
+        )
         return context
 
 
