@@ -106,7 +106,7 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
             HttpResponse: A response with the updated wishlist products.
         """
         try:
-            product = Product.objects.get(id=pk)  # get_object_or_404(Product, id=pk)
+            product = Product.objects.get(id=pk)
         except Product.DoesNotExist:
             return HttpResponse(status=404, content="Product not found.")
 

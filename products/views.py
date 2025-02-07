@@ -2,14 +2,17 @@ from typing import Any
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import DeleteView, TemplateView, UpdateView
 
 from inventories.models import Inventory
 from notifications.models import Notification
 from products.models import Category, Product
+from products.permissions import product_owner_required
 from users.models import CustomUser
 from wishlists.models import Wishlist
 
@@ -61,9 +64,19 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
         products = (
             Product.objects.select_related("category").prefetch_related("image").all()
         )
+        paginator = Paginator(products, 12)
+        page_number = self.request.GET.get("page")
+        try:
+            page_number = int(page_number)
+        except (TypeError, ValueError):
+            page_number = 1
+        page_obj = paginator.get_page(page_number)
+
         categories = Category.objects.all()
+
         context = super().get_context_data(**kwargs)
-        context["products"] = products
+
+        context["products"] = page_obj
         context["categories"] = categories
         context["deals"] = deals
         return context
@@ -120,13 +133,21 @@ class CategoryTemplateView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
         category = Category.objects.get(id=context["pk"])
-        context["category"] = category
-        context["categories"] = Category.objects.exclude(id=context["pk"])
-        context["products"] = (
+        products = (
             Product.objects.select_related("category")
             .prefetch_related("image")
             .filter(category=category)
         )
+        paginator = Paginator(products, 12)
+        page_number = self.request.GET.get("page")
+        try:
+            page_number = int(page_number)
+        except (TypeError, ValueError):
+            page_number = 1
+        page_obj = paginator.get_page(page_number)
+        context["category"] = category
+        context["categories"] = Category.objects.exclude(id=context["pk"])
+        context["products"] = page_obj
         return context
 
 
@@ -136,6 +157,7 @@ class CreateProduct(LoginRequiredMixin):
     and adding product details to the database.
     """
 
+    # TODO permission tylko vendor
     @staticmethod
     def product_upload(request: HttpRequest) -> HttpResponse:
         """
@@ -179,6 +201,7 @@ class CreateProduct(LoginRequiredMixin):
         return render(request, "products/add_product.html", context)
 
 
+@method_decorator(product_owner_required(), name="dispatch")
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
     View for updating an existing product. This view allows the vendor to update
@@ -189,26 +212,26 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     form_class = AddProductForm
     model = Product
 
-    def get_object(self, queryset=None) -> Product:
-        """
-        Retrieves the product object to be updated.
-
-        Args:
-            queryset (QuerySet): Optional query to filter products.
-
-        Returns:
-            Product: The product object to be updated.
-
-        Raises:
-            Http404: If the product does not exist or the user does not have permission to update it.
-        """
-
-        product = get_object_or_404(Product, pk=self.kwargs["pk"])
-        inventory = get_object_or_404(Inventory, products=product)
-        if inventory.vendor == self.request.user:
-            return product
-
-        raise Http404("Inventory not found or you don't have permission to view it.")
+    # def get_object(self, queryset=None) -> Product:
+    #     """
+    #     Retrieves the product object to be updated.
+    #
+    #     Args:
+    #         queryset (QuerySet): Optional query to filter products.
+    #
+    #     Returns:
+    #         Product: The product object to be updated.
+    #
+    #     Raises:
+    #         Http404: If the product does not exist or the user does not have permission to update it.
+    #     """
+    #
+    #     product = get_object_or_404(Product, pk=self.kwargs["pk"])
+    #
+    #     if product:
+    #         return product
+    #
+    #     raise Http404("Inventory not found or you don't have permission to view it.")
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         """
@@ -286,16 +309,16 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
+@method_decorator(product_owner_required(), name="dispatch")
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "products/delete.html"
     success_url = reverse_lazy("products")
 
-    def get_object(self, queryset=None) -> Product:
-
-        product = get_object_or_404(Product, pk=self.kwargs["pk"])
-        inventory = get_object_or_404(Inventory, products=product)
-        if inventory.vendor == self.request.user:
-            return product
-
-        raise Http404("Inventory not found or you don't have permission to view it.")
+    # def get_object(self, queryset=None) -> Product:
+    #
+    #     product = get_object_or_404(Product, pk=self.kwargs["pk"])
+    #     if product:
+    #         return product
+    #
+    #     raise Http404("Inventory not found or you don't have permission to view it.")

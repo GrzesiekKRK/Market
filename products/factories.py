@@ -54,5 +54,5 @@ class ProductImageFactory(DjangoModelFactory):
     class Meta:
         model = ProductImage
 
-    miniature = False
+    miniature = True
     product = factory.SubFactory(ProductFactory)
