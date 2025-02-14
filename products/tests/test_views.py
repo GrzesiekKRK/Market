@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 
 from inventories.factories import InventoryFactory
@@ -17,6 +17,7 @@ class ProductListTemplateViewTest(TestCase):
         )
         self.additional_factory_deals = ProductFactory.create_batch(5, is_sale=True)
 
+    @tag("x")
     def test_get_products_page_loads_correctly(self):
         self.client.force_login(self.user)
         response = self.client.get(

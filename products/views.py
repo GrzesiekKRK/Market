@@ -157,7 +157,6 @@ class CreateProduct(LoginRequiredMixin):
     and adding product details to the database.
     """
 
-    # TODO permission tylko vendor
     @staticmethod
     def product_upload(request: HttpRequest) -> HttpResponse:
         """
@@ -211,27 +210,6 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "products/update.html"
     form_class = AddProductForm
     model = Product
-
-    # def get_object(self, queryset=None) -> Product:
-    #     """
-    #     Retrieves the product object to be updated.
-    #
-    #     Args:
-    #         queryset (QuerySet): Optional query to filter products.
-    #
-    #     Returns:
-    #         Product: The product object to be updated.
-    #
-    #     Raises:
-    #         Http404: If the product does not exist or the user does not have permission to update it.
-    #     """
-    #
-    #     product = get_object_or_404(Product, pk=self.kwargs["pk"])
-    #
-    #     if product:
-    #         return product
-    #
-    #     raise Http404("Inventory not found or you don't have permission to view it.")
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         """
@@ -314,11 +292,3 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "products/delete.html"
     success_url = reverse_lazy("products")
-
-    # def get_object(self, queryset=None) -> Product:
-    #
-    #     product = get_object_or_404(Product, pk=self.kwargs["pk"])
-    #     if product:
-    #         return product
-    #
-    #     raise Http404("Inventory not found or you don't have permission to view it.")
