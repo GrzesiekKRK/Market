@@ -20,7 +20,7 @@ class ProductListTemplateViewTest(TestCase):
     def test_get_products_page_loads_correctly(self):
         self.client.force_login(self.user)
         response = self.client.get(
-            self.view,
+            self.view, data = {'products': self.factory}
         )
 
         products = Product.objects.all()
