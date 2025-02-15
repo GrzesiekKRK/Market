@@ -48,10 +48,10 @@ jobs:
         DB_PORT: ${{ secrets.DB_PORT }}
         DEBUG: false
         ENVIRONMENT: 'CI'
-#    - name: Upload coverage report
-#      uses: codecov/codecov-action@v4
-#      env:
-#        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - name: Run Bandit
       run: |
         bandit -c pyproject.toml -r .
