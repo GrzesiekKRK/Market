@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -105,7 +106,14 @@ class OrderListTemplateView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
         orders = Order.objects.filter(customer=self.request.user).order_by("-id")
-        context["orders"] = orders
+        paginator = Paginator(orders, 12)
+        page_number = self.request.GET.get("page")
+        try:
+            page_number = int(page_number)
+        except (TypeError, ValueError):
+            page_number = 1
+        page_obj = paginator.get_page(page_number)
+        context["orders"] = page_obj
         return context
 
 

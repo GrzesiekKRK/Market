@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
@@ -31,11 +32,18 @@ class WishListTemplateView(TemplateView, LoginRequiredMixin):
         wishlist, create = Wishlist.objects.prefetch_related("products").get_or_create(
             user=self.request.user
         )
-
-        context["wishlist"] = wishlist
-        context["products"] = (
+        products = (
             wishlist.products.select_related("category").prefetch_related("image").all()
         )
+        paginator = Paginator(products, 12)
+        page_number = self.request.GET.get("page")
+        try:
+            page_number = int(page_number)
+        except (TypeError, ValueError):
+            page_number = 1
+        page_obj = paginator.get_page(page_number)
+        context["wishlist"] = wishlist
+        context["products"] = page_obj
 
         return context
 
