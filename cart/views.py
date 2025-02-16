@@ -16,7 +16,7 @@ class CartTemplateView(TemplateView):
     template_name = "cart/cart.html"
 
     def get_context_data(self, **kwargs) -> dict[str:Any]:
-        """Generates the context for the cart page, including the cart contents and total price.
+        """Generates the context for the cart page, including the cart contents and total price of cart.
 
         Arguments:
                 kwargs: Additional keyword arguments for context generation.
