@@ -22,6 +22,6 @@ Done 15. Zrobiłem decorator do products update i delete view sprawdzający czy 
 
 FRONTNED:
 Footer - do dostosowania linki do stron
-Paginacja - Produktóœ
+Paginacja - Produktów
 Done Docker
 
