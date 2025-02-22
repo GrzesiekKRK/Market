@@ -38,7 +38,7 @@ jobs:
       run: |
         coverage run manage.py test
         coverage report
-        coverage report xml
+        coverage xml
       env:
         DB_NAME: ${{ vars.DB_NAME }}
         DB_USER: ${{ vars.DB_USER }}
