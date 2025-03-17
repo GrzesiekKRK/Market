@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "axes",
     "silk",
+    "crispy_forms",
+    "crispy_bootstrap4",
 ]
 
 INSTALLED_EXTENSIONS = [
@@ -143,3 +145,5 @@ if os.getenv("ENVIRONMENT") != "CI":
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
