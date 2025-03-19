@@ -1,4 +1,0 @@
-1.Go to D:/stripe
-2.Open cmd
-3.strip login
-4.stripe listen --forward-to localhost:8000/payments/webhook/
