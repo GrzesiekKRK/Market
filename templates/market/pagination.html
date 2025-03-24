@@ -1,0 +1,107 @@
+<!-- Pagination -->
+<nav aria-label="Page navigation" class="mt-5">
+    <ul class="pagination justify-content-center m-0 p-0 d-flex">
+        {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>
+        {% endif %}
+
+        <!-- Display limited page numbers -->
+        {% with ''|center:5 as range %}
+            {% for _ in range %}
+                {% with forloop.counter0|add:products.number|add:-2 as num %}
+                    {% if num > 0 and num <= products.paginator.num_pages %}
+                        {% if products.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        {% endwith %}
+
+        {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Next</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{#       <!-- Pagination -->#}
+{#                <nav aria-label="Page navigation" class="mt-5">#}
+{#    <ul class="pagination justify-content-center m-0 p-0 d-flex">#}
+{#        {% if products.has_previous %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="?page=1">&laquo;</a>#}
+{#            </li>#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>#}
+{#            </li>#}
+{#        {% else %}#}
+{#            <li class="page-item disabled">#}
+{#                <span class="page-link">&laquo;</span>#}
+{#            </li>#}
+{#            <li class="page-item disabled">#}
+{#                <span class="page-link">Previous</span>#}
+{#            </li>#}
+{#        {% endif %}#}
+{#    <!-- Wyświetlanie numerów stron -->#}
+{#        {% for num in products.paginator.page_range %}#}
+{#            {% if products.number == num %}#}
+{#                <li class="page-item active">#}
+{#                    <span class="page-link">{{ num }}</span>#}
+{#                </li>#}
+{#            {% else %}#}
+{#                <li class="page-item">#}
+{#                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>#}
+{#                </li>#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{##}
+{#        {% if products.has_next %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>#}
+{#            </li>#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>#}
+{#            </li>#}
+{#        {% else %}#}
+{#            <li class="page-item disabled">#}
+{#                <span class="page-link">Next</span>#}
+{#            </li>#}
+{#            <li class="page-item disabled">#}
+{#                <span class="page-link">&raquo;</span>#}
+{#            </li>#}
+{#        {% endif %}#}
+{#    </ul>#}
+{#</nav>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}

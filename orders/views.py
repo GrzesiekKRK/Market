@@ -113,7 +113,7 @@ class OrderListTemplateView(LoginRequiredMixin, TemplateView):
         except (TypeError, ValueError):
             page_number = 1
         page_obj = paginator.get_page(page_number)
-        context["orders"] = page_obj
+        context["products"] = page_obj
         return context
 
 
