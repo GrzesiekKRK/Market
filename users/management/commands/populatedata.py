@@ -41,6 +41,11 @@ class Command(BaseCommand):
                 for product in products:
                     ProductImageFactory.create(product=product)
                     inventory.products.add(product)
+                    sale = Product.objects.filter(is_sale=True).first()
+                    if not sale:
+                        sale_product = ProductFactory.create(is_sale=True)
+                        ProductImageFactory.create(product=sale_product)
+                        inventory.products.add(sale_product)
                 Command.wishlist_factories(products)
 
     @staticmethod
