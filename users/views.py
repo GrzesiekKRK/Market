@@ -152,7 +152,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
                 messages.success(request, "Your profile is updated successfully")
                 return redirect("user-profile")
         else:
-            form = form = UpdateUserForm()
+            form = UpdateUserForm()
         return render(request, "users/update.html", {"form": form})
 
     def form_invalid(self, form: UpdateUserForm) -> TemplateResponse:

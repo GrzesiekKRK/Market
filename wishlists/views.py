@@ -11,7 +11,7 @@ from products.models import Product
 from .models import Wishlist
 
 
-class WishListTemplateView(TemplateView, LoginRequiredMixin):
+class WishListTemplateView(LoginRequiredMixin, TemplateView):
     """
     Displays the user's wishlist with a list of products.
     """
