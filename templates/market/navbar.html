@@ -5,7 +5,7 @@
                 <div class="d-flex align-items-center ms-auto">
                     <small class="me-3 text-white">
                         <i class="fas fa-map-marker-alt me-2 text-secondary"></i>
-                        {% if request.user.address%}
+                        {% if request.user.address %}
                             {{ request.user.address }}
                         {% endif %}
                     </small>
@@ -27,10 +27,10 @@
             {% else %}
                 <div>
                     <small class="text-white me-3">
-                        <i class="fas fa-phone-alt me-2 text-secondary"></i> +012 345 6789
+                        <i class="fas fa-phone-alt me-2 text-secondary"></i> Administration
                     </small>
                     <small class="text-white">
-                        <i class="fas fa-envelope me-2 text-secondary"></i> info@example.com
+                        <i class="fas fa-envelope me-2 text-secondary"></i> administrator@example.com
                     </small>
                 </div>
                 <div>

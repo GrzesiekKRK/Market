@@ -11,6 +11,7 @@ from django.views.generic import DeleteView, TemplateView, UpdateView
 
 from inventories.models import Inventory
 from notifications.models import Notification
+from products.filters import ProductFilter
 from products.models import Category, Product
 from products.permissions import product_owner_required
 from users.models import CustomUser
@@ -79,6 +80,7 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
         context["products"] = page_obj
         context["categories"] = categories
         context["deals"] = deals
+        context["filter"] = ProductFilter(self.request.GET, queryset=products)
         return context
 
 
