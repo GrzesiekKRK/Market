@@ -11,6 +11,7 @@ class ProductFilter(django_filters.FilterSet):
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
 
     ordering = django_filters.OrderingFilter(
+        label="Sort by",
         choices=(
             ("price", "Price (Low to High)"),
             ("-price", "Price (High to Low)"),
@@ -35,4 +36,4 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ["name", "category", "reviews", "is_sale"]
+        fields = ["name", "category", "is_sale"]
