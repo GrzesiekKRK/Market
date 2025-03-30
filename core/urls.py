@@ -10,7 +10,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", DashboardView.as_view(), name="market-dashboard"),
     path("contact/", ConcatView.as_view(), name="market-contact"),
-    path("products/", include("products.urls")),
+    path("", include("products.urls")),
     path("shop/", include("cart.urls")),
     path("accounts/", include("users.urls")),
     path("inventory/", include("inventories.urls")),

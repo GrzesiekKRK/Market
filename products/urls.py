@@ -10,9 +10,9 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", ProductListTemplateView.as_view(), name="products"),
+    path("products/", ProductListTemplateView.as_view(), name="products"),
     path(
-        "category/<int:pk>/", CategoryTemplateView.as_view(), name="category-products"
+        "categories/<int:pk>/", CategoryTemplateView.as_view(), name="category-products"
     ),
     path(
         "detail/<int:pk>/", ProductDetailTemplateView.as_view(), name="product-detail"
