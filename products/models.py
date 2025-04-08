@@ -1,6 +1,13 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from . import consts as product_units
+
+
+def validate_minimal_price(price):
+    if price > 0:
+        return price
+    raise ValidationError("Can not set product price to zero")
 
 
 class Category(models.Model):
@@ -40,7 +47,9 @@ class Product(models.Model):
         related_name="category",
         help_text="Check for similar products",
     )
-    price = models.DecimalField(decimal_places=2, max_digits=6, default=0)
+    price = models.DecimalField(
+        decimal_places=2, max_digits=6, default=1, validators=[validate_minimal_price]
+    )
     miniature_description = models.CharField(
         max_length=100, default="", blank=True, null=True, help_text="Limit 100 marks"
     )
@@ -54,9 +63,7 @@ class Product(models.Model):
     reviews = models.DecimalField(decimal_places=2, max_digits=6, default=5.0)
     is_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(
-        decimal_places=2,
-        max_digits=6,
-        default=0,
+        decimal_places=2, max_digits=6, default=1, validators=[validate_minimal_price]
     )
 
     class Meta:
