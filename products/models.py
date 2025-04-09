@@ -1,6 +1,6 @@
 from django.db import models
 
-from products.validation import validate_minimal_price
+from products.validators import validate_minimal_price
 
 from . import consts as product_units
 
