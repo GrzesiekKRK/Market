@@ -1,13 +1,8 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 
+from products.validation import validate_minimal_price
+
 from . import consts as product_units
-
-
-def validate_minimal_price(price):
-    if price > 0:
-        return price
-    raise ValidationError("Can not set product price to zero")
 
 
 class Category(models.Model):
