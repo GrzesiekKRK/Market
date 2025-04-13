@@ -15,9 +15,15 @@ urlpatterns = [
         "categories/<int:pk>/", CategoryTemplateView.as_view(), name="category-products"
     ),
     path(
-        "detail/<int:pk>/", ProductDetailTemplateView.as_view(), name="product-detail"
+        "products/<int:pk>/detail/",
+        ProductDetailTemplateView.as_view(),
+        name="product-detail",
     ),
     path("add_product/", CreateProduct.product_upload, name="vendor-add-product"),
-    path("update/<int:pk>/", ProductUpdateView.as_view(), name="product-update"),
-    path("delete/<int:pk>/", ProductDeleteView.as_view(), name="product-delete"),
+    path(
+        "products/<int:pk>/update/", ProductUpdateView.as_view(), name="product-update"
+    ),
+    path(
+        "products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product-delete"
+    ),
 ]

@@ -1,7 +1,7 @@
 import django_filters
 from django import forms
 
-from products.models import Product
+from products.models import Category, Product
 
 
 class ProductFilter(django_filters.FilterSet):
@@ -9,6 +9,11 @@ class ProductFilter(django_filters.FilterSet):
     is_sale = django_filters.BooleanFilter(widget=forms.CheckboxInput())
     price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
+    categories = django_filters.ModelMultipleChoiceFilter(
+        queryset=Category.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        field_name="category",
+    )
 
     ordering = django_filters.OrderingFilter(
         label="Sort by",
