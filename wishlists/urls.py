@@ -9,11 +9,11 @@ from .views import (
 urlpatterns = [
     path("", WishListTemplateView.as_view(), name="wishlist"),
     path(
-        "add_product/<int:pk>/",
+        "<int:pk>/add",
         WishlistAddProductView.as_view(),
         name="add-to-wishlist",
     ),
     path(
-        "remove/<int:pk>/", WishlistRemoveProductView.as_view(), name="wishlist-remove"
+        "<int:pk>/remove", WishlistRemoveProductView.as_view(), name="wishlist-remove"
     ),
 ]

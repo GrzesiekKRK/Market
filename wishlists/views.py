@@ -2,8 +2,8 @@ from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, View
 
 from products.models import Product
@@ -29,7 +29,7 @@ class WishListTemplateView(LoginRequiredMixin, TemplateView):
             dict[str, Any]: A dictionary containing the wishlist and its products.
         """
         context = super().get_context_data(**kwargs)
-        wishlist, create = Wishlist.objects.prefetch_related("products").get_or_create(
+        wishlist, _ = Wishlist.objects.prefetch_related("products").get_or_create(
             user=self.request.user
         )
         products = (
@@ -42,13 +42,14 @@ class WishListTemplateView(LoginRequiredMixin, TemplateView):
         except (TypeError, ValueError):
             page_number = 1
         page_obj = paginator.get_page(page_number)
+
         context["wishlist"] = wishlist
         context["products"] = page_obj
 
         return context
 
 
-class WishlistAddProductView(View, LoginRequiredMixin):
+class WishlistAddProductView(LoginRequiredMixin, View):
     """
     Adds a product to the user's wishlist.
     """
@@ -68,19 +69,12 @@ class WishlistAddProductView(View, LoginRequiredMixin):
         if not created:
             wishlist.save()
 
-        product = Product.objects.get(id=pk)
+        product = get_object_or_404(Product, id=pk)
 
-        if product:
-
-            wishlist.products.add(product)
-            products = (
-                wishlist.products.select_related("category")
-                .prefetch_related("image")
-                .all()
-            )
-
-        else:
-            products = wishlist.products.all()
+        wishlist.products.add(product)
+        products = (
+            wishlist.products.select_related("category").prefetch_related("image").all()
+        )
         return render(request, "wishlist/wishlist.html", {"products": products})
 
 
@@ -88,19 +82,6 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
     """
     Removes a product from the user's wishlist.
     """
-
-    def get(self, request, pk) -> None:
-        """
-        Prevents access via GET method for this view.
-
-        Args:
-            request: The HTTP request object.
-            pk: The ID of the product to be removed (not used here).
-
-        Raises:
-            Http404: The page cannot be accessed via GET method.
-        """
-        raise Http404("This page cannot be accessed via GET method.")
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         """
@@ -113,10 +94,8 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
         Returns:
             HttpResponse: A response with the updated wishlist products.
         """
-        try:
-            product = Product.objects.get(id=pk)
-        except Product.DoesNotExist:
-            return HttpResponse(status=404, content="Product not found.")
+
+        product = get_object_or_404(Product, id=pk)
 
         try:
             wishlist = Wishlist.objects.get(user=request.user)
@@ -125,6 +104,6 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
 
         wishlist.products.remove(product)
 
-        products = wishlist.products.all()
+        wishlist.refresh_from_db()
 
-        return render(request, "wishlist/wishlist.html", {"products": products})
+        return render(request, "wishlist/wishlist.html", {"products": wishlist})

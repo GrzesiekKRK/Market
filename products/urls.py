@@ -19,7 +19,7 @@ urlpatterns = [
         ProductDetailTemplateView.as_view(),
         name="product-detail",
     ),
-    path("add_product/", CreateProduct.product_upload, name="vendor-add-product"),
+    path("add-product/", CreateProduct.product_upload, name="vendor-add-product"),
     path(
         "products/<int:pk>/update/", ProductUpdateView.as_view(), name="product-update"
     ),

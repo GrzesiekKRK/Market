@@ -9,12 +9,12 @@ urlpatterns = [
         name="stripe-checkout",
     ),
     path(
-        "success/<int:pk>/",
+        "<int:pk>/success/",
         views.SuccessTemplateView.as_view(),
         name="successful-payment",
     ),
     path(
-        "cancel/<int:pk>/",
+        "<int:pk>/cancel/",
         views.CancelledTemplateView.as_view(),
         name="cancelled-payment",
     ),

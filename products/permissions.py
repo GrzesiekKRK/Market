@@ -14,7 +14,6 @@ def product_owner_required() -> Callable:
             customer_user = request.user
             product_id = kwargs["pk"]
 
-            # product_owner = get_object_or_404(Inventory, vendor=customer_user.id, products=product_id)
             try:
                 product_owner = Inventory.objects.get(
                     vendor=customer_user.id, products=product_id

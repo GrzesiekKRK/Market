@@ -36,20 +36,6 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
 
     template_name = "products/products.html"
 
-    def dispatch(self, *args, **kwargs) -> dict[str:Any]:
-        """
-        Handles the HTTP request and prepares the response by dispatching the request
-        to the appropriate handler.
-
-        Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-
-        Returns:
-            dict[str: Any]: The result of the super().dispatch call.
-        """
-        return super().dispatch(*args, **kwargs)
-
     def get_context_data(self, **kwargs) -> dict[str:Any]:
         """
         Prepares the context data for the product list page, including all products,

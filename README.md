@@ -34,43 +34,66 @@ We can create two types of users: customers and vendors, each with different per
 
 </details>
 
-## Technologies
+### Main languages & tools
 <ul>
 <li> Programming language: Python : 3.13</li>
 <li> Framework: Django </li>
 <li> Database: PostgreSQL </li>
-<li> Payments: Stripe Checkout</li>
-<li> Containerization: Docker </li>
+<li> Payments: Stripe</li>
+<li> Requirements & Virtual environments: Poetry </li>
+<li> Containerization: Docker & Docker Compose</li>
 </ul>
 
-## Setup - How to run project
-1) Download project using `git pull` command
-    ```
-    git pull https://github.com/bgstaal/multipleWindow3dScene.git
+### Secondary packages & tools
+<uL>
+<li> crispy-forms: ...</li>
+
+</ul>
+
+### Setup - How to run project
+1) Download the project using the git `clone` command
+    ```bash
+    git clone https://github.com/GrzesiekKRK/Market.git
     ```
 2) Create virtual environment using command below:
-    ```
-    python -m venv venv
+    ```bash
+    python -m venv .venv
     ```
 3) Activate environment using command:
     Windows:
        ```
-       ./venv/Scripts/activate
+       ./.venv/Scripts/activate
        ```
     Linux / OSX
     ```
-    source ./venv/lib/activate
+    source ./.venv/lib/activate
     ```
 4) If you are in venv install all required dependencies using command:
-    ```
+    ```bash
    pip install -r requirements.txt
    ```
-5) Go to src folder and run application using:
+5) In the main directory where `manage.py` is located run
+    ```bash
+      python manage.py runserver
     ```
-    python main.py
+
+
+
+### Setup - How to run Project using Docker
+1) Download the project using the git `clone` command
+    ```bash
+    git clone https://github.com/GrzesiekKRK/Market.git
+    ```
+2)  Navigate to the project directory
+    ```bash
+    cd Market
+    ```
+3) Run the container using docker-compose:
+   ```bash
+   docker-compose up -d
+   ```
+
 ```
-
-
 ## More detailed information about modules
 <details>
 <summary>Click here to see information about modules <b>Project</b>!</summary>
@@ -133,7 +156,7 @@ We can create two types of users: customers and vendors, each with different per
         Allows customers to reorder past purchases with a single click (e.g. “Renew Order” button).
         Can be extended to support order status tracking (e.g. pending, shipped, delivered).
 
-* Payments - Stripe Checkout
+* Payments - Stripe
     Stripe Checkout is a pre-built, hosted payment page provided by Stripe that makes it easy to accept payments online. It securely handles customer payment details, reducing the complexity of dealing with sensitive information directly.
     Key Features:
         Simple Integration: Stripe Checkout is designed to be easy to integrate with minimal code, using Stripe's pre-built UI for the payment page.

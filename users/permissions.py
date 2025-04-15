@@ -3,7 +3,7 @@ from functools import wraps
 from django.contrib.auth.models import PermissionDenied
 
 
-def account_role_required(roles):  # missed type_hints Callable etc.
+def account_role_required(roles):  # TODO missed type_hints Callable etc.
     def decorator(func):
         @wraps(func)
         def inner(request, *args, **kwargs):

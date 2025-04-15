@@ -40,14 +40,17 @@ class UserLoginView(LoginView):
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
+            username, password = (
+                form.cleaned_data["username"],
+                form.cleaned_data["password"],
+            )
+
             user = authenticate(request, username=username, password=password)
 
             if user:
-
                 login(request, user)
                 return redirect("products")
+
         return render(request, "users/login.html", {"form": form})
 
     def get_success_url(self) -> HttpResponse:
@@ -61,7 +64,7 @@ class UserLoginView(LoginView):
 
         return render(self.request, "users/update.html", {"user": user})
 
-    def form_invalid(self, form: LoginForm) -> TemplateResponse:
+    def form_invalid(self, form: LoginForm) -> HttpResponse:
         """
         Handles the case where the login form is invalid. Displays an error message.
 
@@ -69,10 +72,12 @@ class UserLoginView(LoginView):
             form (LoginForm): The invalid form that was submitted.
 
         Returns:
-            TemplateResponse: The rendered template with the form and error messages.
+            HttpResponse: The rendered template with the form and error messages.
         """
         messages.error(self.request, "Invalid username or password")
-        return self.render_to_response(self.get_context_data(form=form))
+        return render(
+            self.request, self.template_name, context=self.get_context_data(form=form)
+        )
 
 
 class UserSignUpView(CreateView):
@@ -85,18 +90,6 @@ class UserSignUpView(CreateView):
     success_url = reverse_lazy("user-login")
     form_class = RegisterUserForm
     success_message = "Your profile was created successfully"
-
-    def form_invalid(self, form) -> str:
-        """
-        Handles the case where the signup form is invalid.
-
-        Args:
-            form (form): The invalid form that was submitted.
-
-        Returns:
-            str: The template rendered with the invalid form.
-        """
-        return super().form_invalid(form)
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
@@ -166,7 +159,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
             TemplateResponse: The rendered template with the form and error messages.
         """
         messages.error(self.request, "Invalid change")
-        return self.render_to_response(self.get_context_data(form=form))
+        return self.render_to_response(self.get_context_data(form=form))  # TODO render
 
 
 class UserDeleteView(DeleteView, LoginRequiredMixin):

@@ -13,4 +13,4 @@ class Wishlist(models.Model):
     products = models.ManyToManyField(Product)
 
     def __str__(self) -> str:
-        return f" {self.user.first_name} {self.user.last_name} your wishlist"
+        return f"{self.user.first_name} {self.user.last_name} your wishlist"
