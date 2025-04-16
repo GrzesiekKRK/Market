@@ -69,11 +69,11 @@ We can create two types of users: customers and vendors, each with different per
     source ./.venv/lib/activate
     ```
 4) If you are in venv install all required dependencies using command:
-    ```bash
+    ```
    pip install -r requirements.txt
    ```
 5) In the main directory where `manage.py` is located run
-    ```bash
+    ```
       python manage.py runserver
     ```
 
