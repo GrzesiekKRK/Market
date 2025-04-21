@@ -90,7 +90,7 @@ We can create two types of users: customers and vendors, each with different per
     ```
 3) Run the container using docker-compose:
    ```bash
-   docker-compose up -d
+   docker-compose up
    ```
 
 ```
