@@ -78,18 +78,6 @@ class NotificationDeleteViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/products/")
 
-    # TODO Zmiana na view z post albo stworzyć confirm delete
-    # def test_get_notification_delete_works_correctly(self):
-    #     data = {
-    #             'pk': self.note.id
-    #             }
-    #
-    #     response = self.client.get(reverse('notification-delete', kwargs=data))
-    #
-    #     self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertRedirects(response, '/products/')
-
 
 class BuyerVendorNotificationCreationTest(TestCase):
     def setUp(self) -> None:

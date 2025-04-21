@@ -1,10 +1,11 @@
 from functools import wraps
+from typing import Callable
 
 from django.contrib.auth.models import PermissionDenied
 
 
-def account_role_required(roles):  # TODO missed type_hints Callable etc.
-    def decorator(func):
+def account_role_required(roles: str) -> Callable:
+    def decorator(func: Callable):
         @wraps(func)
         def inner(request, *args, **kwargs):
             customer_user = request.user

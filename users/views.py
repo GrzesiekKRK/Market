@@ -159,7 +159,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
             TemplateResponse: The rendered template with the form and error messages.
         """
         messages.error(self.request, "Invalid change")
-        return self.render_to_response(self.get_context_data(form=form))  # TODO render
+        return render(self.request, "users/update.html", {"form": form})
 
 
 class UserDeleteView(DeleteView, LoginRequiredMixin):
