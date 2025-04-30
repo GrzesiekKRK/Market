@@ -6,6 +6,7 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView, View
 
+from deliveries.models import Delivery
 from orders.models import ProductOrder
 from products.models import Product
 
@@ -26,12 +27,21 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
         cart = Cart(self.request)
+
         products = cart
-        total_price = cart.get_sub_total_price()
+        filtered_delivery_methods = (
+            Delivery.objects.all()
+        )  # TODO filtraż delivery metod po wymiarach
+        items_total_price = cart.get_products_sub_total_price()
+        selected_delivery_method = cart.get_delivery_method(self.request)
+        total_price = items_total_price + selected_delivery_method.price
+
         items_in_cart = len(cart)
         context["products"] = products
         context["total_price"] = total_price
         context["items_in_cart"] = items_in_cart
+        context["delivery_methods"] = filtered_delivery_methods
+        context["selected_delivery_id"] = selected_delivery_method.id
 
         return context
 
@@ -134,6 +144,21 @@ class CartClearView(LoginRequiredMixin, View):
         self.model.clear(Cart(request))
 
         messages.success(request, "Cart clear.")
+        return redirect("cart")
+
+
+class CartDeliveryView(LoginRequiredMixin, View):
+    model = Cart
+
+    def post(self, request):
+        """
+        Update the cart's delivery method and recalculate total price.
+        """
+        if request.method == "POST":
+            delivery_id = request.POST.get("delivery_method")
+
+            request.session["selected_delivery_id"] = delivery_id
+
         return redirect("cart")
 
 

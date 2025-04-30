@@ -4,7 +4,7 @@ from typing import Callable
 from django.contrib.auth.models import PermissionDenied
 
 
-def account_role_required(roles: str) -> Callable:
+def account_role_required(roles: list[int]) -> Callable:
     def decorator(func: Callable):
         @wraps(func)
         def inner(request, *args, **kwargs):

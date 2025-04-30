@@ -61,9 +61,9 @@ We can create two types of users: customers and vendors, each with different per
     ```
 3) Activate environment using command:
     Windows:
-       ```
-       ./.venv/Scripts/activate
-       ```
+   ```
+   ./.venv/Scripts/activate
+   ```
     Linux / OSX
     ```
     source ./.venv/lib/activate
@@ -76,6 +76,7 @@ We can create two types of users: customers and vendors, each with different per
     ```
       python manage.py runserver
     ```
+6)  Application will be available at `localhost:8000`
 
 
 
@@ -90,10 +91,11 @@ We can create two types of users: customers and vendors, each with different per
     ```
 3) Run the container using docker-compose:
    ```bash
-   docker-compose up
+   docker-compose up --build -d
    ```
+4) Application will be available at `localhost:8000`
 
-```
+
 ## More detailed information about modules
 <details>
 <summary>Click here to see information about modules <b>Project</b>!</summary>

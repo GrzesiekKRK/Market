@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.http import HttpRequest
 
+from deliveries.models import Delivery
 from products.models import Product
 
 
@@ -86,7 +87,7 @@ class Cart:
         """
         return sum(item["quantity"] for item in self.cart.values())
 
-    def get_sub_total_price(self) -> int:
+    def get_products_sub_total_price(self) -> int:
         """Calculates the sum of the products' prices in the cart (regular price or sale price).
 
         Returns:
@@ -100,6 +101,17 @@ class Cart:
             )
             for item in self.cart.values()
         )
+
+    def get_delivery_price(self) -> Decimal:
+        """Adds delivery fee to the cart total price."""
+        return self.get_sub_total_price() + Decimal(settings.DELIVERY_FEE)
+
+    def get_delivery_method(self, request: HttpRequest) -> int:
+        selected_delivery_id = request.session.get("selected_delivery_id")
+        if not selected_delivery_id:
+            selected_delivery_id = 1
+        selected_delivery = Delivery.objects.get(id=selected_delivery_id)
+        return selected_delivery
 
     def clear(self) -> None:
         """Removes all products from the cart."""

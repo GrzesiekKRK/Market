@@ -17,7 +17,7 @@ from products.permissions import product_owner_required
 from users.models import CustomUser
 from wishlists.models import Wishlist
 
-from .forms import AddProductForm, ImageForm
+from .forms import AddProductForm, ImageForm, ProductDimensionForm
 from .models import ProductImage
 
 
@@ -158,13 +158,17 @@ class CreateProduct(LoginRequiredMixin):
                            product creation form.
         """
         image_form = ImageForm()
+        product_dimension_form = ProductDimensionForm()
         product_form = AddProductForm()
+
         if request.method == "POST":
             product_form = AddProductForm(request.POST)
+            product_dimension_form = ProductDimensionForm(request.POST)
 
             images = request.FILES.getlist("image")
             miniature = request.FILES.getlist("miniature")
-            if product_form.is_valid():
+
+            if product_form.is_valid() and product_dimension_form.is_valid():
                 user = request.user
                 product = product_form.save()
                 inventory = Inventory.objects.get_or_create(vendor=user)
@@ -184,7 +188,11 @@ class CreateProduct(LoginRequiredMixin):
                 return render(
                     request, "products/product-detail.html", {"product": product}
                 )
-        context = {"form": image_form, "product_form": product_form}
+        context = {
+            "form": image_form,
+            "product_form": product_form,
+            "product_dimension_form": product_dimension_form,
+        }
         return render(request, "products/add_product.html", context)
 
 

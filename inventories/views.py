@@ -2,6 +2,7 @@ from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.db.models import QuerySet
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
@@ -34,17 +35,24 @@ class InventoryListTemplateView(LoginRequiredMixin, TemplateView):
             .prefetch_related("image")
             .all()
         )
-        paginator = Paginator(products, 12)
-        page_number = self.request.GET.get("page")
-        try:
-            page_number = int(page_number)
-        except (TypeError, ValueError):
-            page_number = 1
-        page_obj = paginator.get_page(page_number)
+
         context["inventory"] = inventory
-        context["products"] = page_obj
+        context["products"] = self._get_paginated_queryset(products)
         context["images"] = ProductImage.objects.filter(
             product__in=inventory.products.all()
         )
 
         return context
+
+    def _get_paginated_queryset(self, products: QuerySet):
+        paginator = Paginator(products, 12)
+        page_number = self.request.GET.get("page")
+
+        try:
+            page_number = int(page_number)
+        except (TypeError, ValueError):
+            page_number = 1
+
+        page_obj = paginator.get_page(page_number)
+
+        return page_obj

@@ -4,7 +4,7 @@ import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from .models import Category, Product, ProductImage
+from .models import Category, Product, ProductDimension, ProductImage
 
 fake = Faker()
 
@@ -61,6 +61,11 @@ class ProductFactory(DjangoModelFactory):
         min_value=0.1,
         max_value=9999,
     )
+
+
+class ProductDimensionFactory(DjangoModelFactory):
+    class Meta:
+        model = ProductDimension
 
 
 class ProductImageFactory(DjangoModelFactory):
