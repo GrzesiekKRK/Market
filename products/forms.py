@@ -42,13 +42,27 @@ class ProductDimensionForm(forms.ModelForm):
     width = forms.DecimalField(decimal_places=2, max_digits=6, initial=1)
     height = forms.DecimalField(decimal_places=2, max_digits=6, initial=1)
     weight = forms.DecimalField(decimal_places=2, max_digits=6, initial=1)
-    weight_unit = forms.ChoiceField(
+    weight_unit_kg = forms.ChoiceField(
         choices=[choice for choice in Product.UNITS_CHOICES if choice != 1], initial=3
     )
 
     class Meta:
         model = ProductDimension
-        fields = ["length", "width", "height", "weight"]
+        fields = ["length", "width", "height", "weight", "weight_unit_kg"]
+
+
+class UpdateProductDimensionForm(forms.ModelForm):
+    length = forms.DecimalField(decimal_places=2, max_digits=6)
+    width = forms.DecimalField(decimal_places=2, max_digits=6)
+    height = forms.DecimalField(decimal_places=2, max_digits=6)
+    weight = forms.DecimalField(decimal_places=2, max_digits=6)
+    weight_unit_kg = forms.ChoiceField(
+        choices=[choice for choice in Product.UNITS_CHOICES if choice != 1], initial=3
+    )
+
+    class Meta:
+        model = ProductDimension
+        fields = ["length", "width", "height", "weight", "weight_unit_kg"]
 
 
 class ImageForm(forms.ModelForm):

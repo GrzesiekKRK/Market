@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from users.models import CustomUser
@@ -20,3 +21,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification of user {self.user} {self.body}"
+
+    @staticmethod
+    def create_wishlist_notification(wishlist_owner, product):
+        title = f"Special Offer: {product.name}"
+        body = f"<a href =\"{settings.SITE_URL}/products/detail/{product.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>{product.name}</a>"
+        user = CustomUser.objects.get(id=wishlist_owner.user.id)
+        notification = Notification(user=user, title=title, body=body)
+        notification.save()

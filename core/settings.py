@@ -150,3 +150,5 @@ INTERNAL_IPS = [
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 AXES_LOCKOUT_PARAMETERS = ["username"]
+
+SITE_URL = "http://localhost:8000"

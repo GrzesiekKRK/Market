@@ -67,7 +67,11 @@ class Cart:
             item: Each cart item (product with price, quantity, and other information).
         """
         product_ids = self.cart.keys()
-        products = Product.objects.filter(id__in=product_ids)
+        products = (
+            Product.objects.select_related("dimension")
+            .prefetch_related("inventory")
+            .filter(id__in=product_ids)
+        )
         cart = self.cart.copy()
         for product in products:
             cart[str(product.id)]["product"] = product
@@ -106,7 +110,7 @@ class Cart:
         """Adds delivery fee to the cart total price."""
         return self.get_sub_total_price() + Decimal(settings.DELIVERY_FEE)
 
-    def get_delivery_method(self, request: HttpRequest) -> int:
+    def get_delivery_method(self, request: HttpRequest) -> Delivery:
         selected_delivery_id = request.session.get("selected_delivery_id")
         if not selected_delivery_id:
             selected_delivery_id = 1

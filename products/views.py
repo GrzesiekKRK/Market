@@ -12,12 +12,16 @@ from django.views.generic import DeleteView, TemplateView, UpdateView
 from inventories.models import Inventory
 from notifications.models import Notification
 from products.filters import ProductFilter
-from products.models import Category, Product
+from products.models import Category, Product, ProductDimension
 from products.permissions import product_owner_required
-from users.models import CustomUser
 from wishlists.models import Wishlist
 
-from .forms import AddProductForm, ImageForm, ProductDimensionForm
+from .forms import (
+    AddProductForm,
+    ImageForm,
+    ProductDimensionForm,
+    UpdateProductDimensionForm,
+)
 from .models import ProductImage
 
 
@@ -167,14 +171,13 @@ class CreateProduct(LoginRequiredMixin):
 
             images = request.FILES.getlist("image")
             miniature = request.FILES.getlist("miniature")
-
             if product_form.is_valid() and product_dimension_form.is_valid():
                 user = request.user
                 product = product_form.save()
                 inventory = Inventory.objects.get_or_create(vendor=user)
                 inventory[0].save()
                 inventory[0].products.add(product)
-
+                ProductDimension.creation(product, product_dimension_form)
                 for image in images:
                     image_ins = ProductImage(image=image, product=product)
                     image_ins.save()
@@ -221,11 +224,16 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         """
         product = self.get_object()
         product_form = AddProductForm(instance=product)
-
+        product_dimension = ProductDimension.objects.get(product=product)
+        product_dimension_form = UpdateProductDimensionForm(instance=product_dimension)
         return render(
             request,
             "products/update.html",
-            {"product_form": product_form, "product": product},
+            {
+                "product_form": product_form,
+                "product": product,
+                "product_dimension_form": product_dimension_form,
+            },
         )
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -241,33 +249,28 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         """
         product = self.get_object()
         product_form = AddProductForm(request.POST, instance=product)
+        product_dimension = ProductDimension.objects.get(product=product)
+        product_dimension_form = UpdateProductDimensionForm(
+            request.POST, instance=product_dimension
+        )
 
-        if product_form.is_valid():
+        if product_form.is_valid() and product_dimension_form.is_valid():
             product_form.save()
+            product_dimension_form.save()
+
             if product.is_sale:
-                wishlists_with_product_on_sale = Wishlist.objects.filter(
-                    product=product
+                wishlists_with_product_on_sale = (
+                    Wishlist.objects.filter(product=product),
                 )
                 for wishlist_owner in wishlists_with_product_on_sale:
-                    title = f"Special Offer: {product.name}"
-                    body = f"<a href =\"http://127.0.0.1:8000/products/detail/{product.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>{product.name}</a>"
-                    user = CustomUser.objects.get(id=wishlist_owner.user.id)
-                    notification = Notification(user=user, title=title, body=body)
-                    notification.save()
-
-            return render(
-                request,
-                "products/product-detail.html",
-                {
-                    "product": product,
-                },
-            )
-        elif not product_form.is_valid():
-            return render(
-                request,
-                "products/update.html",
-                {"product_form": product_form, "product": product},
-            )
+                    Notification.create_wishlist_notification(wishlist_owner, product)
+        return render(
+            request,
+            "products/product-detail.html",
+            {
+                "product": product,
+            },
+        )
 
     def form_invalid(self, form) -> str:
         """

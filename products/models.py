@@ -126,8 +126,7 @@ class ProductDimension(models.Model):
             MaxValueValidator(50.00, message="Weight cannot be more than 50 kg"),
         ],
     )
-    weight_unit = models.PositiveSmallIntegerField(
-        choices=Product.UNITS_CHOICES,
+    weight_unit_kg = models.PositiveSmallIntegerField(
         default=product_units.PRODUCT_UNITS_KILOGRAMS,
         help_text="Weight unit",
     )
@@ -135,89 +134,13 @@ class ProductDimension(models.Model):
     def __str__(self):
         return f"Wymiary produktu: {self.product.name}"
 
-    # TODO Forma, liczenie przez mnożenie, waga
-
-    ...
-
-
-# 10x15x5 -> wymiar pudełka
-
-
-"""
-Długość (L) = dłuższy z wymiarów w ustawieniu do otwarcia opakowania. Szerokość (B) = krótszy z wymiarów w ustawieniu do otwarcia opakowania.
-Wysokość (H) = wymiar pomiędzy podstawa a góra opakowania.
-
-
-30x20x10
-
-paczką średnia jest do 70x40x15
-
-90x40x15
-2
-2
-2
-
-90x40x20 4
-
-
-   30 30 30
-20 1 1 1  -> 40
-20 2 2  20 -> 8
-
-1 1
-1 1
-1 1
-
-1200mm:300mm = 4 sztuki
-800mm:200mm = 4 sztuki
-liczba kartonów na jednej warstwie 4*4 = 16 sztuk
-waga pojedynczej warstwy=16 sztuk*5 kg (waga kartonu)= 80 kg
-1200mm (maksymalna wysokość)- 144mm(wysokość pustej palety) = 1056mm:100mm (wysokość kartonu) =10 warstw
-Liczba kartonów na jednej palecie euro:16 sztuk (jedna warstwa)*10 warstw= 160 sztuk kartonów.
-10 warstw* 80kg (waga pojedynczej warstwy)=800kg (waga 10 warstw kartonów, nie licząc wagi pustej palety)
-waga brutto pojedynczej palety: 800kg+25kg=825kg
-
-Kupujący wybuera metode dostawy, vendor podaje gabaryty produktu z wagą,
-paczkomat lub kurire dom lub punkt odn=bioru,
-od jakieś kwoty dostawa za friko, a jak nie to zakazfdy produkt 20pln
-
-30x20x10
-
-90x30x20
-
-90 / 30 = 3
-30 / 20 = 1
-20 / 10 = 2
-
-6
-
-2
-2
-2
-
-30x20x15
-
-90 / 30 = 3
-30 / 20 = 1
-30 / 15 = 1
-
-3 * 1 * 1
-
-
-
-90x55x40
-
-90 / 30 = 3
-55 / 20 = 2
-40 / 10 = 4
-
-3x2x4 = 24
-
-4 4 4
-4 4 4
-
-4 4
-4 4
-4 4
-
-"""
+    @staticmethod
+    def creation(product, product_dimension_form):
+        product_dimension = ProductDimension(
+            product=product,
+            length=product_dimension_form.cleaned_data["length"],
+            width=product_dimension_form.cleaned_data["width"],
+            height=product_dimension_form.cleaned_data["height"],
+            weight=product_dimension_form.cleaned_data["weight"],
+        )
+        product_dimension.save()

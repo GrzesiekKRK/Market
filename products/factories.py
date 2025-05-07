@@ -67,6 +67,41 @@ class ProductDimensionFactory(DjangoModelFactory):
     class Meta:
         model = ProductDimension
 
+    product = factory.SubFactory(ProductFactory)
+    length = factory.Faker(
+        "pydecimal",
+        left_digits=4,
+        right_digits=2,
+        positive=True,
+        min_value=0.1,
+        max_value=300,
+    )
+    width = factory.Faker(
+        "pydecimal",
+        left_digits=4,
+        right_digits=2,
+        positive=True,
+        min_value=0.1,
+        max_value=150,
+    )
+    height = factory.Faker(
+        "pydecimal",
+        left_digits=4,
+        right_digits=2,
+        positive=True,
+        min_value=0.1,
+        max_value=120,
+    )
+    weight = factory.Faker(
+        "pydecimal",
+        left_digits=4,
+        right_digits=2,
+        positive=True,
+        min_value=0.1,
+        max_value=50,
+    )
+    # weight_unit_kg = 3 #TODO  stała jednostka w kg
+
 
 class ProductImageFactory(DjangoModelFactory):
     class Meta:

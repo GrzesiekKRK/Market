@@ -5,7 +5,11 @@ from deliveries.models import Delivery
 from inventories.factories import InventoryFactory
 from notifications.factories import NotificationFactory
 from orders.factories import OrderFactory
-from products.factories import ProductFactory, ProductImageFactory
+from products.factories import (
+    ProductDimensionFactory,
+    ProductFactory,
+    ProductImageFactory,
+)
 from products.models import Product
 from wishlists.factories import WishlistFactory
 
@@ -31,12 +35,12 @@ class Command(BaseCommand):
         return users
 
     @staticmethod
-    def notification_factories(users: CustomUser):
+    def notification_factories(users: CustomUser) -> None:
         for user in users:
             NotificationFactory.create_batch(5, user=user)
 
     @staticmethod
-    def inventory_product_factories(users: CustomUser):
+    def inventory_product_factories(users: CustomUser) -> None:
         for user in users:
             if user.role == 2:  # role 1 - moderator,  2 - vendor, 3 - user
                 inventory = InventoryFactory(vendor=user)
@@ -45,14 +49,16 @@ class Command(BaseCommand):
                     ProductImageFactory.create(product=product)
                     inventory.products.add(product)
                     sale = Product.objects.filter(is_sale=True).first()
+
                     if not sale:
                         sale_product = ProductFactory.create(is_sale=True)
                         ProductImageFactory.create(product=sale_product)
                         inventory.products.add(sale_product)
                 Command.wishlist_factories(products)
+                Command.product_dimensions(products)
 
     @staticmethod
-    def wishlist_factories(products: Product):
+    def wishlist_factories(products: Product) -> None:
         wishs = WishlistFactory.create_batch(5)
 
         for wish in wishs:
@@ -60,16 +66,16 @@ class Command(BaseCommand):
                 wish.products.add(product)
 
     @staticmethod
-    def order_factories(users: CustomUser):
+    def order_factories(users: CustomUser) -> None:
         for user in users:
             OrderFactory.create_batch(2, customer=user, address=user.address)
 
     @staticmethod
-    def delivery_methods():
+    def delivery_methods() -> None:
         for reception in DELIVERY_BY_RECEPTION:
 
             for avg_time in DELIVERY_BY_TIME:
-                if reception == 2:
+                if DELIVERY_BY_RECEPTION[reception] == "2":
                     new = Delivery(
                         name=f"{avg_time} {reception}",
                         price=10 * DELIVERY_BY_TIME[avg_time],
@@ -90,3 +96,9 @@ class Command(BaseCommand):
                         max_weight=50,
                     )
                 new.save()
+
+    @staticmethod
+    def product_dimensions(products: Product) -> None:
+        for product in products:
+            dimensions = ProductDimensionFactory.create(product=product)
+            dimensions.save()

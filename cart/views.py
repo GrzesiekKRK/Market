@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView, View
+from icecream import ic
 
 from deliveries.models import Delivery
 from orders.models import ProductOrder
@@ -27,11 +28,10 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
         cart = Cart(self.request)
-
         products = cart
-        filtered_delivery_methods = (
-            Delivery.objects.all()
-        )  # TODO filtraż delivery metod po wymiarach
+        # TODO filter Vendor
+        filtered_delivery_methods = Delivery.filter_deliveries_method(items=products)
+        ic("cart", filtered_delivery_methods)
         items_total_price = cart.get_products_sub_total_price()
         selected_delivery_method = cart.get_delivery_method(self.request)
         total_price = items_total_price + selected_delivery_method.price
