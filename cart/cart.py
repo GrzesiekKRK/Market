@@ -110,11 +110,13 @@ class Cart:
         """Adds delivery fee to the cart total price."""
         return self.get_sub_total_price() + Decimal(settings.DELIVERY_FEE)
 
-    def get_delivery_method(self, request: HttpRequest) -> Delivery:
+    # TODO Sprawdzanie delivery dla wielu kupców
+    def get_delivery_method(self, request: HttpRequest) -> {}:
         selected_delivery_id = request.session.get("selected_delivery_id")
+        vendor_id = request.POST.get("vendor_id")
         if not selected_delivery_id:
             selected_delivery_id = 1
-        selected_delivery = Delivery.objects.get(id=selected_delivery_id)
+        selected_delivery = {vendor_id: Delivery.objects.get(id=selected_delivery_id)}
         return selected_delivery
 
     def clear(self) -> None:
@@ -122,3 +124,38 @@ class Cart:
         for key in list(self.cart.keys()):
             del self.cart[key]
         self.session.save()
+
+    def calculate_shipping_cost(self, delivery_methods: dict) -> float:
+        """
+        Oblicza całkowity koszt dostawy na podstawie wybranych metod.
+        """
+        total_shipping = 0.0
+        for delivery in delivery_methods.values():
+            total_shipping += delivery.price
+        return total_shipping
+
+    # def update_delivery_method(self, request: HttpRequest) -> None:
+    #     """
+    #     Aktualizuje wybraną metodę dostawy dla konkretnego sprzedawcy.
+    #     """
+    #     if request.method == 'POST':
+    #         vendor_id = request.POST.get('vendor_id')
+    #         delivery_id = request.POST.get('delivery_method')
+    #
+    #         if vendor_id and delivery_id:
+    #             selected_delivery_methods = request.session.get('selected_delivery_methods', {})
+    #
+    #             # Aktualizuj wybraną metodę dla tego sprzedawcy
+    #             selected_delivery_methods[vendor_id] = delivery_id
+    #
+    #             # Zapisz zaktualizowany słownik w sesji
+    #             request.session['selected_delivery_methods'] = selected_delivery_methods
+    #
+    #             # Zaktualizuj całkowity koszt dostawy
+    #             delivery_methods = self.get_delivery_methods(request)
+    #             total_shipping = self.calculate_shipping_cost(delivery_methods)
+    #             request.session['total_shipping_price'] = total_shipping
+    #
+    #             # Zaktualizuj sumę końcową
+    #             cart_total = request.session.get('cart_total', 0)
+    #             request.session['grand_total'] = cart_total + total_shipping

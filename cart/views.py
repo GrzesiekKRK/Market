@@ -29,9 +29,8 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         cart = Cart(self.request)
         products = cart
-        # TODO filter Vendor
-        filtered_delivery_methods = Delivery.filter_deliveries_method(items=products)
-        ic("cart", filtered_delivery_methods)
+        delivery_by_vendor = Delivery.filter_deliveries_method(items=products)
+        ic(delivery_by_vendor)
         items_total_price = cart.get_products_sub_total_price()
         selected_delivery_method = cart.get_delivery_method(self.request)
         total_price = items_total_price + selected_delivery_method.price
@@ -40,7 +39,7 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         context["products"] = products
         context["total_price"] = total_price
         context["items_in_cart"] = items_in_cart
-        context["delivery_methods"] = filtered_delivery_methods
+        context["delivery_methods"] = delivery_by_vendor  # TODO
         context["selected_delivery_id"] = selected_delivery_method.id
 
         return context

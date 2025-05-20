@@ -106,12 +106,8 @@ class Delivery(models.Model):
             return None
         list_products = Delivery.check_items(items)
         deliveries_by_vendor = Delivery.multiply_vendor_products(list_products)
-        return deliveries_by_vendor
 
-        # TODO zapisalem w deliveries views
-        # TODO Cart z podziałem na sprzedających oraz ich mozliwościami wysylki w template
-        # TODO logica podziału sprzedajćy oraz produkty
-        # TODO Cena jednej paczki poprostu od każdego
+        return deliveries_by_vendor
 
     @staticmethod
     def multiply_vendor_products(list_products):
@@ -120,22 +116,24 @@ class Delivery(models.Model):
         vendor_package = 0
         for product in list_products:
             vendor = get_object_or_404(Inventory, products=product)
+
             if vendor:
                 if vendor in his_products:
-                    his_products[vendor] = his_products[vendor] + [product]
+                    his_products[vendor]["products"] = his_products[vendor][
+                        "products"
+                    ] + [product]
 
                     if len(vendor_package) == len(deliveries_methods_all):
                         vendor_package = Delivery.filter_dimensions(product)
 
                         if len(vendor_package) < len(deliveries_methods_all):
-                            his_products[vendor.id] = [vendor_package]
-
-                    his_products[vendor] = [product]
-                    vendor_package = Delivery.filter_dimensions(product)
-                    his_products[vendor.id] = [vendor_package]
+                            his_products[vendor]["deliveries"] = [vendor_package]
 
                 else:
-                    his_products[vendor] = [product]
                     vendor_package = Delivery.filter_dimensions(product)
-                    his_products[vendor.id] = [vendor_package]
+                    his_products[vendor] = {
+                        "products": [product],
+                        "deliveries": vendor_package,
+                    }
+
         return his_products
