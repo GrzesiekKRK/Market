@@ -45,7 +45,7 @@ class CreateOrderTemplateView(LoginRequiredMixin, TemplateView):
         cart = Cart(request)
         products = cart
         order_quantity = len(cart)
-        total_price = cart.get_sub_total_price()
+        total_price = self.request.POST.get("total_price")
         order_before_payment = self.model(
             customer=customer,
             order_quantity=order_quantity,

@@ -31,17 +31,43 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         products = cart
         delivery_by_vendor = Delivery.filter_deliveries_method(items=products)
         ic(delivery_by_vendor)
-        items_total_price = cart.get_products_sub_total_price()
-        selected_delivery_method = cart.get_delivery_method(self.request)
-        total_price = items_total_price + selected_delivery_method.price
+        if self.request.method == "POST":
+            selected_deliveries = {}
+            for key, value in self.request.POST.items():
+                if key.startswith("deliveryvendor"):
+                    vendor_id = key.replace("deliveryvendor", "")
+                    vendor_id_from_value, delivery_id = value.split(",")
 
+                    selected_deliveries[vendor_id] = {
+                        "vendor_id": int(vendor_id_from_value),
+                        "delivery_id": int(delivery_id),
+                    }
+
+            # selected_delivery_by_vendor = Delivery.selected_deliveries(delivery_by_vendor, selected_delivery_metod)
+            deliveries_price = Delivery.delivery_price_total(
+                delivery_by_vendor, selected_deliveries
+            )
+
+            total_price = cart.get_delivery_price(deliver_fee=deliveries_price)
+            items_in_cart = len(cart)
+            ic(delivery_by_vendor)
+            ic(selected_deliveries)
+            context["products"] = products
+            context["total_price"] = total_price
+            context["items_in_cart"] = items_in_cart
+            context["delivery_methods"] = delivery_by_vendor
+            context["selected_delivery_id"] = selected_deliveries
+
+            return context
+        deliveries_price = Delivery.delivery_price_total(delivery_by_vendor, None)
+        items_total_price = cart.get_products_sub_total_price()
+        total_price = items_total_price + deliveries_price
         items_in_cart = len(cart)
+
         context["products"] = products
         context["total_price"] = total_price
         context["items_in_cart"] = items_in_cart
-        context["delivery_methods"] = delivery_by_vendor  # TODO
-        context["selected_delivery_id"] = selected_delivery_method.id
-
+        context["delivery_methods"] = delivery_by_vendor
         return context
 
 
@@ -149,16 +175,21 @@ class CartClearView(LoginRequiredMixin, View):
 class CartDeliveryView(LoginRequiredMixin, View):
     model = Cart
 
-    def post(self, request):
+    def post(self, request: HttpRequest, **kwargs) -> None:
         """
-        Update the cart's delivery method and recalculate total price.
+        Update the cart's delivery method
         """
+
         if request.method == "POST":
-            delivery_id = request.POST.get("delivery_method")
 
-            request.session["selected_delivery_id"] = delivery_id
-
-        return redirect("cart")
+            delivery_data = request.POST.get("delivery_method")
+            vendor_id = delivery_data[0]
+            delivery_id = delivery_data[2]
+            if vendor_id and delivery_id:
+                return redirect("cart")
+        return redirect(
+            "cart",
+        )
 
 
 class RenewOrderView(LoginRequiredMixin, View):

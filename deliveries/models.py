@@ -1,7 +1,9 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
+from icecream import ic
 
 from inventories.models import Inventory
 from products.consts import PRODUCT_UNITS_KILOGRAMS
@@ -134,6 +136,48 @@ class Delivery(models.Model):
                     his_products[vendor] = {
                         "products": [product],
                         "deliveries": vendor_package,
+                        "selected_delivery": Delivery.objects.get(id=1),
                     }
 
         return his_products
+
+    @staticmethod
+    def get_delivery_method(request: HttpRequest) -> int:
+        selected_delivery_id = request.session.get("selected_delivery_id")
+        try:
+            selected_delivery = Delivery.objects.get(id=selected_delivery_id)
+
+        except Delivery.DoesNotExist:
+
+            selected_delivery = Delivery.objects.get(id=1)
+
+        return selected_delivery
+
+    @staticmethod
+    def delivery_price_total(delivery_by_vendor, get_selected_delivery):
+        deliveries_price = 0
+        if get_selected_delivery:
+            ic("tu")
+            ic(get_selected_delivery)
+            pass
+        else:
+            for vendor in delivery_by_vendor:
+
+                deliveries_price += delivery_by_vendor[vendor][
+                    "selected_delivery"
+                ].price
+
+        return deliveries_price
+
+    @staticmethod
+    def selected_deliveries(delivery_by_vendor, get_selected_delivery):
+
+        deliveries_by_vendor = {}
+        for vendor in delivery_by_vendor:
+            deliveries_by_vendor[vendor.id] = delivery_by_vendor[vendor][
+                "selected_delivery"
+            ]
+            if get_selected_delivery:
+                deliveries_by_vendor["vendor_id"] = get_selected_delivery[0]
+
+        return deliveries_by_vendor
