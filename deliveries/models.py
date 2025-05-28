@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
-from icecream import ic
 
 from inventories.models import Inventory
 from products.consts import PRODUCT_UNITS_KILOGRAMS
@@ -157,8 +156,6 @@ class Delivery(models.Model):
     def delivery_price_total(delivery_by_vendor, get_selected_delivery):
         deliveries_price = 0
         if get_selected_delivery:
-            ic("tu")
-            ic(get_selected_delivery)
             pass
         else:
             for vendor in delivery_by_vendor:

@@ -5,7 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView, View
-from icecream import ic
 
 from deliveries.models import Delivery
 from orders.models import ProductOrder
@@ -30,8 +29,8 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         cart = Cart(self.request)
         products = cart
         delivery_by_vendor = Delivery.filter_deliveries_method(items=products)
-        ic(delivery_by_vendor)
-        if self.request.method == "POST":
+
+        if self.request.method == "POST" and delivery_by_vendor:
             selected_deliveries = {}
             for key, value in self.request.POST.items():
                 if key.startswith("deliveryvendor"):
@@ -43,15 +42,12 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
                         "delivery_id": int(delivery_id),
                     }
 
-            # selected_delivery_by_vendor = Delivery.selected_deliveries(delivery_by_vendor, selected_delivery_metod)
             deliveries_price = Delivery.delivery_price_total(
                 delivery_by_vendor, selected_deliveries
             )
 
             total_price = cart.get_delivery_price(deliver_fee=deliveries_price)
             items_in_cart = len(cart)
-            ic(delivery_by_vendor)
-            ic(selected_deliveries)
             context["products"] = products
             context["total_price"] = total_price
             context["items_in_cart"] = items_in_cart

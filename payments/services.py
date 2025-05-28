@@ -71,8 +71,8 @@ def stripe_checkout_session(order: Order) -> stripe.checkout:
             },
         ],
         mode="payment",
-        success_url=DOMAIN + "payments/success/" + f"{order.id}",
-        cancel_url=DOMAIN + "payments/cancel/" + f"{order.id}",
+        success_url=DOMAIN + f"payments/{order.id}/success",
+        cancel_url=DOMAIN + f"payments/{order.id}/cancel",
         automatic_tax={
             "enabled": True,
         },
