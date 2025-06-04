@@ -1,4 +1,4 @@
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse
 
 from orders.factories import OrderFactory
@@ -46,7 +46,6 @@ class CancelledTemplateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "payments/cancel.html")
 
-    @tag("x")
     def test_cancelled_template_does_not_work(self):
         self.user = CustomUserFactory.create()
         self.client.force_login(self.user)

@@ -55,7 +55,7 @@ class OrderListTemplateViewTest(TestCase):
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(orders_list), len(self.factory))
-        self.assertCountEqual(response.context["orders"], self.factory)
+        self.assertCountEqual(response.context["products"], self.factory)
         self.assertTemplateUsed(response, "orders/order.html")
 
 

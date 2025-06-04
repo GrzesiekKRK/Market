@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from deliveries.consts import DELIVERY_BY_RECEPTION, DELIVERY_BY_TIME
+from deliveries.consts import DELIVERY_CHOICES
 from deliveries.models import Delivery
 from inventories.factories import InventoryFactory
 from notifications.factories import NotificationFactory
@@ -11,10 +11,9 @@ from products.factories import (
     ProductImageFactory,
 )
 from products.models import Product
+from users.factories import CustomUserFactory
+from users.models import CustomUser
 from wishlists.factories import WishlistFactory
-
-from ...factories import CustomUserFactory
-from ...models import CustomUser
 
 
 class Command(BaseCommand):
@@ -72,30 +71,34 @@ class Command(BaseCommand):
 
     @staticmethod
     def delivery_methods() -> None:
-        for reception in DELIVERY_BY_RECEPTION:
-
-            for avg_time in DELIVERY_BY_TIME:
-                if DELIVERY_BY_RECEPTION[reception] == "2":
-                    new = Delivery(
-                        name=f"{avg_time} {reception}",
-                        price=10 * DELIVERY_BY_TIME[avg_time],
-                        delivery_average_time=10 // DELIVERY_BY_TIME[avg_time],
-                        max_length=90,
-                        max_width=40,
-                        max_height=20,
-                        max_weight=25,
-                    )
-                elif reception != 2:
-                    new = Delivery(
-                        name=f"{avg_time} {reception}",
-                        price=10 * DELIVERY_BY_TIME[avg_time],
-                        delivery_average_time=10 // DELIVERY_BY_TIME[avg_time],
-                        max_length=300,
-                        max_width=150,
-                        max_height=220,
-                        max_weight=50,
-                    )
-                new.save()
+        for data in DELIVERY_CHOICES:
+            if data[0] <= 3:
+                id = data[0]
+                name = data[1]
+                new = Delivery(
+                    id=id,
+                    name=f"{name}",
+                    price=10 * id,
+                    delivery_average_time=10 // id,
+                    max_length=90,
+                    max_width=40,
+                    max_height=20,
+                    max_weight=25,
+                )
+            elif data[0] > 3:
+                id = data[0]
+                name = data[1]
+                new = Delivery(
+                    id=id,
+                    name=f"{name}",
+                    price=10 * id,
+                    delivery_average_time=20 // id,
+                    max_length=90,
+                    max_width=40,
+                    max_height=20,
+                    max_weight=25,
+                )
+            new.save()
 
     @staticmethod
     def product_dimensions(products: Product) -> None:

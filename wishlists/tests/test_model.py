@@ -12,5 +12,5 @@ class WishlistModelTest(TestCase):
         wish = Wishlist.objects.last()
         self.assertEqual(
             str(self.factory),
-            f" {wish.user.first_name} {wish.user.last_name} your wishlist",
+            f"{wish.user.first_name} {wish.user.last_name} your wishlist",
         )

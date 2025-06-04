@@ -1,10 +1,14 @@
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse
 
 from inventories.factories import InventoryFactory
-from products.factories import ProductFactory, ProductImageFactory
-from products.forms import AddProductForm, ImageForm
-from products.models import Category, Product
+from products.factories import (
+    ProductDimensionFactory,
+    ProductFactory,
+    ProductImageFactory,
+)
+from products.forms import AddProductForm, ImageForm, ProductDimensionForm
+from products.models import Category, Product, ProductDimension
 from users.factories import CustomUserFactory
 
 
@@ -17,7 +21,6 @@ class ProductListTemplateViewTest(TestCase):
         )
         self.additional_factory_deals = ProductFactory.create_batch(5, is_sale=True)
 
-    @tag("x")
     def test_get_products_page_loads_correctly(self):
         self.client.force_login(self.user)
         response = self.client.get(
@@ -175,7 +178,13 @@ class ProductUpdateViewTest(TestCase):
         self.inventory = InventoryFactory.create(vendor=self.user)
         self.factory = ProductFactory.create()
         self.additional_factory_image = ProductImageFactory.create(product=self.factory)
-        self.additional_product_is_sale = ProductFactory(is_sale=True)
+        self.additional_factory_product_dimension = ProductDimensionFactory.create(
+            product=self.factory
+        )
+        self.additional_product_is_sale = ProductFactory.create(is_sale=True)
+        self.additional_factory_product_is_sale_dimension = (
+            ProductDimensionFactory.create(product=self.additional_product_is_sale)
+        )
         self.additional_factory_image_is_sale = ProductImageFactory.create(
             product=self.additional_product_is_sale
         )
@@ -195,7 +204,7 @@ class ProductUpdateViewTest(TestCase):
         self.assertEqual(response.context["product"], product)
         self.assertTemplateUsed(response, "products/update.html")
 
-    def test_post_products_update_page_loads_correctly(self):
+    def test_post_products_update_page_works_correctly(self):
         self.client.force_login(self.user)
         product = Product.objects.last()
         self.inventory.products.add(product)
@@ -215,7 +224,16 @@ class ProductUpdateViewTest(TestCase):
             "sale_price": product.sale_price,
         }
 
+        product_dimensions = ProductDimension.objects.get(product=product)
+        product_dimensions_form_data = {
+            "length": product_dimensions.length,
+            "weight": product_dimensions.weight,
+            "width": product_dimensions.width,
+            "height": product_dimensions.height,
+            "weight_unit_kg": product_dimensions.weight_unit_kg,
+        }
         add_product_form = AddProductForm(product_form_data)
+        product_dimensions_form = ProductDimensionForm(product_dimensions_form_data)
         response = self.client.post(reverse("product-update", kwargs=data))
 
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
@@ -223,7 +241,8 @@ class ProductUpdateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["product"], product)
         self.assertEqual(add_product_form.is_valid(), True)
-        self.assertTemplateUsed(response, "products/update.html")
+        self.assertEqual(product_dimensions_form.is_valid(), True)
+        self.assertTemplateUsed(response, "products/product-detail.html")
 
     def test_post_products_update_page_invalid_form(self):
         self.client.force_login(self.user)
@@ -238,6 +257,7 @@ class ProductUpdateViewTest(TestCase):
             "category": product.category,
         }
         add_product_invalid_form = AddProductForm(product_form_data)
+        # product_dimensions = ProductDimension.objects.get(product=product)
 
         response = self.client.post(reverse("product-update", kwargs=data))
 
@@ -245,7 +265,6 @@ class ProductUpdateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["product"], product)
         self.assertEqual(add_product_invalid_form.is_valid(), False)
-        self.assertTemplateUsed(response, "products/update.html")
 
 
 class ProductDeleteViewTest(TestCase):

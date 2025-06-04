@@ -3,7 +3,7 @@ from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import TemplateView, View
 
 from products.models import Product
@@ -106,4 +106,4 @@ class WishlistRemoveProductView(View, LoginRequiredMixin):
 
         wishlist.refresh_from_db()
 
-        return render(request, "wishlist/wishlist.html", {"products": wishlist})
+        return redirect("wishlist")

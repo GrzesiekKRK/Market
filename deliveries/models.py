@@ -4,22 +4,28 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 
+from deliveries.consts import DELIVERY_CHOICES
 from inventories.models import Inventory
 from products.consts import PRODUCT_UNITS_KILOGRAMS
 from products.models import Product, ProductDimension
 
 
+# TODO Factories, default
 class Delivery(models.Model):
     """Delivery methods"""
 
-    name = models.CharField(max_length=50, unique=True)
+    id = models.PositiveSmallIntegerField(
+        choices=DELIVERY_CHOICES,
+        primary_key=True,
+    )
+    name = models.CharField(choices=DELIVERY_CHOICES, max_length=100)
     price = models.DecimalField(decimal_places=2, max_digits=6, default=5.0)
     delivery_average_time = models.IntegerField()
     max_length = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         help_text="Length in cm",
-        default=1,
+        default=300,
         validators=[
             MinValueValidator(0.10, message="Length cannot be less than 0.10 cm"),
             MaxValueValidator(300.00, message="Length cannot be more than 300 cm"),
@@ -29,7 +35,7 @@ class Delivery(models.Model):
         max_digits=10,
         decimal_places=2,
         help_text="Width in cm",
-        default=1,
+        default=150,
         validators=[
             MinValueValidator(0.10, message="Width cannot be less than 0.10 cm"),
             MaxValueValidator(150.00, message="Width cannot be more than 150 cm"),
@@ -39,7 +45,7 @@ class Delivery(models.Model):
         max_digits=10,
         decimal_places=2,
         help_text="Height in cm",
-        default=1,
+        default=120,
         validators=[
             MinValueValidator(0.10, message="Height cannot be less than 0.10 cm"),
             MaxValueValidator(120.00, message="Height cannot be more than 120 cm"),
@@ -49,7 +55,7 @@ class Delivery(models.Model):
         max_digits=10,
         decimal_places=2,
         help_text="Weight in kg",
-        default=1,
+        default=50,
         validators=[
             MinValueValidator(0.10, message="Weight cannot be less than 0.10 kg"),
             MaxValueValidator(50.00, message="Weight cannot be more than 50 kg"),
@@ -72,17 +78,18 @@ class Delivery(models.Model):
         list_products = []
 
         for item in items:
-            product = get_object_or_404(Product, id=item["product"].id)
-            if product:
-                list_products.append(product)
+            try:
+                product = get_object_or_404(Product, id=item["product"].id)
+                if product:
+                    list_products.append(product)
+            except (TypeError, ValueError):
+                continue
         return list_products
 
     @staticmethod
     def filter_dimensions(product) -> None | QuerySet:
         product = get_object_or_404(ProductDimension, product=product)
-        delivery_parcel = get_object_or_404(
-            Delivery, name__contains="Standard Parcel lockers"
-        )
+        delivery_parcel = get_object_or_404(Delivery, id=1)
         if delivery_parcel:
             product_length, product_width = product.length, product.width
             product_height, product_weight = product.height, product.weight
@@ -94,13 +101,14 @@ class Delivery(models.Model):
             ):
                 filtered_methods = Delivery.objects.all()
             else:
+
                 filtered_methods = Delivery.objects.all().exclude(
                     name__contains="Parcel lockers"
                 )
+
             return filtered_methods
         return None
 
-    # TODO testy deliveries
     @staticmethod
     def filter_deliveries_method(items: {Product}) -> {}:
         if not items:
@@ -154,17 +162,19 @@ class Delivery(models.Model):
 
     @staticmethod
     def delivery_price_total(delivery_by_vendor, get_selected_delivery):
-        deliveries_price = 0
-        if get_selected_delivery:
-            pass
-        else:
-            for vendor in delivery_by_vendor:
+        if delivery_by_vendor:
+            deliveries_price = 0
+            if get_selected_delivery:
+                pass
+            else:
+                for vendor in delivery_by_vendor:
 
-                deliveries_price += delivery_by_vendor[vendor][
-                    "selected_delivery"
-                ].price
+                    deliveries_price += delivery_by_vendor[vendor][
+                        "selected_delivery"
+                    ].price
 
-        return deliveries_price
+            return deliveries_price
+        return 0
 
     @staticmethod
     def selected_deliveries(delivery_by_vendor, get_selected_delivery):

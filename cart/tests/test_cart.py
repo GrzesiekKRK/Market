@@ -94,25 +94,37 @@ class CartTest(TestCase):
             self.assertEqual(item["quantity"], product["quantity"])
             self.assertEqual(str(item["sale_price"]), product["sale_price"])
 
-    def test_get_sub_total_price(self) -> None:
+    def test_get_products_sub_total_price(self) -> None:
         cart = Cart(self.request)
         product = ProductFactory.create(is_sale=False)
         product2 = ProductFactory.create(is_sale=False)
         cart.add(product, quantity=4)
         cart.add(product2, quantity=1)
 
-        get_sub = cart.get_sub_total_price()
+        get_sub = cart.get_products_sub_total_price()
         value = product.price * 4 + product2.price * 1
         self.assertEqual(get_sub, value)
 
-    def test_get_sub_total_price_with_one_product_on_sale(self) -> None:
+    def test_get_products_sub_total_price_with_one_product_on_sale(self) -> None:
         cart = Cart(self.request)
         product = ProductFactory.create(is_sale=False)
         product2 = ProductFactory.create(is_sale=True)
         cart.add(product, quantity=4)
         cart.add(product2, quantity=1)
 
-        get_sub = cart.get_sub_total_price()
+        get_sub = cart.get_products_sub_total_price()
+        value = product.price * 4 + product2.sale_price * 1
+
+        self.assertEqual(get_sub, value)
+
+    def test_get_delivery_price(self) -> None:
+        cart = Cart(self.request)
+        product = ProductFactory.create(is_sale=False)
+        product2 = ProductFactory.create(is_sale=True)
+        cart.add(product, quantity=4)
+        cart.add(product2, quantity=1)
+
+        get_sub = cart.get_products_sub_total_price()
         value = product.price * 4 + product2.sale_price * 1
 
         self.assertEqual(get_sub, value)

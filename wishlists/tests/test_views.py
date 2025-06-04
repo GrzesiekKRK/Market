@@ -68,9 +68,7 @@ class WishlistAddProductViewTest(TestCase):
         self.assertEqual(
             str(response.context["products"]), f"<QuerySet [<Product: {product.name}>]>"
         )
-        self.assertEqual(
-            str(wish), f" {user.first_name} {user.last_name} your wishlist"
-        )
+        self.assertEqual(str(wish), f"{user.first_name} {user.last_name} your wishlist")
 
 
 class WishlistRemoveProductViewTest(TestCase):
@@ -86,20 +84,22 @@ class WishlistRemoveProductViewTest(TestCase):
         data = {
             "pk": product.id,
         }
-        Wishlist.objects.get(user=self.user)
-
+        wishlist = Wishlist.objects.get(user=self.user)
+        wishlist.products.add(product)
+        wishlist.save()
         response = self.client.post(reverse("wishlist-remove", kwargs=data))
-
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "wishlist/wishlist.html")
-        self.assertEqual(str(response.context["products"]), "<QuerySet []>")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.context, None)
 
     def test_post_with_none_existing_product(self):
+        product = Product.objects.last()
         data = {
-            "pk": 9999,
+            "pk": product.id + 1,
         }
+        wishlist = Wishlist.objects.get(user=self.user)
+        wishlist.products.add(product)
+        wishlist.save()
         response = self.client.post(reverse("wishlist-remove", kwargs=data))
 
-        self.assertEqual(response.wsgi_request.user.is_authenticated, True)
         self.assertEqual(response.status_code, 404)

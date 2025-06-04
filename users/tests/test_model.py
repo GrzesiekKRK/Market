@@ -124,52 +124,52 @@ class CustomUserModelTest(TestCase):
         user = CustomUser.objects.last()
         username = user.username
         self.assertEqual(username, "test_user")
-        self.assertNotEquals(username, "Abraham")
+        self.assertNotEqual(username, "Abraham")
 
     def test_email_test_krk12(self):
         user = CustomUser.objects.last()
         email = user.email
         self.assertEqual(email, "krk12@wp.pl")
-        self.assertNotEquals(email, "Abraham@wp.pl")
+        self.assertNotEqual(email, "Abraham@wp.pl")
 
     def test_pesel_test_12345678911(self):
         user = CustomUser.objects.last()
         pesel = user.pesel
         self.assertEqual(pesel, "12345678911")
-        self.assertNotEquals(pesel, "19995678911")
+        self.assertNotEqual(pesel, "19995678911")
 
     def test_bank_account_test_1234756890123456789123450(self):
         user = CustomUser.objects.last()
         bank_account = user.bank_account
         self.assertEqual(bank_account, "1234756890123456789123450")
-        self.assertNotEquals(bank_account, "1234756890123456789098765")
+        self.assertNotEqual(bank_account, "1234756890123456789098765")
 
     def test_secondary_email_test_walmart(self):
         user = CustomUser.objects.last()
         secondary_email = user.secondary_email
         self.assertEqual(secondary_email, "walmart@wp.pl")
-        self.assertNotEquals(secondary_email, "qwer@wp.pl")
+        self.assertNotEqual(secondary_email, "qwer@wp.pl")
 
     def test_address_test_new_york(self):
         user = CustomUser.objects.last()
         address = user.address
         self.assertEqual(address, "New York")
-        self.assertNotEquals(address, "Yorktown")
+        self.assertNotEqual(address, "Yorktown")
 
     def test_postal_code_test_32_576(self):
         user = CustomUser.objects.last()
         postal_code = user.postal_code
         self.assertEqual(postal_code, "32-576")
-        self.assertNotEquals(postal_code, "888888")
+        self.assertNotEqual(postal_code, "888888")
 
     def test_role_test_2(self):
         user = CustomUser.objects.last()
         role = user.role
         self.assertEqual(role, 2)
-        self.assertNotEquals(role, 3)
+        self.assertNotEqual(role, 3)
 
     def test_reviews_test_3_5(self):
         user = CustomUser.objects.last()
         reviews = user.reviews
         self.assertEqual(reviews, 3.5)
-        self.assertNotEquals(reviews, 5.0)
+        self.assertNotEqual(reviews, 5.0)
