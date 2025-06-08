@@ -166,8 +166,8 @@ We can create two types of users: customers and vendors, each with different per
         Supports Multiple Payment Methods: Credit cards, debit cards, Apple Pay, Google Pay, and other local payment methods depending on your region.
         Redirect After Payment: After the payment is completed, users are redirected back to your site (e.g., an order confirmation page).
 
-* Deliveries -
-    Place for futher development
+  * Deliveries -
+    Model manages shipping methods and logistics for an e-commerce platform. It handles delivery options, pricing, dimensional constraints, and vendor-specific shipping calculations
 </details>
 
 
