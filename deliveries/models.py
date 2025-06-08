@@ -10,7 +10,6 @@ from products.consts import PRODUCT_UNITS_KILOGRAMS
 from products.models import Product, ProductDimension
 
 
-# TODO Factories, default
 class Delivery(models.Model):
     """Delivery methods"""
 
@@ -110,7 +109,7 @@ class Delivery(models.Model):
         return None
 
     @staticmethod
-    def filter_deliveries_method(items: {Product}) -> {}:
+    def filter_deliveries_method(items: {Product}) -> {} | {Inventory: Product}:
         if not items:
             return None
         list_products = Delivery.check_items(items)
@@ -119,7 +118,7 @@ class Delivery(models.Model):
         return deliveries_by_vendor
 
     @staticmethod
-    def multiply_vendor_products(list_products):
+    def multiply_vendor_products(list_products) -> {} | {Inventory: str}:
         his_products = {}
         deliveries_methods_all = Delivery.objects.all()
         vendor_package = 0
@@ -165,10 +164,7 @@ class Delivery(models.Model):
         if delivery_by_vendor:
             deliveries_price = 0
             if get_selected_delivery:
-                pass
-            else:
                 for vendor in delivery_by_vendor:
-
                     deliveries_price += delivery_by_vendor[vendor][
                         "selected_delivery"
                     ].price
@@ -177,7 +173,7 @@ class Delivery(models.Model):
         return 0
 
     @staticmethod
-    def selected_deliveries(delivery_by_vendor, get_selected_delivery):
+    def selected_deliveries(delivery_by_vendor, get_selected_delivery) -> {}:
 
         deliveries_by_vendor = {}
         for vendor in delivery_by_vendor:

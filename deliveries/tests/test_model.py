@@ -12,17 +12,40 @@ from products.factories import ProductDimensionFactory, ProductFactory
 
 class DeliveryModelTest(TestCase):
     def setUp(self):
-        self.delivery_standard = DeliveryFactory.create_batch(5)
+        self.delivery_locker_standard = DeliveryFactory.create(
+            id=1,
+            name="Standard Parcel lockers",
+            price=15.99,
+            delivery_average_time=3,
+            weight_unit=PRODUCT_UNITS_KILOGRAMS,
+            max_length=90,
+            max_width=40,
+            max_height=20,
+            max_weight=25,
+        )
+        self.delivery_minimal_dimensions_value = DeliveryFactory.create(
+            id=3,
+            name="Express Parcel lockers",
+            price=15.99,
+            delivery_average_time=3,
+            weight_unit=PRODUCT_UNITS_KILOGRAMS,
+            max_length=0.1,
+            max_width=0.1,
+            max_height=0.1,
+            max_weight=0.1,
+        )
 
     def test_delivery_creation(self):
-        self.assertEqual(self.delivery_standard.name, "Standard Parcel lockers")
-        self.assertEqual(self.delivery_standard.price, Decimal("15.99"))
-        self.assertEqual(self.delivery_standard.delivery_average_time, 3)
-        self.assertEqual(self.delivery_standard.weight_unit, PRODUCT_UNITS_KILOGRAMS)
+        self.assertEqual(self.delivery_locker_standard.name, "Standard Parcel lockers")
+        self.assertEqual(self.delivery_locker_standard.price, Decimal(15.99))
+        self.assertEqual(self.delivery_locker_standard.delivery_average_time, 3)
+        self.assertEqual(
+            self.delivery_locker_standard.weight_unit, PRODUCT_UNITS_KILOGRAMS
+        )
 
     def test_delivery_str_method(self):
         expected = "Delivery by Standard Parcel lockers  on average in 3 days "
-        self.assertEqual(str(self.delivery_standard), expected)
+        self.assertEqual(str(self.delivery_locker_standard), expected)
 
     def test_delivery_validators_min_values(self):
         with self.assertRaises(ValidationError):
@@ -51,50 +74,66 @@ class DeliveryModelTest(TestCase):
             delivery.full_clean()
 
 
-class DeliveryStaticMethodsTest(TestCase):
+class DeliveryMethodsWorkflowTest(TestCase):
     def setUp(self):
-        self.delivery_that_non_of_products_can_use = Delivery.objects.create(
-            name="Not Available Parcel lockers",
-            id=3,
-            price=Decimal("17.99"),
-            delivery_average_time=3,
-            max_length=Decimal("0.1"),
-            max_width=Decimal("0.1"),
-            max_height=Decimal("0.1"),
-            max_weight=Decimal("0.1"),
-        )
-
-        self.delivery_parcel = Delivery.objects.create(
+        self.delivery_locker_standard = DeliveryFactory.create(
+            id=1,
             name="Standard Parcel lockers",
-            price=Decimal("15.99"),
+            price=15.99,
             delivery_average_time=3,
-            max_length=Decimal("30.0"),
-            max_width=Decimal("20.0"),
-            max_height=Decimal("15.0"),
-            max_weight=Decimal("5.0"),
+            weight_unit=PRODUCT_UNITS_KILOGRAMS,
+            max_length=90,
+            max_width=40,
+            max_height=20,
+            max_weight=25,
         )
 
-        self.delivery_courier = Delivery.objects.create(
-            name="Courier Delivery",
-            price=Decimal("25.99"),
-            delivery_average_time=2,
-            max_length=Decimal("100.0"),
-            max_width=Decimal("80.0"),
-            max_height=Decimal("60.0"),
-            max_weight=Decimal("25.0"),
+        self.delivery_standard_house = DeliveryFactory.create(
+            id=4,
+            name="Standard In-house",
+            price=40,
+            delivery_average_time=6,
+            weight_unit=PRODUCT_UNITS_KILOGRAMS,
+            max_length=300,
+            max_width=150,
+            max_height=120,
+            max_weight=50,
+        )
+        self.delivery_standard_remote = DeliveryFactory.create(
+            id=7,
+            name="Standard Remote",
+            price=30,
+            delivery_average_time=6,
+            weight_unit=PRODUCT_UNITS_KILOGRAMS,
+            max_length=300,
+            max_width=150,
+            max_height=120,
+            max_weight=50,
+        )
+
+        self.delivery_minimal_dimensions_value = DeliveryFactory.create(
+            id=3,
+            name="Express Parcel lockers",
+            price=15.99,
+            delivery_average_time=3,
+            weight_unit=PRODUCT_UNITS_KILOGRAMS,
+            max_length=0.1,
+            max_width=0.1,
+            max_height=0.1,
+            max_weight=0.1,
         )
         """ Vendor products   """
 
-        self.product_1 = ProductFactory.create()
+        self.product_1_no_lockers = ProductFactory.create()
 
         self.product_2 = ProductFactory.create()
 
         self.dimensions_1 = ProductDimensionFactory.create(
-            product=self.product_1,
-            length=50.00,
+            product=self.product_1_no_lockers,
+            length=100.00,
             width=30.00,
-            height=20.00,
-            weight=8.0,
+            height=10.00,
+            weight=28.0,
         )
 
         self.dimensions_2 = ProductDimensionFactory.create(
@@ -102,8 +141,8 @@ class DeliveryStaticMethodsTest(TestCase):
         )
 
         """ Vendor  """
-        self.vendor = InventoryFactory.create()
-        self.vendor.products.add(self.product_1)
+        self.vendor = InventoryFactory.create(id=1)
+        self.vendor.products.add(self.product_1_no_lockers)
         self.vendor.products.add(self.product_2)
 
         """Vendor_2 products  """
@@ -134,12 +173,12 @@ class DeliveryStaticMethodsTest(TestCase):
         self.vendor.products.add(self.product_4_vendor_2)
 
     def test_check_items_valid_products(self):
-        items = [{"product": self.product_1}, {"product": self.product_2}]
+        items = [{"product": self.product_1_no_lockers}, {"product": self.product_2}]
 
         result = Delivery.check_items(items)
 
         self.assertEqual(len(result), 2)
-        self.assertIn(self.product_1, result)
+        self.assertIn(self.product_1_no_lockers, result)
         self.assertIn(self.product_2, result)
 
     def test_check_items_empty_list(self):
@@ -157,46 +196,46 @@ class DeliveryStaticMethodsTest(TestCase):
         self.assertEqual(result, [])
 
     def test_filter_dimensions_valid_product_for_all_except_none_can_use(self):
-        result = Delivery.filter_dimensions(self.product_1)
-        print(result)
+        result = Delivery.filter_dimensions(self.product_1_no_lockers)
+        delivery_methods_without_lockers = Delivery.objects.filter(max_weight=50).all()
         self.assertIsNotNone(result)
-        self.assertEqual(result.count(), Delivery.objects.exclude(id=3).count())
+        self.assertEqual(result.count(), len(delivery_methods_without_lockers))
 
     def test_filter_dimensions_product_too_big_for_locker(self):
 
-        result = Delivery.filter_dimensions(self.product_1)
+        result = Delivery.filter_dimensions(self.product_1_no_lockers)
 
         self.assertIsNotNone(result)
         excluded_methods = result.filter(name__contains="Parcel lockers")
         self.assertEqual(excluded_methods.count(), 0)
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0].name, "Courier Delivery")
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0].name, "Standard In-house")
 
     def test_filter_deliveries_method_empty_items(self):
         result = Delivery.filter_deliveries_method([])
         self.assertIsNone(result)
 
     def test_multiply_vendor_products_with_single_product(self):
-        product = [self.product_1]
+        product = [self.product_1_no_lockers]
 
         result = Delivery.multiply_vendor_products(product)
+
         self.assertIsInstance(result, dict)
         self.assertIn(self.vendor, result)
         self.assertIn("products", result[self.vendor])
         self.assertIn("deliveries", result[self.vendor])
         self.assertIn("selected_delivery", result[self.vendor])
 
-    # TODO
     def test_multiply_vendor_products_method_with_4_products(self):
         products = [
-            self.product_1,
+            self.product_1_no_lockers,
             self.product_2,
             self.product_3_vendor_2,
             self.product_4_vendor_2,
         ]
 
         result = Delivery.multiply_vendor_products(products)
-        print(result)
+
         self.assertIsInstance(result, dict)
         self.assertIn(self.vendor, result)
         self.assertIn("products", result[self.vendor])
@@ -224,11 +263,13 @@ class DeliveryStaticMethodsTest(TestCase):
         self,
     ):
 
-        delivery_by_vendor = {self.vendor: {"selected_delivery": self.delivery_courier}}
+        delivery_by_vendor = {
+            self.vendor: {"selected_delivery": self.delivery_standard_remote}
+        }
 
         result = Delivery.delivery_price_total(delivery_by_vendor, None)
 
-        self.assertEqual(result, self.delivery_courier.price)
+        self.assertEqual(result, self.delivery_standard_remote.price)
 
     def test_delivery_price_total_without_products(self):
         result = Delivery.delivery_price_total({}, None)
@@ -239,56 +280,53 @@ class DeliveryStaticMethodsTest(TestCase):
         self.assertEqual(result, 0)
 
     def test_selected_deliveries_with_default_option(self):
-        delivery_by_vendor = {self.vendor: {"selected_delivery": self.delivery_parcel}}
+        delivery_by_vendor = {
+            self.vendor: {"selected_delivery": self.delivery_locker_standard}
+        }
 
         result = Delivery.selected_deliveries(delivery_by_vendor, None)
         self.assertIn(self.vendor.id, result)
-        self.assertEqual(result[self.vendor.id], self.delivery_parcel)
+        self.assertEqual(result[self.vendor.id], self.delivery_locker_standard)
 
     def test_selected_deliveries_with_non_default_option(self):
-        """Test selected_deliveries z wybraną dostawą"""
-        delivery_by_vendor = {self.vendor: {"selected_delivery": self.delivery_parcel}}
-        get_selected_delivery = [self.delivery_courier]
+
+        delivery_by_vendor = {
+            self.vendor: {"selected_delivery": self.delivery_locker_standard}
+        }
+        get_selected_delivery = [self.delivery_locker_standard]
 
         result = Delivery.selected_deliveries(delivery_by_vendor, get_selected_delivery)
 
         self.assertIn("vendor_id", result)
-        self.assertEqual(result["vendor_id"], self.delivery_courier)
+        self.assertEqual(result["vendor_id"], self.delivery_locker_standard)
 
-
-class DeliveryIntegrationTest(TestCase):
     def test_full_delivery_filtering_workflow(self):
-        """Test pełnego procesu filtrowania dostaw"""
-        items = [{"product": self.small_product}, {"product": self.big_product}]
 
-        # Test całego procesu
+        items = [{"product": self.product_2}, {"product": self.product_1_no_lockers}]
+
         result = Delivery.filter_deliveries_method(items)
 
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict)
 
-        # Sprawdź czy vendors są w wynikach
         vendor_keys = list(result.keys())
         self.assertTrue(len(vendor_keys) > 0)
 
-        # Sprawdź strukturę danych dla każdego vendora
         for vendor in result:
             self.assertIn("products", result[vendor])
             self.assertIn("deliveries", result[vendor])
             self.assertIn("selected_delivery", result[vendor])
 
-    def test_delivery_method_selection_workflow(self):
-        """Test procesu wybierania metody dostawy"""
+    def test_delivery_method_selection_workflow_remote_delivery(self):
+
         factory = RequestFactory()
         request = factory.get("/")
-        request.session = {"selected_delivery_id": self.courier_delivery.id}
+        request.session = {"selected_delivery_id": self.delivery_standard_remote.id}
 
-        # Test pobierania wybranej metody
         selected = Delivery.get_delivery_method(request)
-        self.assertEqual(selected, self.courier_delivery)
+        self.assertEqual(selected, self.delivery_standard_remote)
 
-        # Test kalkulacji ceny
-        delivery_by_vendor = {self.vendor_a: {"selected_delivery": selected}}
+        delivery_by_vendor = {self.vendor_2: {"selected_delivery": selected}}
 
         total_price = Delivery.delivery_price_total(delivery_by_vendor, None)
-        self.assertEqual(total_price, self.courier_delivery.price)
+        self.assertEqual(total_price, self.delivery_standard_remote.price)

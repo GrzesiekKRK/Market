@@ -78,8 +78,8 @@ class Command(BaseCommand):
                 new = Delivery(
                     id=id,
                     name=f"{name}",
-                    price=10 * id,
-                    delivery_average_time=10 // id,
+                    price=20 * id,
+                    delivery_average_time=20 // id,
                     max_length=90,
                     max_width=40,
                     max_height=20,
