@@ -17,7 +17,8 @@ from wishlists.factories import WishlistFactory
 
 
 class Command(BaseCommand):
-    """Creat Users, 5 x Notifications per user, and Inventory if user is vendor"""
+    """Creat Dummy Users, 5 x Notifications per user, and Inventory if user is vendor,
+    9 x Deliveries methods, Produtcs, Orders and Wishlists"""
 
     def handle(self, *args, **options) -> None:
         users = self.users_factories()
