@@ -1,7 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import QuerySet
-from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 
 from deliveries.consts import DELIVERY_CHOICES
@@ -148,18 +147,6 @@ class Delivery(models.Model):
         return his_products
 
     @staticmethod
-    def get_delivery_method(request: HttpRequest) -> int:
-        selected_delivery_id = request.session.get("selected_delivery_id")
-        try:
-            selected_delivery = Delivery.objects.get(id=selected_delivery_id)
-
-        except Delivery.DoesNotExist:
-
-            selected_delivery = Delivery.objects.get(id=1)
-
-        return selected_delivery
-
-    @staticmethod
     def delivery_price_total(delivery_by_vendor, get_selected_delivery):
         if delivery_by_vendor:
             deliveries_price = 0
@@ -171,16 +158,3 @@ class Delivery(models.Model):
 
             return deliveries_price
         return 0
-
-    @staticmethod
-    def selected_deliveries(delivery_by_vendor, get_selected_delivery) -> {}:
-
-        deliveries_by_vendor = {}
-        for vendor in delivery_by_vendor:
-            deliveries_by_vendor[vendor.id] = delivery_by_vendor[vendor][
-                "selected_delivery"
-            ]
-            if get_selected_delivery:
-                deliveries_by_vendor["vendor_id"] = get_selected_delivery[0]
-
-        return deliveries_by_vendor

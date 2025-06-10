@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.core.exceptions import ValidationError
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 
 from deliveries.factories import DeliveryFactory
 from deliveries.models import Delivery
@@ -242,35 +242,6 @@ class DeliveryMethodsWorkflowTest(TestCase):
         self.assertIn("deliveries", result[self.vendor])
         self.assertIn("selected_delivery", result[self.vendor])
 
-    def test_get_delivery_method_default(self):
-        factory = RequestFactory()
-        request = factory.get("/")
-        request.session = {}
-
-        result = Delivery.get_delivery_method(request)
-
-        self.assertEqual(result.id, 1)
-
-    def test_get_delivery_method_with_invalid_id(self):
-        factory = RequestFactory()
-        request = factory.get("/")
-        request.session = {"selected_delivery_id": 999999}
-
-        result = Delivery.get_delivery_method(request)
-        self.assertEqual(result.id, 1)
-
-    def test_delivery_price_total_with_delivery_courier_selected_non_default_option(
-        self,
-    ):
-
-        delivery_by_vendor = {
-            self.vendor: {"selected_delivery": self.delivery_standard_remote}
-        }
-
-        result = Delivery.delivery_price_total(delivery_by_vendor, None)
-
-        self.assertEqual(result, self.delivery_standard_remote.price)
-
     def test_delivery_price_total_without_products(self):
         result = Delivery.delivery_price_total({}, None)
         self.assertEqual(result, 0)
@@ -278,27 +249,6 @@ class DeliveryMethodsWorkflowTest(TestCase):
     def test_delivery_price_total_with_none_in_place_of_vendors(self):
         result = Delivery.delivery_price_total(None, None)
         self.assertEqual(result, 0)
-
-    def test_selected_deliveries_with_default_option(self):
-        delivery_by_vendor = {
-            self.vendor: {"selected_delivery": self.delivery_locker_standard}
-        }
-
-        result = Delivery.selected_deliveries(delivery_by_vendor, None)
-        self.assertIn(self.vendor.id, result)
-        self.assertEqual(result[self.vendor.id], self.delivery_locker_standard)
-
-    def test_selected_deliveries_with_non_default_option(self):
-
-        delivery_by_vendor = {
-            self.vendor: {"selected_delivery": self.delivery_locker_standard}
-        }
-        get_selected_delivery = [self.delivery_locker_standard]
-
-        result = Delivery.selected_deliveries(delivery_by_vendor, get_selected_delivery)
-
-        self.assertIn("vendor_id", result)
-        self.assertEqual(result["vendor_id"], self.delivery_locker_standard)
 
     def test_full_delivery_filtering_workflow(self):
 
@@ -316,17 +266,3 @@ class DeliveryMethodsWorkflowTest(TestCase):
             self.assertIn("products", result[vendor])
             self.assertIn("deliveries", result[vendor])
             self.assertIn("selected_delivery", result[vendor])
-
-    def test_delivery_method_selection_workflow_remote_delivery(self):
-
-        factory = RequestFactory()
-        request = factory.get("/")
-        request.session = {"selected_delivery_id": self.delivery_standard_remote.id}
-
-        selected = Delivery.get_delivery_method(request)
-        self.assertEqual(selected, self.delivery_standard_remote)
-
-        delivery_by_vendor = {self.vendor_2: {"selected_delivery": selected}}
-
-        total_price = Delivery.delivery_price_total(delivery_by_vendor, None)
-        self.assertEqual(total_price, self.delivery_standard_remote.price)
