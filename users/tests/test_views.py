@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from products.factories import ProductFactory
 from users.factories import CustomUserFactory
 from users.forms import LoginForm, RegisterUserForm
 from users.models import CustomUser
@@ -76,7 +77,7 @@ class TestCustomUserLoginView(TestCase):
         self.assertIsInstance(response.context["form"], LoginForm)
 
     def test_login_correct(self):
-
+        ProductFactory.create_batch(5)
         data = {
             "username": self.user.username,
             "password": "defaultpassword",
@@ -84,9 +85,7 @@ class TestCustomUserLoginView(TestCase):
         response = self.client.post(self.sign_in, data=data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertRedirects(
-            response, reverse("products", kwargs=None), status_code=302
-        )
+        self.assertRedirects(response, reverse("products"), status_code=302)
 
     def test_invalid_form(self):
         data = {
