@@ -9,9 +9,9 @@
 # from products.factories import ProductFactory
 # from products.models import Product
 # from users.factories import CustomUserFactory
-#
+# CustomUserFactory
 # from ..views import CartTemplateView
-
+#
 # TODO fix this test by stachu
 # class CartTemplateViewTest(TestCase):
 #     def setUp(self) -> None:

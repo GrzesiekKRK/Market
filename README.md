@@ -158,16 +158,24 @@ We can create two types of users: customers and vendors, each with different per
         Allows customers to reorder past purchases with a single click (e.g. “Renew Order” button).
         Can be extended to support order status tracking (e.g. pending, shipped, delivered).
 
-* Payments - Stripe
-    Stripe Checkout is a pre-built, hosted payment page provided by Stripe that makes it easy to accept payments online. It securely handles customer payment details, reducing the complexity of dealing with sensitive information directly.
-    Key Features:
-        Simple Integration: Stripe Checkout is designed to be easy to integrate with minimal code, using Stripe's pre-built UI for the payment page.
-        Secure Payments: Payments are processed using Stripe's secure infrastructure, ensuring PCI-DSS compliance.
-        Supports Multiple Payment Methods: Credit cards, debit cards, Apple Pay, Google Pay, and other local payment methods depending on your region.
-        Redirect After Payment: After the payment is completed, users are redirected back to your site (e.g., an order confirmation page).
+  * Payments - Stripe
+      Stripe Checkout is a pre-built, hosted payment page provided by Stripe that makes it easy to accept payments online. It securely handles customer payment details, reducing the complexity of dealing with sensitive information directly.
+      Key Features:
+          Simple Integration: Stripe Checkout is designed to be easy to integrate with minimal code, using Stripe's pre-built UI for the payment page.
+          Secure Payments: Payments are processed using Stripe's secure infrastructure, ensuring PCI-DSS compliance.
+          Supports Multiple Payment Methods: Credit cards, debit cards, Apple Pay, Google Pay, and other local payment methods depending on your region.
+          Redirect After Payment: After the payment is completed, users are redirected back to your site (e.g., an order confirmation page).
 
-  * Deliveries -
-    Model manages shipping methods and logistics for an e-commerce platform. It handles delivery options, pricing, dimensional constraints, and vendor-specific shipping calculations
+    * Deliveries -The delivery system manages shipping methods and logistics for the multi-vendor marketplace. It handles delivery options, pricing calculations, and automatically filters available shipping methods based on product dimensions and vendor requirements.
+
+    Key Features:
+        Smart Delivery Filtering: Automatically determines which delivery methods are available based on product dimensions (length, width, height, weight).
+        Multi-Vendor Support: Groups products by vendor and calculates separate delivery costs for each vendor's items.
+        Dimensional Constraints: Each delivery method has specific size and weight limits (e.g., parcel lockers have stricter limits than standard delivery).
+        Flexible Pricing: Each delivery method has its own pricing structure and estimated delivery time.
+        Parcel Locker Integration: Special handling for parcel locker deliveries with size restrictions (max 90×40×20 cm, 25kg).
+        The system automatically excludes incompatible delivery methods (like parcel lockers for oversized items) and provides fallback options to ensure customers always have available shipping choices.
+
 </details>
 
 
