@@ -84,7 +84,9 @@ class TestCustomUserLoginView(TestCase):
         response = self.client.post(self.sign_in, data=data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.wsgi_request.user.is_authenticated, True)
-        self.assertRedirects(response, reverse("products"), status_code=302)
+        self.assertRedirects(
+            response, reverse("products", kwargs=None), status_code=302
+        )
 
     def test_invalid_form(self):
         data = {
