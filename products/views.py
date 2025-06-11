@@ -55,22 +55,26 @@ class ProductListTemplateView(LoginRequiredMixin, TemplateView):
         products = (
             Product.objects.select_related("category").prefetch_related("image").all()
         )
-        paginator = Paginator(products, 12)
+        product_filter = ProductFilter(self.request.GET or None, queryset=products)
+        filtered_products = product_filter.qs
+
+        paginator = Paginator(filtered_products, 12)
         page_number = self.request.GET.get("page")
         try:
-            page_number = int(page_number)
+            page_number = int(page_number) if page_number else 1
         except (TypeError, ValueError):
             page_number = 1
-        page_obj = paginator.get_page(page_number)
 
+        page_obj = paginator.get_page(page_number)
         categories = Category.objects.all()
 
         context = super().get_context_data(**kwargs)
 
-        context["products"] = page_obj
+        context["products"] = page_obj  # paginated filtered products
         context["categories"] = categories
         context["deals"] = deals
-        context["filter"] = ProductFilter(self.request.GET, queryset=products)
+        context["filter"] = product_filter  # pass the filter object
+
         return context
 
 

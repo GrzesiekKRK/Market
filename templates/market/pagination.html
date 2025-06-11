@@ -18,22 +18,24 @@
         {% endif %}
 
         <!-- Display limited page numbers -->
-        {% with ''|center:5 as range %}
-            {% for _ in range %}
-                {% with forloop.counter0|add:products.number|add:-2 as num %}
-                    {% if num > 0 and num <= products.paginator.num_pages %}
-                        {% if products.number == num %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ num }}</span>
-                            </li>
-                        {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
-                            </li>
+        {% with products.number|add:-2 as start_page %}
+            {% with products.number|add:2 as end_page %}
+                {% for num in products.paginator.page_range %}
+                    {% if num >= start_page and num <= end_page %}
+                        {% if num > 0 and num <= products.paginator.num_pages %}
+                            {% if products.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
-                {% endwith %}
-            {% endfor %}
+                {% endfor %}
+            {% endwith %}
         {% endwith %}
 
         {% if products.has_next %}
