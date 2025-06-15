@@ -18,23 +18,25 @@ urlpatterns = [
         CartAddView.as_view(),
         name="product-add-to-cart",
     ),
-    path("cart/<int:pk>/renew/", RenewOrderView.as_view(), name="renew-order"),
+    path("cart/orders/<int:pk>/renew/", RenewOrderView.as_view(), name="renew-order"),
     path(
-        "cart/<int:pk>/decrease/",
+        "cart/products/<int:pk>/decrease-product-quantity/",
         CartDecreaseProductQuantityView.as_view(),
         name="cart-decrease-quantity-in-product",
     ),
     path(
-        "cart/<int:pk>/incartcrease/",
+        "cart/products/<int:pk>/increase-product-quantity/",
         CartIncreaseProductQuantityView.as_view(),
         name="cart-increase-quantity-in-product",
     ),
     path(
-        "cart/update-delivery/", CartDeliveryView.as_view(), name="cart-update-delivery"
+        "cart/products/update-delivery/",
+        CartDeliveryView.as_view(),
+        name="cart-update-delivery",
     ),
-    path("cart/clear/", CartClearView.as_view(), name="cart-clear"),
+    path("cart/products/clear/", CartClearView.as_view(), name="cart-clear"),
     path(
-        "products/<int:pk>/remove/",
+        "cart/products/<int:pk>/remove/",
         CartRemoveProductView.as_view(),
         name="cart-remove-product",
     ),

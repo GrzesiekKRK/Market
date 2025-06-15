@@ -12,14 +12,16 @@ from .views import (
 urlpatterns = [
     path("products/", ProductListTemplateView.as_view(), name="products"),
     path(
-        "categories/<int:pk>/", CategoryTemplateView.as_view(), name="category-products"
+        "products/categories/<int:pk>/",
+        CategoryTemplateView.as_view(),
+        name="category-products",
     ),
     path(
         "products/<int:pk>/detail/",
         ProductDetailTemplateView.as_view(),
         name="product-detail",
     ),
-    path("add-product/", CreateProduct.product_upload, name="vendor-add-product"),
+    path("products/create/", CreateProduct.product_upload, name="vendor-add-product"),
     path(
         "products/<int:pk>/update/", ProductUpdateView.as_view(), name="product-update"
     ),

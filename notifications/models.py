@@ -19,11 +19,11 @@ class Notification(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Notification of user {self.user} {self.body}"
 
     @staticmethod
-    def create_wishlist_notification(wishlist_owner, product):
+    def create_wishlist_notification(wishlist_owner, product) -> None:
         title = f"Special Offer: {product.name}"
         body = f"<a href =\"{settings.SITE_URL}/products/detail/{product.id}\"><i class='fas fa-envelope me-2 text-secondary'></i>{product.name}</a>"
         user = CustomUser.objects.get(id=wishlist_owner.user.id)

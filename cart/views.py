@@ -33,8 +33,8 @@ class CartTemplateView(LoginRequiredMixin, TemplateView):
         if self.request.method == "POST" and delivery_by_vendor:
             selected_deliveries = {}
             for key, value in self.request.POST.items():
-                if key.startswith("deliveryvendor"):
-                    vendor_id = key.replace("deliveryvendor", "")
+                if key.startswith("delivery_vendor_"):
+                    vendor_id = key.replace("delivery_vendor", "")
                     vendor_id_from_value, delivery_id = value.split(",")
 
                     selected_deliveries[vendor_id] = {

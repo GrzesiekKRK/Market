@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import Any, Generator
 
 from django.conf import settings
 from django.http import HttpRequest
@@ -59,7 +60,7 @@ class Cart:
             del self.cart[product_id]
         self.session.save()
 
-    def __iter__(self) -> None:
+    def __iter__(self) -> Generator[Any, Any, None]:
         """Generates product objects from the cart with associated Product data.
 
         Returns:

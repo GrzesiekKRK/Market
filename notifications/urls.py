@@ -9,12 +9,12 @@ from .views import (
 urlpatterns = [
     path("", NotificationListTemplateView.as_view(), name="notification"),
     path(
-        "notification/<int:pk>/detail",
+        "<int:pk>/detail",
         NotificationDetailTemplateView.as_view(),
         name="notification-detail",
     ),
     path(
-        "notification/<int:pk>/delete",
+        "<int:pk>/delete",
         NotificationDeleteView.as_view(),
         name="notification-delete",
     ),

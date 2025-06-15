@@ -44,7 +44,7 @@ class InventoryListTemplateView(LoginRequiredMixin, TemplateView):
 
         return context
 
-    def _get_paginated_queryset(self, products: QuerySet):
+    def _get_paginated_queryset(self, products: QuerySet) -> int:
         paginator = Paginator(products, 12)
         page_number = self.request.GET.get("page")
 

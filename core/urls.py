@@ -8,8 +8,8 @@ from .views import ConcatView, DashboardView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", DashboardView.as_view(), name="market-dashboard"),
     path("contact/", ConcatView.as_view(), name="market-contact"),
+    path("", DashboardView.as_view(), name="market-dashboard"),
     path("", include("products.urls")),
     path("shop/", include("cart.urls")),
     path("accounts/", include("users.urls")),
