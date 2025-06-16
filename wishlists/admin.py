@@ -6,7 +6,12 @@ from .models import Wishlist
 class WishlistAdmin(admin.ModelAdmin):
     list_filter = ["user"]
     ordering = ["-user"]
-    search_fields = ["user__username", "user__first_name", "user__last_name"]
+    search_fields = [
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+        "user__email",
+    ]
     list_per_page = 25
 
 
