@@ -10,6 +10,7 @@ class NotificationAdmin(admin.ModelAdmin):
         "user__last_name",
         "user__email",
     ]
+    list_per_page = 25
 
 
 admin.site.register(Notification, NotificationAdmin)

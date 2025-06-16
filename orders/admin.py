@@ -13,6 +13,7 @@ class OrderAdmin(admin.ModelAdmin):
         "address",
         "postal_code",
     ]
+    list_per_page = 25
 
 
 class ProductOrderAdmin(admin.ModelAdmin):

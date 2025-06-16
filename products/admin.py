@@ -20,10 +20,12 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductDimensionAdmin(admin.ModelAdmin):
     list_filter = ["product"]
     search_fields = ["product__name"]
+    list_per_page = 25
 
 
 class ProductImageAdmin(admin.ModelAdmin):
     search_fields = ["product__name"]
+    list_per_page = 25
 
 
 admin.site.register(Category, CategoryAdmin)
