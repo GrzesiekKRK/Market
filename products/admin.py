@@ -22,7 +22,11 @@ class ProductDimensionAdmin(admin.ModelAdmin):
     search_fields = ["product__name"]
 
 
+class ProductImageAdmin(admin.ModelAdmin):
+    search_fields = ["product__name"]
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(ProductImage)
+admin.site.register(ProductImage, ProductImageAdmin)
 admin.site.register(ProductDimension, ProductDimensionAdmin)
