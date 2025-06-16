@@ -132,7 +132,7 @@ class ProductDimension(models.Model):
     )
 
     def __str__(self):
-        return f"Wymiary produktu: {self.product.name}"
+        return f"Dimension: {self.product.name}"
 
     @staticmethod
     def creation(product, product_dimension_form):
