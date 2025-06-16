@@ -61,7 +61,7 @@ class Delivery(models.Model):
         default=PRODUCT_UNITS_KILOGRAMS, help_text="Weight unit only in kilograms"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"Delivery by {self.name}  on average in {self.delivery_average_time} days "
         )

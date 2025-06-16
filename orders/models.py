@@ -1,3 +1,5 @@
+import decimal
+
 from django.db import models
 from django.utils import timezone
 
@@ -19,7 +21,7 @@ class Order(models.Model):
         max_digits=6,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"order {self.id} "
 
 
@@ -31,9 +33,9 @@ class ProductOrder(models.Model):
     quantity = models.DecimalField(decimal_places=2, max_digits=6)
     price = models.DecimalField(decimal_places=2, max_digits=6)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Product {self.product.name} from order {self.order}, in {self.quantity} and price {self.price}"
 
-    def total_price(self):
+    def total_price(self) -> decimal.Decimal:
         """Calculates and returns the total price for the specific product in the order."""
         return self.quantity * self.price

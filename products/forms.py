@@ -83,7 +83,7 @@ class ImageForm(forms.ModelForm):
         model = ProductImage
         fields = ["miniature", "image"]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         initial_images = kwargs.pop("initial_images", None)
         super().__init__(*args, **kwargs)
 

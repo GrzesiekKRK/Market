@@ -131,7 +131,7 @@ class ProductDimension(models.Model):
         help_text="Weight unit",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Dimension: {self.product.name}"
 
     @staticmethod
