@@ -144,7 +144,7 @@ class Delivery(models.Model):
 
         return his_products
 
-    # TODO Comments/ Display admin/ check typing all
+    # TODO Comments/check typing all
     @staticmethod
     def delivery_price_total(delivery_by_vendor, get_selected_delivery) -> int:
         if delivery_by_vendor:
