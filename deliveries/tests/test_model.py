@@ -213,7 +213,7 @@ class DeliveryMethodsWorkflowTest(TestCase):
 
     def test_filter_deliveries_method_empty_items(self):
         result = Delivery.filter_deliveries_method([])
-        self.assertIsNone(result)
+        self.assertEqual({}, result)
 
     def test_multiply_vendor_products_with_single_product(self):
         product = [self.product_1_no_lockers]

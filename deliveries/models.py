@@ -10,6 +10,15 @@ from products.models import Product, ProductDimension
 
 
 class Delivery(models.Model):
+    """
+    Delivery service model representing different shipping methods and their constraints.
+
+    This model defines various delivery options (parcel lockers, courier services, etc.)
+    with their associated costs, delivery times, and physical limitations for packages.
+    Each delivery method has size and weight restrictions that determine which products
+    can be shipped using that method.
+    """
+
     id = models.PositiveSmallIntegerField(
         choices=DELIVERY_CHOICES,
         primary_key=True,
@@ -70,7 +79,7 @@ class Delivery(models.Model):
         verbose_name_plural = "Deliveries"
 
     @staticmethod
-    def check_items(items: {Product}) -> list[Product]:
+    def check_items(items: list[Product]) -> list[Product]:
         list_products = []
 
         for item in items:
@@ -83,7 +92,7 @@ class Delivery(models.Model):
         return list_products
 
     @staticmethod
-    def filter_dimensions(product) -> None | QuerySet:
+    def filter_dimensions(product: list[Product]) -> None | QuerySet:
         product = get_object_or_404(ProductDimension, product=product)
         delivery_parcel = get_object_or_404(Delivery, id=1)
         if delivery_parcel:
@@ -106,16 +115,16 @@ class Delivery(models.Model):
         return None
 
     @staticmethod
-    def filter_deliveries_method(items: {Product}) -> {} | {Inventory: Product}:
+    def filter_deliveries_method(items: list[Product]) -> dict[Inventory, str]:
         if not items:
-            return None
+            return {}
         list_products = Delivery.check_items(items)
         deliveries_by_vendor = Delivery.multiply_vendor_products(list_products)
 
         return deliveries_by_vendor
 
     @staticmethod
-    def multiply_vendor_products(list_products) -> {} | {Inventory: str}:
+    def multiply_vendor_products(list_products: list[Product]) -> dict[Inventory, str]:
         his_products = {}
         deliveries_methods_all = Delivery.objects.all()
         vendor_package = 0
@@ -144,9 +153,11 @@ class Delivery(models.Model):
 
         return his_products
 
-    # TODO Comments/check typing all
     @staticmethod
-    def delivery_price_total(delivery_by_vendor, get_selected_delivery) -> int:
+    def delivery_price_total(
+        delivery_by_vendor: dict[Inventory, dict[str, list[Product] | int]],
+        get_selected_delivery: int,
+    ) -> int:
         if delivery_by_vendor:
             deliveries_price = 0
             if get_selected_delivery:
