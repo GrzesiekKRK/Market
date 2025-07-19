@@ -1,0 +1,33 @@
+{% extends 'market/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Product {{ product.name }}</h1>
+    </div>
+    <!-- Single Page Header End -->
+
+    <div class="container py-5">
+        <div class="content-section text-center">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Change product data</label>
+                    {{ product_form|crispy }}
+                    {{ product_dimension_form|crispy }}
+                    {% if image_form.image %}
+                        {% for image in image_form.image %}
+                            <h1>{{ image.url }}</h1>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Submit</button>
+            </form>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Delete product: <a href="{% url 'product-delete' product.id %}">{{ product.name }}</a>
+                </small>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

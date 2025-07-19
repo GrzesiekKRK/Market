@@ -1,0 +1,151 @@
+{% extends 'market/base.html' %}
+
+{% block content %}
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Market</h1>
+    </div>
+    <!-- Single Page Header End -->
+
+    <div class="container-fluid py-5">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-3">
+            <!-- Categories Sidebar -->
+            <div class="bg-light p-4 mb-5">
+        </div>
+
+            <!-- Search Bar -->
+
+            <div class="search-bar-container bg-light p-4 mb-5">
+                <h6 class="mb-3">Search</h6>
+                <form method="get" class="d-flex flex-column">
+                    <div class="form-control p-0 mb-2">
+                        {% for field in filter.form %}
+                            <div class="mb-2">
+                                <label for="{{ field.id_for_label }}" class="form-label d-block">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+
+
+                        <!-- New Reviews Range Filter -->
+                        <div class="mb-2">
+                            <label class="form-label">Reviews Range</label>
+                            <div class="d-flex align-items-center">
+                                <select name="reviews_min" class="form-select me-2">
+                                    <option value="">Min Rating</option>
+                                    <option value="1">1 Star</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="5">5 Stars</option>
+                                </select>
+                                <select name="reviews_max" class="form-select">
+                                    <option value="">Max Rating</option>
+                                    <option value="1">1 Star</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="5">5 Stars</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100 d-flex justify-content-center align-items-center">
+                        <i class="fas fa-search me-1"></i>
+                        <span class="small">Search</span>
+                    </button>
+                <p></p>
+                 <a href="{{ request.path }}" class="btn btn-outline-secondary btn-sm flex-grow-1 d-flex justify-content-center align-items-center">
+                <i class="fas fa-times me-1"></i>
+                <span class="small">Clear</span>
+            </a>
+                </form>
+            </div>
+        </div>
+
+            <!-- Main Content Area -->
+            <div class="col-lg-9">
+                <!-- Today's Deals -->
+                <div class="mb-5">
+                    <h4 class="mb-4">Today's Deals</h4>
+                    <div class="row">
+                        {% for product in deals %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        <div class="mb-2">
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                        </div>
+                                        <h6 class="text-danger mb-0">
+                                            <span class="text-dark me-2">{{ product.sale_price }} $</span>
+                                            <s class="small">{{ product.price }} $</s>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No deals available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <h4 class="mb-4">Products</h4>
+                <div class="row g-4">
+                    {% for product in products %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    {% for image in product.image.all %}
+                                        {% if image.miniature %}
+                                            <img src="{{ image.image.url }}" class="card-img-top" alt="Image of {{ product.name }}" style="height: 200px; object-fit: cover;">
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="position-absolute top-0 start-0 m-2">
+                                        <span class="badge bg-secondary">{{ product.image.id }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text flex-grow-1">{{ product.description }}</p>
+                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                        {% if product.is_sale %}
+                                            <div>
+                                                <s class="text-muted">${{ product.price }}</s>
+                                                <span class="text-danger fw-bold ms-2">${{ product.sale_price }}</span>
+                                            </div>
+                                        {% else %}
+                                            <span class="fw-bold">${{ product.price }}</span>
+                                        {% endif %}
+                                        <div class="btn-group" role="group">
+                                            <form action="{% url 'product-add-to-cart' product.id %}" method="post" class="me-2">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fa fa-shopping-bag me-1"></i> Add
+                                                </button>
+                                            </form>
+                                            <a href="{% url 'product-detail' product.id %}" class="btn btn-sm btn-outline-secondary">
+                                                <i class="fas fa-info-circle me-1"></i> Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No products available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include "market/pagination.html" %}
+{% endblock content %}
+

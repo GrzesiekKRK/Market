@@ -1,0 +1,103 @@
+{% extends 'market/base.html' %}
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <h3>
+                <i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
+            </h3>
+            <form action="{% url 'user-logout' %}" method="POST">
+                {% csrf_token %}
+                <button style="height:25px;width:70px" type="submit">Log out</button>
+            </form>
+        </div>
+        <!-- User End -->
+        <!-- If not sign up or login-->
+    {% else %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Adress</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <a href="{% url 'user-login' %}"class="text-white"><small class="text-white mx-2">Login</small>/</a>
+            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign UP</small></a>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- If not sign up or login End -->
+<body>
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Order {{ order_number }}</h1>
+    </div>
+    <!-- Single Page Header End -->
+    <!-- First Name and Last Name on the Label -->
+    <h3 align="center">Data on the label</h3>
+    <p align="center">First name: {{ customer.first_name }}</p>
+    <p align="center">Last name: {{ customer.last_name }}</p>
+    <!-- First Name and Last Name on the Label End -->
+    <!-- Address -->
+    <p align="center">Address: {{ address }}</p>
+    <p align="center">Postal Code: {{ postal_code }}</p>
+    <!-- Address End-->
+    <!-- Products -->
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-9">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Unit Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col"> Price</th>
+                    </tr>
+                </thead>
+                <!-- Items in cart -->
+                <h3 align="center">Products</h3>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                {% for image in product.product.image.all %}
+                                {% if image.miniature %}
+                                    <img src="{{ image.image.url }}"
+                                         class="img-fluid w-100 rounded-top border border-secondary"
+                                         alt="Image of {{ product.name }}">
+                                {% endif %}
+                            {% endfor %}
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">{{ product.product }}</p>
+                            </td>
+                            <td>
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
+                            </td>
+                            <td>{{ product.quantity }}</td>
+                            <td>{{ product.total_price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Products End -->
+            <!-- Stripe -->
+            <div class="col-12">
+                <a href="{{ stripe_session_url.url }}">
+                    <button class="button is-primary" id="submitBtn">Total Price {{ total_price }}</button>
+                </a>
+            </div>
+            <!-- Stripe End -->
+        </div>
+    </div>
+</div>
+        </body>
+    {% endblock content %}

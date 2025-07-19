@@ -1,0 +1,106 @@
+ [
+        {
+            "model": "products.Product",
+            "pk": 1,
+            "fields": {
+                "name": "Muszyna",
+                "price": 119.99,
+                "category": 1,
+                "description": "Mineralwater Muszyna 1.5L",
+                "miniature_description": "Mineralwater Muszyna filled from source in Poland",
+                "quantity": 1500,
+                "units_of_measurement": 1
+            }
+        },
+        {
+            "model": "products.Product",
+            "pk": 2,
+            "fields": {
+                "name": "Ice Tea",
+                "price": 119.99,
+                "category": 1,
+                "description": "Ice Tea 1.5L Peach",
+                "miniature_description": "Ice Tea made with tea extract and powder",
+                "quantity": 900.00,
+                "units_of_measurement": 1
+            }
+        },
+     {
+            "model": "products.Product",
+            "pk": 3,
+            "fields": {
+                "name": "Orange",
+                "price": 119.99,
+                "category": 2,
+                "description": "from Peru",
+                "miniature_description": "Size 2",
+                "quantity": 99.5,
+                "units_of_measurement": 3
+            }
+        },
+     {
+            "model": "products.Product",
+            "pk": 4,
+            "fields": {
+                "name": "Strawberry",
+                "price": 119.99,
+                "category": 2,
+                "description": "from Poland",
+                "miniature_description": "Size 1",
+                "quantity": 900.00,
+                "units_of_measurement": 2
+            }
+        },
+     {
+            "model": "products.Product",
+            "pk": 5,
+            "fields": {
+                "name": "Raspberry",
+                "price": 119.99,
+                "category": 2,
+                "description": "from Poland",
+                "miniature_description": "Size 1",
+                "quantity": 900.00,
+                "units_of_measurement": 2
+            }
+        },
+     {
+            "model": "products.Product",
+            "pk": 6,
+            "fields": {
+                "name": "Tomato Green",
+                "price": 119.99,
+                "category": 3,
+                "description": "from Poland",
+                "miniature_description": "Size 1",
+                "quantity": 100.50,
+                "units_of_measurement": 3
+            }
+        },
+     {
+            "model": "products.Product",
+            "pk": 7,
+            "fields": {
+                "name": "Tomato Red",
+                "price": 119.99,
+                "category": 3,
+                "description": "from Poland",
+                "miniature_description": "Size 2",
+                "quantity": 180.90,
+                "units_of_measurement": 3
+            }
+        },
+     {
+            "model": "products.Product",
+            "pk": 8,
+            "fields": {
+                "name": "Orange Juice",
+                "price": 119.99,
+                "category": 3,
+                "description": "Take bottel and fill it",
+                "miniature_description": "Orange from Peru",
+                "quantity": 100.50,
+                "units_of_measurement": 4
+            }
+        }
+ ]

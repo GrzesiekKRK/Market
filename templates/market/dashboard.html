@@ -1,0 +1,25 @@
+{% extends 'market/base.html' %}
+{% load static %}
+
+{% block content %}
+    <main>
+        <!-- Page Header Start -->
+        <div class="container-fluid page-header py-5">
+            <h1 class="text-center text-white display-6">Fruits & Vegetables</h1>
+        </div>
+        <!-- Page Header End -->
+
+        <!-- Welcome Section Start -->
+        <div class="container-fluid py-5">
+            <div class="container py-5 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <h1 class="mb-4">Welcome to the best online store nearby</h1>
+                        <a class="btn border-secondary rounded-pill py-3 px-5" href="{% url 'products' %}">Products</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Welcome Section End -->
+    </main>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends 'market/base.html' %}
+{% block content %}
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Delete Account</h1>
+    </div>
+    <!-- Single Page Header End -->
+
+    <div class="container text-center py-5">
+        <form method="post" class="mb-3">
+            {% csrf_token %}
+            <p>Are you sure you want to delete "{{ object }}" account?</p>
+            <button type="submit" class="btn btn-danger">Confirm</button>
+        </form>
+
+        <h3 class="border-top pt-3">
+            <small class="text-muted">
+                Not sure? Go to <a class="nl-2" href="{% url 'products' %}">Market</a>
+            </small>
+        </h3>
+    </div>
+{% endblock content %}

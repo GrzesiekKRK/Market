@@ -1,0 +1,24 @@
+{% extends 'market/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Add Product</h1>
+    </div>
+    <!-- Single Page Header End -->
+
+    <!-- Products -->
+    <div class="container text-center">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="formFile" class="form-label"></label>
+                {{ product_form|crispy }}
+                {{ product_dimension_form|crispy }}
+                {{ form|crispy}}
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+        </form>
+    </div>
+    <!-- Products End -->
+{% endblock content %}

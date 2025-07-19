@@ -1,0 +1,43 @@
+{% extends 'market/base.html' %}
+{% block content %}
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Notifications</h1>
+    </div>
+    <!-- Single Page Header End -->
+
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            {% for notification in notifications %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="rounded border border-secondary mb-4">
+                        <div class="p-4">
+                            <h4>{{ notification.title }}</h4>
+                            <button class="btn border-secondary rounded-pill px-4 py-2 text-primary text-uppercase mb-2">
+                                <a href="{% url 'notification-detail' notification.id %}" class="text-primary text-decoration-none">
+                                    <i class="fas fa-envelope me-2 text-secondary"></i> Open Notification
+                                </a>
+                            </button>
+
+                            {% if notification.is_read %}
+                                <p class="text-success">Status: Read</p>
+                                <form action="{% url 'notification-delete' notification.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger rounded-pill px-3">
+                                        <i class="fa fa-trash me-2"></i> Delete Notification
+                                    </button>
+                                </form>
+                            {% else %}
+                                <p class="text-warning">Status: Unread</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p>No notifications available.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

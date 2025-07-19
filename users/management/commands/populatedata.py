@@ -1,0 +1,108 @@
+from django.core.management.base import BaseCommand
+
+from deliveries.consts import DELIVERY_CHOICES
+from deliveries.models import Delivery
+from inventories.factories import InventoryFactory
+from notifications.factories import NotificationFactory
+from orders.factories import OrderFactory
+from products.factories import (
+    ProductDimensionFactory,
+    ProductFactory,
+    ProductImageFactory,
+)
+from products.models import Product
+from users.factories import CustomUserFactory
+from users.models import CustomUser
+from wishlists.factories import WishlistFactory
+
+
+class Command(BaseCommand):
+    """Creat Dummy Users, 5 x Notifications per user, and Inventory if user is vendor,
+    9 x Deliveries methods, Produtcs, Orders and Wishlists"""
+
+    def handle(self, *args, **options) -> None:
+        users = self.users_factories()
+        self.notification_factories(users)
+        self.inventory_product_factories(users)
+        self.order_factories(users)
+        self.delivery_methods()
+
+    @staticmethod
+    def users_factories() -> CustomUser:
+        users = CustomUserFactory.create_batch(
+            20,
+        )
+        return users
+
+    @staticmethod
+    def notification_factories(users: CustomUser) -> None:
+        for user in users:
+            NotificationFactory.create_batch(5, user=user)
+
+    @staticmethod
+    def inventory_product_factories(users: CustomUser) -> None:
+        for user in users:
+            if user.role == 2:  # role 1 - moderator,  2 - vendor, 3 - user
+                inventory = InventoryFactory(vendor=user)
+                products = ProductFactory.create_batch(5)
+                for product in products:
+                    ProductImageFactory.create(product=product)
+                    inventory.products.add(product)
+                    sale = Product.objects.filter(is_sale=True).first()
+
+                    if not sale:
+                        sale_product = ProductFactory.create(is_sale=True)
+                        ProductImageFactory.create(product=sale_product)
+                        inventory.products.add(sale_product)
+                Command.wishlist_factories(products)
+                Command.product_dimensions(products)
+
+    @staticmethod
+    def wishlist_factories(products: Product) -> None:
+        wishs = WishlistFactory.create_batch(5)
+
+        for wish in wishs:
+            for product in products:
+                wish.products.add(product)
+
+    @staticmethod
+    def order_factories(users: CustomUser) -> None:
+        for user in users:
+            OrderFactory.create_batch(2, customer=user, address=user.address)
+
+    @staticmethod
+    def delivery_methods() -> None:
+        for data in DELIVERY_CHOICES:
+            if data[0] <= 3:
+                id = data[0]
+                name = data[1]
+                new = Delivery(
+                    id=id,
+                    name=f"{name}",
+                    price=20 * id,
+                    delivery_average_time=20 // id,
+                    max_length=90,
+                    max_width=40,
+                    max_height=20,
+                    max_weight=25,
+                )
+            elif data[0] > 3:
+                id = data[0]
+                name = data[1]
+                new = Delivery(
+                    id=id,
+                    name=f"{name}",
+                    price=10 * id,
+                    delivery_average_time=20 // id,
+                    max_length=90,
+                    max_width=40,
+                    max_height=20,
+                    max_weight=25,
+                )
+            new.save()
+
+    @staticmethod
+    def product_dimensions(products: Product) -> None:
+        for product in products:
+            dimensions = ProductDimensionFactory.create(product=product)
+            dimensions.save()

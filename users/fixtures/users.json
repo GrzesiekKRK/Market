@@ -1,0 +1,53 @@
+ [
+        {
+            "model": "users.CustomUser",
+            "pk": 1,
+            "fields": {
+                "username": "ad",
+                "first_name": "John",
+                "last_name": "Elder",
+                "email": "jhon@wp.pl",
+                "pesel": "12345678910",
+                "bank_account": "1234756890123456789123450",
+                "secondary_email": "elder@wp.pl",
+                "address": "Cracow ul. Kazimierz 12/2",
+                "created_at": "2024-05-13",
+                "role": 2,
+                "password": "pbkdf2_sha256$720000$k690GSGiJW7UGFJH3VEqVw$01WrlZuC+zQm1YCFjMTunxIQnL6qbwDu0dlbjKqVtYg="
+            }
+        },
+   {
+            "model": "users.CustomUser",
+            "pk": 2,
+            "fields": {
+                "username": "qwere",
+                "first_name": "Julian",
+                "last_name": "Stonee",
+                "email": "Jul@wp.pl",
+                "pesel": "78216876123",
+                "bank_account": "8127192638172631263123161",
+                "secondary_email": "Stone@wp.pl",
+                "address": "Cracow ul. Kazimierz 12/2",
+                "created_at": "2024-05-13",
+                "role": 2,
+                "password": "pbkdf2_sha256$720000$k690GSGiJW7UGFJH3VEqVw$01WrlZuC+zQm1YCFjMTunxIQnL6qbwDu0dlbjKqVtYg="
+            }
+        },
+       {
+            "model": "users.CustomUser",
+            "pk": 3,
+            "fields": {
+                "username": "zx",
+                "first_name": "NJohn",
+                "last_name": "Rede",
+                "email": "Rede@wp.pl",
+                "pesel": "12345677710",
+                "bank_account": "1234756890123456782223450",
+                "secondary_email": "elsder@wp.pl",
+                "address": "Cracow ul. Kazimierz 12/2",
+                "created_at": "2024-05-13",
+                "role": 3,
+                "password": "pbkdf2_sha256$720000$k690GSGiJW7UGFJH3VEqVw$01WrlZuC+zQm1YCFjMTunxIQnL6qbwDu0dlbjKqVtYg="
+            }
+        }
+ ]

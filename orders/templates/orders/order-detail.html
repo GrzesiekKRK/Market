@@ -1,0 +1,94 @@
+{% extends 'market/base.html' %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Address</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <h3>
+                <i class="fas fa-user-circle me-2 text-secondary"></i> <a class="text-white">{{ request.user.username }}</a>
+            </h3>
+            <form action="{% url 'user-logout' %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button class="btn btn-link text-white">Log out</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="top-info ps-2">
+            <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Address</a></small>
+            <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Messages</a></small>
+        </div>
+        <div class="top-link pe-2">
+            <a href="{% url 'user-login' %}" class="text-white"><small class="text-white mx-2">Login</small>/</a>
+            <a href="{% url 'user-register' %}" class="text-white"><small class="text-white mx-2">Sign Up</small></a>
+        </div>
+    {% endif %}
+
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Order {{ orders.id }}</h1>
+    </div>
+
+    <h3 class="text-center">Data on the label</h3>
+    <p class="text-center">First name: {{ customer.first_name }}</p>
+    <p class="text-center">Last name: {{ customer.last_name }}</p>
+    <p class="text-center">Address: {{ customer.address }}</p>
+    <p class="text-center">Postal Code: {{ customer.postal_code }}</p>
+
+    <div class="col-lg-9">
+        <h3 class="text-center">Products</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products_order %}
+                    <tr>
+                        <td>{{ product.product }}</td>
+                        <td>
+                            {% for image in product.product.image.all %}
+                                {% if image.miniature %}
+                                    <img src="{{ image.image.url }}"
+                                         class="img-fluid w-100 rounded-top border border-secondary image-fit"
+                                         alt="Image of {{ product.product.name }}">
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if product.is_sale %}
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
+                            {% else %}
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
+                            {% endif %}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.total_price }} $</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No products in this order.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if not orders.status %}
+            <div class="text-center">
+                <a href="{{ stripe_session_url.url }}">
+                    <button class="btn btn-primary" id="submitBtn">Purchase!</button>
+                </a>
+            </div>
+        {% else %}
+            <form action="{% url 'renew-order' orders.id %}" method="post" class="text-center">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Renew Order</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock content %}

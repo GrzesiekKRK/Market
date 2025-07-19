@@ -1,0 +1,59 @@
+{% extends 'market/base.html' %}
+{% block content %}
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Wishlist</h1>
+    </div>
+    <!-- Single Page Header End -->
+
+    <div class="container py-5">
+        <!-- Products -->
+        <div class="col-lg-9">
+                    <div class="row g-4 justify-content-center">
+                        {% for product in products %}
+                            <div class="col-md-6 col-lg-6 col-xl-4">
+                                <div class="rounded position-relative fruite-item" style="height: 650px;"> <!-- Ustalona wysokość -->
+                                    <div class="fruite-img" style="height: 400px; overflow: hidden;"> <!-- Ustalona wysokość obrazka -->
+                                        {% for image in product.image.all %}
+                                            {% if image.miniature %}
+                                                <img src="{{ image.image.url }}"
+                                                     class="img-fluid w-100 rounded-top border border-secondary"
+                                                     alt="Image of {{ product.name }}" style="height: 150%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ product.category }}</div>
+                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                            <h4>{{ product.name }}</h4>
+                            <p>{{ product.description }}</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                <p class="text-dark fs-5 fw-bold mb-0">{{ product.quantity }}</p>
+                                {% if product.is_sale %}
+                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.sale_price }} $</p>
+                                {% else %}
+                                    <p class="text-dark fs-5 fw-bold mb-0">{{ product.price }} $</p>
+                                {% endif %}
+                            </div>
+                            <form action="{% url 'product-add-to-cart' product.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                </button>
+                            </form>
+                            <form action="{% url 'wishlist-remove' product.id %}"   method="post" style="display:inline;">
+                                {% csrf_token %}<button type="submit"  class="btn border border-secondary rounded-pill px-3 text-primary" >
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-center">No products in your wishlist.</p>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Products End -->
+
+{% endblock content %}
