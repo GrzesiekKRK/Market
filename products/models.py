@@ -1,9 +1,17 @@
+import os
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+import uuid
 from products.validators import validate_minimal_price
 
 from . import consts as product_units
+
+
+def product_image_upload_path(instance, filename):
+    """Generuje ścieżkę dla obrazów produktów"""
+    ext = filename.split('.')[-1].lower()
+    filename = f'{uuid.uuid4()}.{ext}'
+    return os.path.join('products', str(instance.product.id), filename)
 
 
 class Category(models.Model):
@@ -69,6 +77,19 @@ class Product(models.Model):
         return self.name
 
 
+# class ProductImage(models.Model):
+#     """
+#     Represents an image associated with a product. A product can have multiple images,
+#     including miniature images used for product previews.
+#     """
+#
+#     miniature = models.BooleanField(
+#         default=False, help_text="This image will be display on dashboard"
+#     )
+#     image = models.FileField(
+#         upload_to="static/product/", default="static/product/default.jpg"
+#     )
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="image")
 class ProductImage(models.Model):
     """
     Represents an image associated with a product. A product can have multiple images,
@@ -79,7 +100,10 @@ class ProductImage(models.Model):
         default=False, help_text="This image will be display on dashboard"
     )
     image = models.FileField(
-        upload_to="uploads/product/", default="uploads/product/default.jpg"
+        upload_to=product_image_upload_path,
+        default=None,
+        blank=True,
+        null=True
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="image")
 

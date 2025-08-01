@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <!-- Products -->
+              <!-- Products -->
                 <h4 class="mb-4">Products</h4>
                 <div class="row g-4">
                     {% for product in products %}
@@ -104,8 +104,10 @@
                             <div class="card h-100">
                                 <div class="position-relative">
                                     {% for image in product.image.all %}
-                                        {% if image.miniature %}
+                                        {% if image.miniature and image.image %}
                                             <img src="{{ image.image.url }}" class="card-img-top" alt="Image of {{ product.name }}" style="height: 200px; object-fit: cover;">
+                                        {% else %}
+                                             <img src="static/product/default.jpg" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
                                         {% endif %}
                                     {% endfor %}
                                     <div class="position-absolute top-0 start-0 m-2">

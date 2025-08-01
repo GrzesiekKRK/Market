@@ -1,18 +1,21 @@
 import os
 from pathlib import Path
-
+from icecream import ic
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-1ihyyoz%jpb13h@6t%@c#d)6e4=1k5dhwyxt@pflt8&ql=xd%f'
-DEBUG = bool(os.environ.get("DEBUG", default=0))
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    SECRET_KEY = "django-insecure-0*43b=$2q5vw36c)=+m&&$z4d!@_uh=t**cy6q%tumm!wwj)uy"
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
-                    '54.91.195.109',
-                    'localhost',
-                    '127.0.0.1',
-                    '.elasticbeanstalk.com',
-                    '.amazonaws.com',
-                ]
-
+    '54.91.195.109',
+    'localhost',
+    '127.0.0.1',
+    '.elasticbeanstalk.com',
+    '.amazonaws.com',
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -29,6 +32,7 @@ INSTALLED_APPS = [
     # "silk",
     "crispy_forms",
     "crispy_bootstrap4",
+    "storages"
 ]
 
 INSTALLED_EXTENSIONS = [
@@ -44,7 +48,6 @@ INSTALLED_EXTENSIONS = [
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -86,19 +89,27 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
-DATABASES = {
-    "default": {
-                # 'ENGINE': 'django.db.backends.sqlite3',
-                # 'NAME': BASE_DIR / 'db.sqlite3',
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.environ['RDS_DB_NAME'],
-                'USER': os.environ['RDS_USERNAME'],
-                'PASSWORD': os.environ['RDS_PASSWORD'],
-                'HOST': os.environ['RDS_HOSTNAME'],
-                'PORT': os.environ['RDS_PORT'],
+if os.getenv("RDS_DB_NAME"):
+    DATABASES = {
+        "default": {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
+else:
 
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -124,21 +135,40 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = "static/"
+USE_S3 = os.getenv('USE_S3') == 'TRUE'
 
+if USE_S3:
+    print('Używam S3')
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'elasticbeanstalk-us-east-1-226754875469')  # Your actual bucket name
+    AWS_DEFAULT_ACL = None
+    AWS_S3_REGION_NAME = 'us-east-1'  # Add region
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+    STATICFILES_STORAGE = 'core.storage_backends.StaticStorage'
+
+    PUBLIC_MEDIA_LOCATION = 'uploads'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'core.storage_backends.MediaStorage'
+
+    PRIVATE_MEDIA_LOCATION = 'private'
+    PRIVATE_FILE_STORAGE = 'core.storage_backends.PrivateMediaStorage'
+else:
+    STATIC_URL = "/static/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "assets")
+
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "assets")
-
-
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.CustomUser"
 CART_SESSION_ID = "cart"
-
 
 LOGIN_REDIRECT_URL = "/login"
 
@@ -155,4 +185,15 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 AXES_LOCKOUT_PARAMETERS = ["username"]
 
-SITE_URL = "http://localhost:8000"
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
+
+#
+# if not DEBUG:
+#     SECURE_SSL_REDIRECT = True
+#     SECURE_HSTS_SECONDS = 31536000
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True
+#     SECURE_CONTENT_TYPE_NOSNIFF = True
+#     SECURE_BROWSER_XSS_FILTER = True
+#     SESSION_COOKIE_SECURE = True
+#     CSRF_COOKIE_SECURE = True

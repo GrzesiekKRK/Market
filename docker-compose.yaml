@@ -7,6 +7,11 @@ services:
     ports:
       - "8000:8000"
     command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - USE_S3=TRUE
+      - AWS_ACCESS_KEY_ID=UPDATE_ME
+      - AWS_SECRET_ACCESS_KEY=UPDATE_ME
+      - AWS_STORAGE_BUCKET_NAME=UPDATE_ME
     volumes:
       - .:/app
     depends_on:
@@ -19,6 +24,5 @@ services:
         POSTGRES_DB: MarketDB
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
-
 volumes:
   postgres_data:
