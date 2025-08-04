@@ -10,11 +10,7 @@ if not SECRET_KEY:
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
-    '54.91.195.109',
-    'localhost',
-    '127.0.0.1',
-    '.elasticbeanstalk.com',
-    '.amazonaws.com',
+    '*'
 ]
 
 INSTALLED_APPS = [
@@ -78,6 +74,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.media",
                 "users.context_processors.roles",
                 "cart.context_processors.items_number",
                 "notifications.context_processors.messages_number",
@@ -138,10 +135,9 @@ USE_TZ = True
 USE_S3 = os.getenv('USE_S3') == 'TRUE'
 
 if USE_S3:
-    print('Używam S3')
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'elasticbeanstalk-us-east-1-226754875469')  # Your actual bucket name
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'market-data-storeage')  # Your actual bucket name
     AWS_DEFAULT_ACL = None
     AWS_S3_REGION_NAME = 'us-east-1'  # Add region
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
@@ -151,8 +147,8 @@ if USE_S3:
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
     STATICFILES_STORAGE = 'core.storage_backends.StaticStorage'
 
-    PUBLIC_MEDIA_LOCATION = 'uploads'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    PUBLIC_MEDIA_LOCATION = ''
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
     DEFAULT_FILE_STORAGE = 'core.storage_backends.MediaStorage'
 
     PRIVATE_MEDIA_LOCATION = 'private'

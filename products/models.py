@@ -11,7 +11,7 @@ def product_image_upload_path(instance, filename):
     """Generuje ścieżkę dla obrazów produktów"""
     ext = filename.split('.')[-1].lower()
     filename = f'{uuid.uuid4()}.{ext}'
-    return os.path.join('products', str(instance.product.id), filename)
+    return f'product/{filename}'
 
 
 class Category(models.Model):
@@ -101,7 +101,7 @@ class ProductImage(models.Model):
     )
     image = models.FileField(
         upload_to=product_image_upload_path,
-        default=None,
+        default="static/product/default.jpg",
         blank=True,
         null=True
     )

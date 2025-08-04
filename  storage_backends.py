@@ -15,7 +15,7 @@ class MediaStorage(S3Boto3Storage):
     """
     Storage class for user uploaded media files (public access)
     """
-    location = settings.PUBLIC_MEDIA_LOCATION
+    location = ''
     default_acl = 'public-read'
     file_overwrite = False
 
