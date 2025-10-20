@@ -107,6 +107,7 @@ We can create two types of users: customers and vendors, each with different per
 
     Vendor:
     Vendors can add products along with images through forms, and set product details such as price and quantity. Each vendor has their own inventory system to manage all of their products created upon account creation.
+  ![Screenshot](./user_register.png)
 * Cart -
     A Session-Based Cart is used to temporarily store a customer’s cart data on the server side, associated with their session. This allows users to add products to their cart and continue shopping.
     Key Features:
@@ -124,19 +125,19 @@ We can create two types of users: customers and vendors, each with different per
         Allows duplicats (same name, price etc)
         Multi-Images
         Regular and sale price
-
+ ![Screenshot](./list_close_up_view.png)
 * Inventories -
     Responsible for storing and managing the products added by each vendor (owner). It acts as a personal product collection for each vendor, allowing them to view, update, or remove items they have listed.
     Key Features:
         Each vendor has their own inventory.
         Only the owner (vendor) can access and manage their inventory.
         Products in the inventory can be edited (e.g. price, quantity) or deleted.
-
+![Screenshot](./inventory_list_view.png)
 * Wishlists -
     Allows customers to save products they’re interested in for later, without adding them directly to the cart. This improves user experience by helping them keep track of favorites or products they may want to purchase in the future
     Key Features:
         Send notifications when product is on sale.
-
+![Screenshot](./whislist_view.png)
 * Notifications -
     System is responsible for dispatching alerts to users when specific events occur. It helps keep users informed and engaged by providing real-time or near-real-time updates on important actions or changes related to their account or activity.
     Key Events That Trigger Notifications:
@@ -148,7 +149,7 @@ We can create two types of users: customers and vendors, each with different per
         Can be extended to support additional event types (e.g. out-of-stock alerts, order shipped, etc.)
         Notifications can be marked as read/unread.
         Users can view a list of recent notifications from their dashboard or profile.* Menu - Takes all input and shows menu.
-
+![Screenshot](./notifications.png)
 * Orders -
     System is responsible for recording purchased items along with their price at the moment of purchase. It ensures that each transaction is saved accurately for reference, tracking, and future actions.
 
@@ -157,7 +158,7 @@ We can create two types of users: customers and vendors, each with different per
         Stores all relevant order details: customer, products, total amount, payment status, and timestamp.
         Allows customers to reorder past purchases with a single click (e.g. “Renew Order” button).
         Can be extended to support order status tracking (e.g. pending, shipped, delivered).
-
+ ![Screenshot](./order_history.png)
   * Payments - Stripe
       Stripe Checkout is a pre-built, hosted payment page provided by Stripe that makes it easy to accept payments online. It securely handles customer payment details, reducing the complexity of dealing with sensitive information directly.
       Key Features:
@@ -165,7 +166,7 @@ We can create two types of users: customers and vendors, each with different per
           Secure Payments: Payments are processed using Stripe's secure infrastructure, ensuring PCI-DSS compliance.
           Supports Multiple Payment Methods: Credit cards, debit cards, Apple Pay, Google Pay, and other local payment methods depending on your region.
           Redirect After Payment: After the payment is completed, users are redirected back to your site (e.g., an order confirmation page).
-
+![Screenshot](./stripe_checkout.png)
     * Deliveries -The delivery system manages shipping methods and logistics for the multi-vendor marketplace. It handles delivery options, pricing calculations, and automatically filters available shipping methods based on product dimensions and vendor requirements.
 
     Key Features:
@@ -175,7 +176,7 @@ We can create two types of users: customers and vendors, each with different per
         Flexible Pricing: Each delivery method has its own pricing structure and estimated delivery time.
         Parcel Locker Integration: Special handling for parcel locker deliveries with size restrictions (max 90×40×20 cm, 25kg).
         The system automatically excludes incompatible delivery methods (like parcel lockers for oversized items) and provides fallback options to ensure customers always have available shipping choices.
-
+![Screenshot](./checkout_close.png)
 </details>
 
 
