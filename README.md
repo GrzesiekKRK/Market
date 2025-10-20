@@ -113,7 +113,7 @@ We can create two types of users: customers and vendors, each with different per
         Cart data is saved in the session (request.session), not in the database.
         Each cart contains product IDs, quantities, and optionally prices (though prices should be verified at checkout).
         Cart is cleared after successful checkout or when the session expires.
-
+        ![Screenshot](./checkout close.png)
 * Products -
     A Django model used to represent products in the system. Products are created by vendors through a form. Each product contains key information required for listing and selling.
         Vendors use a form to create and update products.
